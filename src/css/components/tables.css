@@ -1,0 +1,85 @@
+/* Estilos base para tablas */
+.table-container {
+  padding: var(--space-lg);
+  background: var(--color-white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.table-title {
+  margin: 0;
+  font-size: var(--font-size-large);
+}
+
+.table-controls {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.table-search {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  width: 250px;
+}
+
+.table-button {
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.table-button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* Botones de acción */
+.action-buttons {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.action-button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.edit-button {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.edit-button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.delete-button {
+  background-color: #ff4d4f;
+  color: var(--color-white);
+}
+
+.delete-button:hover {
+  background-color: #ff7875;
+}

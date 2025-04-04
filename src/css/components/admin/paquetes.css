@@ -1,0 +1,58 @@
+/* Estilos específicos para tabla de paquetes */
+.paquetes-servicios-container {
+  height: 130px;
+  overflow-y: auto;
+  padding: 4px;
+  width: 300px;
+  scrollbar-width: thin;
+}
+
+.paquetes-servicios-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(3, 1fr);
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.paquetes-servicio-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.paquetes-servicio-incluido {
+  background: var(--color-accent);
+  border: 1px solid var(--color-primary);
+}
+
+.paquetes-servicio-no-incluido {
+  background: var(--color-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.paquetes-servicio-checkbox {
+  margin-right: 6px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.paquetes-servicio-nombre {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.paquetes-multimedia-container {
+  max-height: 100px;
+  overflow-y: auto;
+  font-size: 12px;
+}
+
+.paquetes-multimedia-item {
+  margin-bottom: 4px;
+}
