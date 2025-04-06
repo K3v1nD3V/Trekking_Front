@@ -17,9 +17,9 @@ const Login = () => {
 
     try {
       await login(email, password);
-      navigate('/admin'); // Puedes cambiar esta ruta según tu dashboard
+      navigate('/admin'); 
     } catch (err) {
-      setError(err.response?.data?.message || 'Credenciales incorrectas');
+      setError(err.response?.message || 'Credenciales incorrectas');
     } finally {
       setLoading(false);
     }

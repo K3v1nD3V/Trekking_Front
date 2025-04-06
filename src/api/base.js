@@ -3,7 +3,7 @@ import { getAuthToken, removeAuthToken } from './auth';
 
 // Configuración base de la API
 const api = axios.create({
-  baseURL: 'https://trekking-back.onrender.com',
+  baseURL: 'https://trekking-back.onrender.com/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'

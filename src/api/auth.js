@@ -1,6 +1,6 @@
 import api from './base';
 
-const AUTH_TOKEN_KEY = 'trekking_auth_token';
+const AUTH_TOKEN_KEY = 'Trekking';
 
 // Token management
 export const setAuthToken = (token) => {
@@ -25,8 +25,8 @@ export const login = async (email, password) => {
     correo: email,
     contraseña: password
   });
-  setAuthToken(response.data.token);
-  return response.data;
+  setAuthToken(response.token);
+  return response;
 };
 
 export const logout = () => {
@@ -39,8 +39,8 @@ export const checkAuth = async () => {
   if (!token) return null;
   
   try {
-    const response = await api.get('/usuarios/me');
-    return response.data;
+    const response = await api.get('/permisos');
+    return response;
   } catch {
     removeAuthToken();
     return null;
