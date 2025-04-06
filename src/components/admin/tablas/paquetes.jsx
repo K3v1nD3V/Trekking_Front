@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Modal from '../../common/Modal';
 import NewExpandedModal from '../../common/NewExpandedModal';
-import NewPaqueteForm from './NewPaqueteForm';
+//FORM
+import NewPaqueteForm from './paqueteForm';
+// CSS
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/paquetes.css';
 import '../../../css/components/admin/mediaPreviewEnhanced.css';
