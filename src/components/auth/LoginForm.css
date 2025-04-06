@@ -69,3 +69,73 @@ button:disabled {
   background-color: #6c757d;
   cursor: not-allowed;
 }
+
+/* LoginForm.css */
+
+.login-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 40px 30px;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  border-radius: 16px;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: transform 0.3s ease;
+}
+
+.login-container:hover {
+  transform: translateY(-5px);
+}
+
+.login-container h2 {
+  margin-bottom: 25px;
+  color: #222;
+  font-size: 24px;
+}
+
+.login-container input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 14px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.login-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.login-container button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-container button:hover {
+  background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+.login-container button:disabled {
+  background-color: #a0c5f7;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #d32f2f;
+  margin-top: 10px;
+  font-size: 14px;
+}

@@ -4,33 +4,31 @@ import { logout } from '../../api/auth';
 import { useNavigate } from 'react-router-dom';
 import './NavOption.css';
 
-const NavOption = ({ icon, text, to, isLogout = false }) => {
-  // const { user } = useAuth();
+const NavOption = ({ icon, text, to, isLogout }) => {
   const navigate = useNavigate();
 
-  const handleClick = async () => {
+  const handleClick = () => {
     if (isLogout) {
-      await logout();
+      logout();
       navigate('/login');
     } else {
       navigate(to);
     }
   };
-
+  
   // Ocultar opciones de admin si no está autenticado
   // if (!user && (text === 'Paquetes' || text === 'Servicios' || text === 'Dashboard')) {
   //   return null;
   // }
-
+  
   // Mostrar Login si no está autenticado, Logout si está autenticado
   // if ((text === 'Login' && user) || (text === 'Logout' && !user)) {
   //   return null;
   // }
-
   return (
-    <div className="nav-option" onClick={handleClick} data-logout={isLogout}>
-      <img src={icon} alt={text} className="nav-icon" />
-      <span className="nav-text">{text}</span>
+    <div className="option" onClick={handleClick}>
+      <img src={icon} className="nav-img" alt="nav-icon" />
+      <h3>{text}</h3>
     </div>
   );
 };

@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { AuthProvider } from './context/AuthContext.jsx';
-import {Routes, Route} from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import Admin from './layouts/admin';
 import Paquetes from './components/admin/tablas/paquetes';
 import Servicios from './components/admin/tablas/servicios';
+import Login from './components/auth/login';
+import PrivateRoute from './layouts/PrivateRoute';
 
 const App = () => {
+  
   const [paquetes] = useState([
     {
         nombre: 'Paquete Aventura',
@@ -52,18 +55,27 @@ const App = () => {
           estado: false
       }
   ]);
-
-  return (
+    return (
       <AuthProvider>
         <Routes>
-          <Route path="/*" element={<Admin />}>
+          <Route path="/login" element={<Login />} />
+          
+          <Route path="/admin/*" element={
+            <PrivateRoute>
+              <Admin />
+            </PrivateRoute>
+          }>
             <Route index element={<Paquetes data={paquetes} />} />
-            <Route path="admin/paquetes" element={<Paquetes data={paquetes} />} />
-            <Route path="admin/servicios" element={<Servicios data={servicios} />} />
+            <Route path="paquetes" element={<Paquetes data={paquetes} />} />
+            <Route path="servicios" element={<Servicios data={servicios} />} />
           </Route>
+          
+          <Route path="*" element={<Login />} />
         </Routes>
       </AuthProvider>
-  );
-}
+    );
+  };
+
+
 
 export default App;
