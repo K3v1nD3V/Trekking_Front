@@ -1,52 +1,10 @@
-import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import NavOption from '../components/common/NavOption';
-import TablaPaquetes from '../components/admin/tablas/paquetes';
-import ServiciosTable from '../components/admin/tablas/servicios';
 
 const Admin = () => {
-    // Data de ejemplo, despues se hara consumo de la api
-    const [paquetes] = useState([
-        {
-            nombre: 'Paquete Aventura',
-            valor: 150000,
-            descripcion: 'Tour de aventura en montaña',
-            lugar_encuentro: 'Plaza Central',
-            destino: 'Montaña del Tigre'
-        },
-        {
-            nombre: 'Paquete Relax',
-            valor: 200000,
-            descripcion: 'Tour relajante en termales',
-            lugar_encuentro: 'Terminal Norte',
-            destino: 'Termales del Valle'
-        }
-    ]);
-
-    const [servicios] = useState([
-        {
-            id: 1,
-            nombre: 'Guía turístico',
-            descripcion: 'Servicio de guía profesional',
-            estado: true
-        },
-        {
-            id: 2,
-            nombre: 'Transporte',
-            descripcion: 'Traslado a los lugares de interés',
-            estado: true
-        },
-        {
-            id: 3,
-            nombre: 'Alimentación',
-            descripcion: 'Comidas incluidas',
-            estado: false
-        }
-    ]);
-   
+    
     return (
         <>
-            {/* el header no se toca todavia, ignorenlo */}
             <header>
                 <div className="logosec">
                     <div className="logo">GeeksForGeeks</div>
@@ -54,28 +12,6 @@ const Admin = () => {
                         className="icn menuicn" 
                         id="menuicn" 
                         alt="menu-icon" />
-                </div>
-
-                <div className="searchbar">
-                    <input type="text" 
-                        placeholder="Search" />
-                    <div className="searchbtn">
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
-                            className="icn srchicn" 
-                            alt="search-icon" />
-                    </div>
-                </div>
-
-                <div className="message">
-                    <div className="circle"></div>
-                    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png" 
-                        className="icn" 
-                        alt="" />
-                    <div className="dp">
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png"
-                            className="dpicn" 
-                            alt="dp" />
-                    </div>
                 </div>
             </header>
 
@@ -168,16 +104,9 @@ const Admin = () => {
                         </div>
                     </div>
 
-                    {/* aqui se renderiza la tabla */}
                     <div className="report-container">
-                        <Routes>
-                            <Route index element={<TablaPaquetes data={paquetes} />} /> 
-
-                            <Route path="paquetes" element={<TablaPaquetes data={paquetes} />} />
-                            <Route path="servicios" element={<ServiciosTable data={servicios}/>} />
-{/*siguiente route aqui-->*/}
-                        </Routes>
-                    </div>
+                        <Outlet />
+                    </div> 
                 </div>
             </div>
         </>

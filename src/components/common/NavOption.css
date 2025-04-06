@@ -1,0 +1,29 @@
+.nav-option {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  margin: 0.2rem 0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-option:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.nav-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 1rem;
+}
+
+.nav-text {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Estilo especial para el botón de logout */
+.nav-option[data-logout="true"]:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
