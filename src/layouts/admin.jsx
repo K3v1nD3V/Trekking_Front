@@ -7,7 +7,7 @@ const Admin = () => {
         <>
             <header>
                 <div className="logosec">
-                    <div className="logo">GeeksForGeeks</div>
+                    <div className="logo">TrekkingSanCristobal</div>
                     <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182541/Untitled-design-(30).png"
                         className="icn menuicn" 
                         id="menuicn" 
@@ -15,7 +15,7 @@ const Admin = () => {
                 </div>
             </header>
 
-            <div className="main-container">
+            <div className="main-container">z
             <div className="navcontainer">
                     <nav className="nav">
                         <div className="nav-upper-options">
@@ -25,27 +25,34 @@ const Admin = () => {
                             pueden repetir los iconos, depues se cambian por svgs*/}
                             
                             <NavOption
-                                icon="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png"
+                                icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>dashboard</span>}
                                 text="Dashboard"
                                 to="/admin"
                             />
                             
                             <NavOption
-                                icon="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/9.png"
+                                 icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>package_2</span>}
                                 text="Paquetes"
                                 to="/admin/paquetes"
                             />
                             
                             <NavOption
-                                icon="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/5.png"
+                                icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>linked_services</span>}
                                 text="Servicios"
                                 to="/admin/servicios"
                             />
 
+
                             {/* de aqui para abajo van poniendo los siguientes links */}
                             
                             <NavOption
-                                icon="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/7.png"
+                                 icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>manage_accounts</span>}
+                                text="Roles"
+                                to="/admin/roles"
+                            />
+                            
+                            <NavOption
+                                 icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>login</span>}
                                 text="Logout"
                                 to="/logout"
                                 isLogout={true}
@@ -68,13 +75,12 @@ const Admin = () => {
                     </div>
 
                     <div className="box-container">
-                        <div className="box box1">
+                    <div className="box box1">
                             <div className="text">
                                 <h2 className="topic-heading">60.5k</h2>
                                 <h2 className="topic">Article Views</h2>
                             </div>
-                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210184645/Untitled-design-(31).png"
-                                alt="Views" />
+                            <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#E5C9B3' }}>visibility</span>
                         </div>
 
                         <div className="box box2">
@@ -82,8 +88,7 @@ const Admin = () => {
                                 <h2 className="topic-heading">150</h2>
                                 <h2 className="topic">Likes</h2>
                             </div>
-                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210185030/14.png" 
-                                alt="likes" />
+                            <span className="material-symbols-outlined" style={{ fontSize: '50px', color: '#E5C9B3' }}>thumb_up</span>
                         </div>
 
                         <div className="box box3">
@@ -91,8 +96,8 @@ const Admin = () => {
                                 <h2 className="topic-heading">320</h2>
                                 <h2 className="topic">Comments</h2>
                             </div>
-                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210184645/Untitled-design-(32).png"
-                                alt="comments" />
+                            <span className="material-symbols-outlined" style={{ fontSize: '50px', color: '#E5C9B3' }}>forum</span>
+
                         </div>
 
                         <div className="box box4">
@@ -100,7 +105,7 @@ const Admin = () => {
                                 <h2 className="topic-heading">70</h2>
                                 <h2 className="topic">Published</h2>
                             </div>
-                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210185029/13.png" alt="published" />
+                            <span className="material-symbols-outlined" style={{ fontSize: '50px', color: '#E5C9B3' }}>check_circle</span>
                         </div>
                     </div>
 

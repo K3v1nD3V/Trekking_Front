@@ -1,0 +1,143 @@
+/* Estilos específicos para roles */
+
+.rol-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  
+  /* Estado con switch personalizado */
+  .estado-switch {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 24px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 24px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--color-white);
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: var(--color-principal); /* #C81E17 */
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(16px);
+  }
+  
+  /* Estado en la tabla */
+  .estado-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  
+  .estado-label {
+    font-size: 12px;
+    color: var(--color-text-light); /* Ej: #777 */
+  }
+  
+  /* Celda de permisos */
+  .permisos-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  
+  .permiso-descripcion {
+    font-size: 12px;
+    color: var(--color-text-dark); /* Ej: #383D41 */
+    flex: 1;
+  }
+  
+  /* Botón de detalle */
+  .detalle-button {
+    background-color: #B44F33;
+    color: white;
+    padding: 4px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s;
+  }
+  
+  .detalle-button:hover {
+    background-color: #8B2B1B;
+  }
+  
+  /* Tabla de privilegios */
+  .privilegios-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--space-md);
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+  }
+  
+  .privilegios-table th,
+  .privilegios-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 13px;
+  }
+  
+  .privilegios-table th {
+    background-color: #E5C9B3;
+    color: #383D41;
+  }
+  
+  /* Botón de enviar en modal */
+  .modal-submit-button {
+    margin-top: var(--space-md);
+    background-color: #4f9f6e;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+  }
+  
+  .modal-submit-button:hover {
+    background-color: #3c7b55;
+  }
+  
