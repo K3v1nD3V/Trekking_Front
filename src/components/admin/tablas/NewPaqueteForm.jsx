@@ -1,9 +1,12 @@
 import React, { useState, useRef } from 'react';
 import '../../../css/components/admin/NewPaqueteFormStyles.css';
 import '../../../css/components/admin/PaqueteFormStyles.css';
+import { updatePaquete, createPaquete } from '../../../api/paquetes';
 
-const NewPaqueteForm = ({ onSubmit, initialData = {} }) => {
+
+const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
   const [formData, setFormData] = useState({
+    _id: initialData._id || '',
     nombre: initialData.nombre || '',
     descripcion: initialData.descripcion || '',
     valor: initialData.valor || '',
@@ -12,7 +15,8 @@ const NewPaqueteForm = ({ onSubmit, initialData = {} }) => {
     servicios: initialData.servicios || [],
     multimedia: initialData.multimedia || []
   });
-
+  // console.log(formData);
+  
   const [newMedia, setNewMedia] = useState([]);
   const fileInputRef = useRef(null);
 
@@ -44,12 +48,56 @@ const NewPaqueteForm = ({ onSubmit, initialData = {} }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleServicioToggle = (servicioId) => {
+    setFormData((prev) => {
+      const serviciosSeleccionados = prev.servicios.includes(servicioId)
+        ? prev.servicios.filter(id => id !== servicioId) // Desmarca
+        : [...prev.servicios, servicioId]; // Marca
+  
+      return {
+        ...prev,
+        servicios: serviciosSeleccionados
+      };
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Combina multimedia existente y nuevo
+    const combinedMultimedia = [
+      ...formData.multimedia,
+      ...newMedia
+    ];
+  
+    // Datos finales a enviar
     const finalData = {
       ...formData,
-      newMedia // Esto debería manejarse en el backend
+      multimedia: combinedMultimedia,
+      servicios: formData.servicios.map(s => s._id) // Envía solo IDs
     };
+    delete finalData._id;
+
+    try {
+      if (formData._id) {
+        // Caso edición
+        updatePaquete(formData._id, JSON.stringify(finalData));
+        console.log(JSON.stringify(finalData), formData._id);
+
+        alert('¡Paquete editado exitosamente!');
+      } else {
+        // Caso creación
+        createPaquete(JSON.stringify(finalData))
+        console.log(JSON.stringify(finalData));
+        
+        alert('¡Paquete creado exitosamente!');
+      }
+    } catch (error) {
+      console.error('Error al enviar los datos:', error);
+      alert('Ocurrió un error al enviar los datos. Por favor, inténtalo de nuevo.');
+    }
+  
+    // Limpia el formulario o realiza otras acciones posteriores al envío
     onSubmit(finalData);
   };
 
@@ -110,7 +158,29 @@ const NewPaqueteForm = ({ onSubmit, initialData = {} }) => {
           required
         />
       </div>
-
+      <div className="form-group">
+  <label>Servicios</label>
+  <div className="paquetes-servicios-grid">
+    {servicios.map(servicio => (
+      <div
+        key={servicio._id}
+        className={`paquetes-servicio-item ${
+          formData.servicios.some(s => s._id === servicio._id)
+            ? 'paquetes-servicio-incluido'
+            : 'paquetes-servicio-no-incluido'
+        }`}
+      >
+        <input
+          type="checkbox"
+          id={`servicio-${servicio._id}`}
+          checked={formData.servicios.some(s => s._id === servicio._id)}
+          onChange={() => handleServicioToggle(servicio)}
+        />
+        <label htmlFor={`servicio-${servicio._id}`}>{servicio.nombre}</label>
+      </div>
+    ))}
+  </div>
+</div>
       <div className="form-group">
         <label>Multimedia</label>
         <div
@@ -189,7 +259,7 @@ const NewPaqueteForm = ({ onSubmit, initialData = {} }) => {
         Añadir Multimedia
       </button>
       <button type="submit" className="form-submit-button">
-        {initialData.nombre ? 'Actualizar' : 'Crear'} Paquete
+          {formData._id ? 'Actualizar' : 'Crear'} Paquete
       </button>
     </form>
   );

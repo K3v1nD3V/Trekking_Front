@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+//REACT
+import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
+//MODALES
 import Modal from '../../common/Modal';
 import NewExpandedModal from '../../common/NewExpandedModal';
 //FORM
-import NewPaqueteForm from './paqueteForm';
+import NewPaqueteForm from './NewPaqueteForm';
 // CSS
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/paquetes.css';
 import '../../../css/components/admin/mediaPreviewEnhanced.css';
+// API
+import { getPaquetes } from '../../../api/paquetes';
+import { getServicios } from '../../../api/servicios';
 
-const Paquetes = ({ data }) => {
+const Paquetes = () => {
     const [filterText, setFilterText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
@@ -17,18 +22,45 @@ const Paquetes = ({ data }) => {
     const [selectedMedia, setSelectedMedia] = useState(null);
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
     const [isExpandedModalOpen, setIsExpandedModalOpen] = useState(false);
-    const [serviciosDisponibles] = useState([
-        { id: 1, nombre: 'Alimentación' },
-        { id: 2, nombre: 'Transporte' },
-        { id: 3, nombre: 'Guía turístico' },
-        { id: 4, nombre: 'Seguro médico' },
-        { id: 5, nombre: 'Alojamiento' },
-        { id: 6, nombre: 'Equipamiento' },
-        { id: 7, nombre: 'Fotografía' },
-        { id: 8, nombre: 'Traducción' },
-        { id: 9, nombre: 'WiFi' },
-        { id: 10, nombre: 'Traslados' }
-    ]);
+    // const [serviciosDisponibles] = useState([
+    //     { id: 1, nombre: 'Alimentación' },
+    //     { id: 2, nombre: 'Transporte' },
+    //     { id: 3, nombre: 'Guía turístico' },
+    //     { id: 4, nombre: 'Seguro médico' },
+    //     { id: 5, nombre: 'Alojamiento' },
+    //     { id: 6, nombre: 'Equipamiento' },
+    //     { id: 7, nombre: 'Fotografía' },
+    //     { id: 8, nombre: 'Traducción' },
+    //     { id: 9, nombre: 'WiFi' },
+    //     { id: 10, nombre: 'Traslados' }
+    // ]);
+
+    const [paquetes, setPaquetes] = useState([]);
+    const [servicios, setServicios] = useState([]);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
+    useEffect(() => {
+        const fetchPaquetes = async () => {
+          try {
+            const paquetes = await getPaquetes();
+            const servicios = await getServicios();
+
+            // console.log("P", paquetes);
+            // console.log("S", servicios);
+            
+            setServicios(servicios)
+            setPaquetes(paquetes);
+          } catch (err) {
+            setError(err.message);
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        fetchPaquetes();
+      }, []);
 
     const handleCrearPaquete = () => {
         setSelectedPaquete(null);
@@ -42,54 +74,71 @@ const Paquetes = ({ data }) => {
 
     const handleSubmit = (formData) => {
         console.log('Datos del formulario:', formData);
-        setIsModalOpen(false);
+        // setIsModalOpen(false);
     };
 
-    const paquetes = data.map(paquete => ({
+    const paquetes_servicios = paquetes.map(paquete => ({
         ...paquete,
-        servicios: serviciosDisponibles.map(servicio => ({
-            ...servicio,
-            incluido: paquete.servicios?.some(s => s.id === servicio.id) || false
-        })),
-        multimedia: paquete.multimedia || []
-    }));
-
-    const filteredData = paquetes.filter(item =>
+        servicios: paquete.servicios?.map(servicioId =>
+          servicios.find(servicio => {
+            //   console.log("SERVICIO: ",typeof servicio._id);
+            //   console.log("SERVICIO: ",typeof servicioId);
+            //   console.log(servicio._id == servicioId);
+            if (servicio._id == servicioId) {
+                
+                return servicio
+            }
+          }) // Busca el servicio completo por ID
+        ) || [], // Por si no tiene servicios, evita errores
+        multimedia: paquete.multimedia || [] // Asegura multimedia vacío si no existe
+      }));
+    //   console.log(paquetes_servicios);
+      
+    const filteredData = paquetes_servicios.filter(item =>
         Object.values(item).some(value =>
             String(value).toLowerCase().includes(filterText.toLowerCase())
         )
     );
 
-    const handleServicioChange = (paqueteIndex, servicioId, isChecked) => {
-        console.log(`Paquete ${paqueteIndex}, Servicio ${servicioId}: ${isChecked}`);
-    };
+    // const handleServicioChange = (paqueteIndex, servicioId, isChecked) => {
+    //     console.log(`Paquete ${paqueteIndex}, Servicio ${servicioId}: ${isChecked}`);
+    // };
 
+    // const ServiciosCell = ({ row }) => (
+    //     <div className="paquetes-servicios-container">
+    //         <div className="paquetes-servicios-grid">
+    //             {row.servicios.map(servicio => (
+    //                 <div 
+    //                     key={servicio.id} 
+    //                     className={`paquetes-servicio-item ${servicio.incluido ? 'paquetes-servicio-incluido' : 'paquetes-servicio-no-incluido'}`}
+    //                     onClick={() => handleServicioChange(row.id, servicio.id, !servicio.incluido)}
+    //                 >
+    //                     <input
+    //                         type="checkbox"
+    //                         checked={servicio.incluido}
+    //                         onChange={(e) => {
+    //                             e.stopPropagation();
+    //                             handleServicioChange(row.id, servicio.id, e.target.checked);
+    //                         }}
+    //                         className="paquetes-servicio-checkbox"
+    //                     />
+    //                     <span className="paquetes-servicio-nombre">
+    //                         {servicio.nombre}
+    //                     </span>
+    //                 </div>
+    //             ))}
+    //         </div>
+    //     </div>
+    // );
     const ServiciosCell = ({ row }) => (
         <div className="paquetes-servicios-container">
-            <div className="paquetes-servicios-grid">
-                {row.servicios.map(servicio => (
-                    <div 
-                        key={servicio.id} 
-                        className={`paquetes-servicio-item ${servicio.incluido ? 'paquetes-servicio-incluido' : 'paquetes-servicio-no-incluido'}`}
-                        onClick={() => handleServicioChange(row.id, servicio.id, !servicio.incluido)}
-                    >
-                        <input
-                            type="checkbox"
-                            checked={servicio.incluido}
-                            onChange={(e) => {
-                                e.stopPropagation();
-                                handleServicioChange(row.id, servicio.id, e.target.checked);
-                            }}
-                            className="paquetes-servicio-checkbox"
-                        />
-                        <span className="paquetes-servicio-nombre">
-                            {servicio.nombre}
-                        </span>
-                    </div>
-                ))}
-            </div>
+          {row.servicios?.map(servicio => (
+            <span key={servicio.id} className="paquetes-servicio-badge">
+              {servicio.nombre}
+            </span>
+          ))}
         </div>
-    );
+      );
 
     const MultimediaCell = ({ row }) => {
         // URLs de ejemplo hasta que la API esté implementada
@@ -151,6 +200,11 @@ const Paquetes = ({ data }) => {
     };
 
     const columns = [
+        {
+            name: 'id',
+            selector: row => row._id,
+            omit: true,
+        },    
         {
             name: 'Nombre',
             selector: row => row.nombre,
@@ -229,6 +283,9 @@ const Paquetes = ({ data }) => {
         }
     ];
 
+    if (loading) return <div className="loading">Cargando paquetes...</div>;
+    if (error) return <div className="error">Error: {error}</div>;
+
     return (
         <div className="table-container">
             <div className="table-header">
@@ -281,7 +338,8 @@ const Paquetes = ({ data }) => {
                 </h2>
                 <NewPaqueteForm
                     onSubmit={handleSubmit} 
-                    initialData={selectedPaquete || {}} 
+                    initialData={selectedPaquete || {}}
+                    servicios={servicios}
                 />
             </Modal>
 

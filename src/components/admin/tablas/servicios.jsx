@@ -1,15 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import Modal from '../../common/Modal';
 import ServicioForm from './serviciosForm';
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/servicios.css';
 
-const ServiciosTable = ({ data }) => {
+import { getServicios } from '../../../api/servicios';
+
+const ServiciosTable = () => {
     const [filterText, setFilterText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedServicio, setSelectedServicio] = useState(null);
-
+    const [servicios, setServicios] = useState([]);
+    
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
+    useEffect(() => {
+            const fetchPaquetes = async () => {
+              try {
+                const data = await getServicios();
+                console.log(data);
+                
+                setServicios(data);
+              } catch (err) {
+                setError(err.message);
+              } finally {
+                setLoading(false);
+              }
+            };
+        
+            fetchPaquetes();
+    }, []);
+    
     const handleCrearServicio = () => {
         setSelectedServicio(null);
         setIsModalOpen(true);
@@ -25,7 +48,7 @@ const ServiciosTable = ({ data }) => {
         setIsModalOpen(false);
     };
 
-    const filteredData = data.filter(item =>
+    const filteredData = servicios.filter(item =>
         Object.values(item).some(value =>
             String(value).toLowerCase().includes(filterText.toLowerCase())
         )
@@ -47,6 +70,11 @@ const ServiciosTable = ({ data }) => {
     );
 
     const columns = [
+        {
+            name: 'id',
+            selector: row => row._id,
+            omit: true,
+        }, 
         {
             name: 'Nombre',
             selector: row => row.nombre,
@@ -100,6 +128,9 @@ const ServiciosTable = ({ data }) => {
             width: '150px'
         }
     ];
+
+    if (loading) return <div className="loading">Cargando paquetes...</div>;
+    if (error) return <div className="error">Error: {error}</div>;
 
     return (
         <div className="table-container">
