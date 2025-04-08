@@ -64,41 +64,56 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Combina multimedia existente y nuevo
-    const combinedMultimedia = [
-      ...formData.multimedia,
-      ...newMedia
-    ];
+    console.log('Datos en formData:', formData);
+    console.log('Archivos en newMedia:', newMedia);
   
-    // Datos finales a enviar
-    const finalData = {
-      ...formData,
-      multimedia: combinedMultimedia,
-      servicios: formData.servicios.map(s => s._id) // Envía solo IDs
-    };
-    delete finalData._id;
-
+    const formDataToSend = new FormData();
+  
+    formDataToSend.append('nombre', formData.nombre);
+    console.log('Nombre añadido a FormData:', formData.nombre);
+  
+    formDataToSend.append('descripcion', formData.descripcion);
+    console.log('Descripción añadida a FormData:', formData.descripcion);
+  
+    formDataToSend.append('valor', formData.valor);
+    console.log('Valor añadido a FormData:', formData.valor);
+  
+    formDataToSend.append('lugar_encuentro', formData.lugar_encuentro);
+    console.log('Lugar de encuentro añadido a FormData:', formData.lugar_encuentro);
+  
+    formDataToSend.append('destino', formData.destino);
+    console.log('Destino añadido a FormData:', formData.destino);
+  
+    formData.servicios.forEach(servicio => {
+      formDataToSend.append('servicios[]', servicio._id); // Añade solo el ID
+    });
+  
+    newMedia.forEach(file => {
+      formDataToSend.append('images', file); // Nombre esperado por multer
+      console.log('Archivo multimedia añadido a FormData:', file.name);
+    });
+  
+    console.log('FormDataToSend final:', formDataToSend);
+    console.log('Contenido de FormData:');
+    for (let [key, value] of formDataToSend.entries()) {
+      console.log(`${key}:`, value);
+    }
     try {
       if (formData._id) {
-        // Caso edición
-        updatePaquete(formData._id, JSON.stringify(finalData));
-        console.log(JSON.stringify(finalData), formData._id);
-
+        console.log('Editando paquete...');
+        updatePaquete(formDataToSend, formData._id)
         alert('¡Paquete editado exitosamente!');
       } else {
-        // Caso creación
-        createPaquete(JSON.stringify(finalData))
-        console.log(JSON.stringify(finalData));
-        
+        console.log('Creando paquete...');
+        createPaquete(formDataToSend)
         alert('¡Paquete creado exitosamente!');
       }
     } catch (error) {
-      console.error('Error al enviar los datos:', error);
-      alert('Ocurrió un error al enviar los datos. Por favor, inténtalo de nuevo.');
+      console.error('Error al enviar los datos:', error.response?.data || error.message);
+      alert('Hubo un error al procesar la solicitud.');
     }
   
-    // Limpia el formulario o realiza otras acciones posteriores al envío
-    onSubmit(finalData);
+    onSubmit(formData);
   };
 
   return (

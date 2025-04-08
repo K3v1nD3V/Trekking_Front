@@ -73,7 +73,8 @@ const Paquetes = () => {
     };
 
     const handleSubmit = (formData) => {
-        console.log('Datos del formulario:', formData);
+        // console.log('Datos del formulario:', formData);
+        formData
         // setIsModalOpen(false);
     };
 

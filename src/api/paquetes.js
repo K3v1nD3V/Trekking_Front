@@ -22,12 +22,25 @@ export const getPaqueteById = async (id) => {
 
 export const createPaquete = async (paqueteData) => {
   try {
-    const response = await api.post('/paquetes', paqueteData);
+    const response = await api.post('/paquetes', paqueteData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error('Error creating paquete:', error);
-    throw error;
+    if (error.response) {
+      console.error('Error del backend:', error.response.data); // Mensaje del servidor
+      console.error('Código de estado:', error.response.status); // Código de error HTTP
+      console.error('Encabezados:', error.response.headers); // Detalles de los encabezados
+    } else if (error.request) {
+      console.error('No se recibió respuesta del servidor:', error.request);
+    } else {
+      console.error('Error configurando la solicitud:', error.message);
+    }
+    alert(error.response?.data?.message || 'Hubo un error desconocido al crear el paquete.');
   }
+  
 };
 
 export const updatePaquete = async (id, paqueteData) => {
