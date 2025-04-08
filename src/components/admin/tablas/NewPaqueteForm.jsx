@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import '../../../css/components/admin/NewPaqueteFormStyles.css';
 import '../../../css/components/admin/PaqueteFormStyles.css';
 import { updatePaquete, createPaquete } from '../../../api/paquetes';
 
