@@ -7,6 +7,8 @@ import Servicios from './components/admin/tablas/servicios';
 import Login from './components/auth/login';
 import PrivateRoute from './layouts/PrivateRoute';
 import RolesTable from '../src/components/admin/tablas/roles';
+import Clientes from './components/admin/tablas/clientes';
+
 
 const App = () => {
   
@@ -30,7 +32,8 @@ const App = () => {
           estado: false
       }
   ]);
-  const [roles] = useState([
+
+const [roles] = useState([
     {
         id: 1,
         nombreRol: "Administrador",
@@ -44,14 +47,46 @@ const App = () => {
         estado: true,
         permisos: ["Ver paquetes", "Reservar servicios"],
         privilegios: [1]
-    },
-    {
-        id: 3,
-        nombreRol: "Guía",
-        estado: false,
-        permisos: ["Acceso a itinerarios", "Ver paquetes asignados"],
-        privilegios: [2, 3]
     }
+  ]);
+
+const [clientes] = useState([
+      {
+        id:1,
+        documento: 1001709975,
+        nombre: 'Ximena',
+        apellido: 'Castañeda',
+        correo: 'roble@gmail.com',
+        telefono: 3002934308,
+        estado: true
+      },
+      {
+        id:2,
+        documento: 10018875454,
+        nombre: 'Mariana',
+        apellido: 'Cardona',
+        correo: 'cardonam@gmail.com',
+        telefono: 3001124408,
+        estado: true
+      },
+      {
+        id:3,
+        documento: 1010700575,
+        nombre: 'Rosalba',
+        apellido: 'Caicedo',
+        correo: 'rosalba_cai@gmail.com',
+        telefono: 3123356670,
+        estado: true
+      },
+      {
+        id:4,
+        documento: 1017202661,
+        nombre: 'Dario',
+        apellido: 'Galvis',
+        correo: 'dariorega@gmail.com',
+        telefono: 3015984265,
+        estado: true
+      }
 ]);
 
     return (
@@ -68,6 +103,8 @@ const App = () => {
             <Route path="paquetes" element={<Paquetes/>} />
             <Route path="servicios" element={<Servicios data={servicios} />} />
             <Route path="roles" element={<RolesTable data={roles} />} />
+            <Route path="clientes" element={<Clientes data={clientes} />} />
+
           </Route>
           
           <Route path="*" element={<Login />} />

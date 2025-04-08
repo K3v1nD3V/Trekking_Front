@@ -9,6 +9,8 @@ import './css/global/base.css'
 /* Importar estilos de componentes */
 import './css/components/tables.css'
 import './css/components/admin/paquetes.css'
+import './css/components/admin/cliente.css'
+
 /* Importar estilos de layouts */
 import './css/layouts/admin.css'
 

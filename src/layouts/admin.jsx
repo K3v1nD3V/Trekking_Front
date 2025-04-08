@@ -8,10 +8,10 @@ const Admin = () => {
             <header>
                 <div className="logosec">
                     <div className="logo">TrekkingSanCristobal</div>
-                    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182541/Untitled-design-(30).png"
+                    {/* <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182541/Untitled-design-(30).png"
                         className="icn menuicn" 
                         id="menuicn" 
-                        alt="menu-icon" />
+                        alt="menu-icon" /> */}
                 </div>
             </header>
 
@@ -52,11 +52,24 @@ const Admin = () => {
                             />
                             
                             <NavOption
+                                    icon={
+                                        <span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B' }}>
+                                            person
+                                        </span>
+                                    }
+                                    text="Clientes"
+                                    to="/admin/clientes"
+                                />
+
+
+                                
+                            <NavOption
                                  icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>login</span>}
                                 text="Logout"
                                 to="/logout"
                                 isLogout={true}
                             />
+
                         </div>
                     </nav>
                 </div>
