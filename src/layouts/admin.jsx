@@ -45,11 +45,6 @@ const Admin = () => {
 
                             {/* de aqui para abajo van poniendo los siguientes links */}
                             
-                            <NavOption
-                                 icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>manage_accounts</span>}
-                                text="Roles"
-                                to="/admin/roles"
-                            />
                             
                             <NavOption
                                     icon={
@@ -60,6 +55,17 @@ const Admin = () => {
                                     text="Clientes"
                                     to="/admin/clientes"
                                 />
+
+                            <NavOption
+                                 icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>manage_accounts</span>}
+                                text="Roles"
+                                to="/admin/roles"
+                            />
+
+                            <NavOption
+                                icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B' }}>admin_panel_settings</span>}                                text="Privilegios"
+                                to="/admin/privilegios"
+                            />
 
 
                                 

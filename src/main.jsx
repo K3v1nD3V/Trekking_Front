@@ -10,6 +10,8 @@ import './css/global/base.css'
 import './css/components/tables.css'
 import './css/components/admin/paquetes.css'
 import './css/components/admin/cliente.css'
+import './css/components/admin/privilegio.css'
+
 
 /* Importar estilos de layouts */
 import './css/layouts/admin.css'

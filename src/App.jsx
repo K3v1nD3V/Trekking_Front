@@ -8,9 +8,11 @@ import Login from './components/auth/login';
 import PrivateRoute from './layouts/PrivateRoute';
 import RolesTable from '../src/components/admin/tablas/roles';
 import Clientes from './components/admin/tablas/clientes';
+import Privilegios from './components/admin/tablas/privilegios';
 
 
 const App = () => {
+  
   const [servicios] = useState([
       {
           id: 1,
@@ -88,6 +90,35 @@ const [clientes] = useState([
       }
 ]);
 
+const [privilegios] = useState([
+  {
+    id:1,
+    descripcion: "Consultar clientes",
+    estado: true
+  },
+  {
+    id:2,
+    descripcion: "Crear clientes",
+    estado: true
+  },
+  {
+    id:3,
+    descripcion: "Editar clientes",
+    estado: true
+  },
+  {
+    id:4,
+    descripcion: "Eliminar clientes",
+    estado: true
+  },
+  {
+    
+      id:5,
+      descripcion: "Crear roles",
+      estado: true
+  }
+]);
+
     return (
       <AuthProvider>
         <Routes>
@@ -103,6 +134,8 @@ const [clientes] = useState([
             <Route path="servicios" element={<Servicios data={servicios} />} />
             <Route path="roles" element={<RolesTable data={roles} />} />
             <Route path="clientes" element={<Clientes data={clientes} />} />
+            <Route path="privilegios" element={<Privilegios data={privilegios} />} />
+
 
           </Route>
           
