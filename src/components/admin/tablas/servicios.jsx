@@ -6,6 +6,7 @@ import '../../../css/components/tables.css';
 import '../../../css/components/admin/servicios.css';
 
 import { getServicios } from '../../../api/servicios';
+import { deleteServicio, updateServicio } from '../../../api/servicios';
 
 const ServiciosTable = () => {
     const [filterText, setFilterText] = useState('');
@@ -19,9 +20,7 @@ const ServiciosTable = () => {
     useEffect(() => {
             const fetchPaquetes = async () => {
               try {
-                const data = await getServicios();
-                console.log(data);
-                
+                const data = await getServicios();                
                 setServicios(data);
               } catch (err) {
                 setError(err.message);
@@ -38,14 +37,29 @@ const ServiciosTable = () => {
         setIsModalOpen(true);
     };
 
+    const handleDeleteServicio = async (id) => {
+        if (!window.confirm('¿Estás seguro de que deseas eliminar este servicio?')) return;
+    
+        try {
+            await deleteServicio(id); // Llamada a la API para eliminar el servicio
+            alert('¡Servicio eliminado exitosamente!');
+            
+            // Actualiza la lista local de servicios
+            setServicios(prevServicios => prevServicios.filter(servicio => servicio._id !== id));
+        } catch (error) {
+            console.error('Error eliminando el servicio:', error.message);
+            alert('Hubo un error al eliminar el servicio.');
+        }
+    };
     const handleServicioClick = (row) => {
         setSelectedServicio(row);
         setIsModalOpen(true);
     };
 
-    const handleSubmit = (formData) => {
-        console.log('Datos del formulario:', formData);
-        setIsModalOpen(false);
+    const handleSubmit = (formData) => {    
+        window.location.reload();
+    
+        setIsModalOpen(false); // Cierra el modal
     };
 
     const filteredData = servicios.filter(item =>
@@ -54,49 +68,66 @@ const ServiciosTable = () => {
         )
     );
 
-    const EstadoCell = ({ row }) => (
+    const EstadoCell = ({ row }) => {
+    const toggleEstado = async () => {
+        try {
+            const updatedServicio = { ...row, estado: !row.estado };
+            await updateServicio(row._id, updatedServicio);
+            setServicios(prevServicios =>
+                prevServicios.map(servicio =>
+                    servicio._id === row._id ? updatedServicio : servicio
+                )
+            );
+        } catch (error) {
+            console.error('Error actualizando estado:', error.message);
+            alert('Hubo un error al cambiar el estado.');
+        }
+    };
+
+    return (
         <div className="estado-switch">
             <label className="switch">
                 <input 
                     type="checkbox" 
                     checked={row.estado}
-                    onChange={(e) => {
-                        console.log('Estado cambiado:', row.id, e.target.checked);
-                    }}
+                    onChange={toggleEstado}
                 />
                 <span className="slider round"></span>
             </label>
         </div>
     );
+};
 
     const columns = [
         {
             name: 'id',
             selector: row => row._id,
             omit: true,
-        }, 
+        },
         {
             name: 'Nombre',
             selector: row => row.nombre,
             sortable: true,
-            cell: row => <div 
-                style={{ fontWeight: 600, cursor: 'pointer' }} 
-                onClick={() => handleServicioClick(row)}
-            >
-                {row.nombre}
-            </div>,
-            width: '200px'
+            cell: row => (
+                <div 
+                    style={{ fontWeight: 600, cursor: 'pointer' }} 
+                    onClick={() => handleServicioClick(row)}
+                >
+                    {row.nombre}
+                </div>
+            ),
+            width: '200px',
         },
         {
             name: 'Descripción',
             selector: row => row.descripcion,
             wrap: true,
-            width: '300px'
+            width: '300px',
         },
         {
             name: 'Estado',
             cell: row => <EstadoCell row={row} />,
-            width: '100px'
+            width: '100px',
         },
         {
             name: 'Acciones',
@@ -106,7 +137,6 @@ const ServiciosTable = () => {
                         className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            console.log('Editar servicio:', row.id);
                             setSelectedServicio(row);
                             setIsModalOpen(true);
                         }}
@@ -117,7 +147,7 @@ const ServiciosTable = () => {
                         className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            console.log('Eliminar servicio:', row.id);
+                            handleDeleteServicio(row._id);
                         }}
                     >
                         Eliminar
@@ -125,8 +155,8 @@ const ServiciosTable = () => {
                 </div>
             ),
             ignoreRowClick: true,
-            width: '150px'
-        }
+            width: '150px',
+        },
     ];
 
     if (loading) return <div className="loading">Cargando paquetes...</div>;

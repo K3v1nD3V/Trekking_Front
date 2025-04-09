@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../../css/components/admin/ServicioForm.css';
-
+import { updateServicio, createServicio } from '../../../api/servicios';
 const ServicioForm = ({ onSubmit, initialData = {} }) => {
     const [formData, setFormData] = React.useState({
         nombre: initialData.nombre || '',
@@ -13,10 +13,32 @@ const ServicioForm = ({ onSubmit, initialData = {} }) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(formData);
-    };
+        
+        console.log('Datos enviados:', formData);
+      
+        try {
+          if (initialData.nombre) {
+            // Actualización de servicio existente
+            await updateServicio(initialData._id, formData);
+            console.log(initialData);
+            console.log(initialData._id);
+            
+            alert('¡Servicio actualizado exitosamente!');
+          } else {
+            // Creación de nuevo servicio
+            
+            await createServicio(formData);
+            alert('¡Servicio creado exitosamente!');
+          }
+          
+          onSubmit(formData); // Llama a la función pasada como prop para actualizar el estado global
+        } catch (error) {
+          console.error('Error al enviar los datos:', error.message);
+          alert('Hubo un error al procesar la solicitud.');
+        }
+      };
 
     return (
         <form className="servicio-form" onSubmit={handleSubmit}>
