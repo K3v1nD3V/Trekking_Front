@@ -9,6 +9,7 @@ import PrivateRoute from './layouts/PrivateRoute';
 import RolesTable from '../src/components/admin/tablas/roles';
 import Clientes from './components/admin/tablas/clientes';
 import Privilegios from './components/admin/tablas/privilegios';
+import Permisos from './components/admin/tablas/permisos';
 
 
 const App = () => {
@@ -135,6 +136,7 @@ const [privilegios] = useState([
             <Route path="roles" element={<RolesTable data={roles} />} />
             <Route path="clientes" element={<Clientes data={clientes} />} />
             <Route path="privilegios" element={<Privilegios data={privilegios} />} />
+            <Route path="permisos" element={<Permisos />} />
 
 
           </Route>

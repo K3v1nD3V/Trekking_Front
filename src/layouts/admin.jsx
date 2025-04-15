@@ -67,6 +67,12 @@ const Admin = () => {
                                 to="/admin/privilegios"
                             />
 
+                            <NavOption
+                                icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B' }}>verified_user</span>}
+                                text="Permisos"
+                                to="/admin/permisos"
+                            />
+
 
                                 
                             <NavOption
