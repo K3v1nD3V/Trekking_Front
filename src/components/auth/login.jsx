@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'; 
+import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../../api/auth';
 import './LoginForm.css';
 
@@ -48,6 +48,15 @@ const Login = () => {
           {loading ? 'Cargando...' : 'Ingresar'}
         </button>
       </form>
+
+      <div className="login-links">
+        <p>
+          ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
+        </p>
+        <p>
+          ¿Olvidaste tu contraseña? <Link to="/recuperar">Recupérala aquí</Link>
+        </p>
+      </div>
     </div>
   );
 };
