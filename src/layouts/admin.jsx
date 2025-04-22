@@ -15,7 +15,7 @@ const Admin = () => {
                 </div>
             </header>
 
-            <div className="main-container">z
+            <div className="main-container">
             <div className="navcontainer">
                     <nav className="nav">
                         <div className="nav-upper-options">

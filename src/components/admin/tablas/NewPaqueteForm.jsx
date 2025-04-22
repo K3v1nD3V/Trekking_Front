@@ -100,7 +100,7 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
     try {
       if (formData._id) {
         console.log('Editando paquete...');
-        updatePaquete(formDataToSend, formData._id)
+        updatePaquete(formData._id, formDataToSend)
         alert('¡Paquete editado exitosamente!');
       } else {
         console.log('Creando paquete...');

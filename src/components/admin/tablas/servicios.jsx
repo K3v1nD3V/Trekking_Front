@@ -56,7 +56,7 @@ const ServiciosTable = () => {
         setIsModalOpen(true);
     };
 
-    const handleSubmit = (formData) => {    
+    const handleSubmit = () => {    
         window.location.reload();
     
         setIsModalOpen(false); // Cierra el modal

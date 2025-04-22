@@ -27,7 +27,7 @@ export const createPaquete = async (paqueteData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    return response.data;
+    return response;
   } catch (error) {
     if (error.response) {
       console.error('Error del backend:', error.response.data); // Mensaje del servidor
@@ -45,8 +45,12 @@ export const createPaquete = async (paqueteData) => {
 
 export const updatePaquete = async (id, paqueteData) => {
   try {
-    const response = await api.put(`/paquetes/${id}`, paqueteData);
-    return response.data;
+    const response = await api.put(`/paquetes/${id}`, paqueteData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response;
   } catch (error) {
     console.error(`Error updating paquete ${id}:`, error);
     throw error;
@@ -54,9 +58,10 @@ export const updatePaquete = async (id, paqueteData) => {
 };
 
 export const deletePaquete = async (id) => {
+  console.log(id);
   try {
     const response = await api.delete(`/paquetes/${id}`);
-    return response.data;
+    return response;
   } catch (error) {
     console.error(`Error deleting paquete ${id}:`, error);
     throw error;

@@ -11,7 +11,7 @@ import '../../../css/components/tables.css';
 import '../../../css/components/admin/paquetes.css';
 import '../../../css/components/admin/mediaPreviewEnhanced.css';
 // API
-import { getPaquetes } from '../../../api/paquetes';
+import { getPaquetes, deletePaquete } from '../../../api/paquetes';
 import { getServicios } from '../../../api/servicios';
 
 const Paquetes = () => {
@@ -22,18 +22,6 @@ const Paquetes = () => {
     const [selectedMedia, setSelectedMedia] = useState(null);
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
     const [isExpandedModalOpen, setIsExpandedModalOpen] = useState(false);
-    // const [serviciosDisponibles] = useState([
-    //     { id: 1, nombre: 'Alimentación' },
-    //     { id: 2, nombre: 'Transporte' },
-    //     { id: 3, nombre: 'Guía turístico' },
-    //     { id: 4, nombre: 'Seguro médico' },
-    //     { id: 5, nombre: 'Alojamiento' },
-    //     { id: 6, nombre: 'Equipamiento' },
-    //     { id: 7, nombre: 'Fotografía' },
-    //     { id: 8, nombre: 'Traducción' },
-    //     { id: 9, nombre: 'WiFi' },
-    //     { id: 10, nombre: 'Traslados' }
-    // ]);
 
     const [paquetes, setPaquetes] = useState([]);
     const [servicios, setServicios] = useState([]);
@@ -47,9 +35,6 @@ const Paquetes = () => {
             const paquetes = await getPaquetes();
             const servicios = await getServicios();
 
-            // console.log("P", paquetes);
-            // console.log("S", servicios);
-            
             setServicios(servicios)
             setPaquetes(paquetes);
           } catch (err) {
@@ -73,27 +58,34 @@ const Paquetes = () => {
     };
 
     const handleSubmit = (formData) => {
-        // console.log('Datos del formulario:', formData);
         formData
-        // setIsModalOpen(false);
+    };
+
+    const handleDeletePaquete = async (id) => {
+        if (!window.confirm('¿Estás seguro de que deseas eliminar este paquete?')) return;
+
+        try {
+            await deletePaquete(id);
+            alert('¡Paquete eliminado exitosamente!');
+
+            setPaquetes(prevPaquetes => prevPaquetes.filter(paquete => paquete._id !== id));
+        } catch (error) {
+            console.error('Error eliminando el paquete:', error.message);
+            alert('Hubo un error al eliminar el paquete.');
+        }
     };
 
     const paquetes_servicios = paquetes.map(paquete => ({
         ...paquete,
         servicios: paquete.servicios?.map(servicioId =>
           servicios.find(servicio => {
-            //   console.log("SERVICIO: ",typeof servicio._id);
-            //   console.log("SERVICIO: ",typeof servicioId);
-            //   console.log(servicio._id == servicioId);
             if (servicio._id == servicioId) {
-                
                 return servicio
             }
-          }) // Busca el servicio completo por ID
-        ) || [], // Por si no tiene servicios, evita errores
-        multimedia: paquete.multimedia || [] // Asegura multimedia vacío si no existe
+          })
+        ) || [],
+        multimedia: paquete.multimedia || []
       }));
-    //   console.log(paquetes_servicios);
       
     const filteredData = paquetes_servicios.filter(item =>
         Object.values(item).some(value =>
@@ -101,36 +93,6 @@ const Paquetes = () => {
         )
     );
 
-    // const handleServicioChange = (paqueteIndex, servicioId, isChecked) => {
-    //     console.log(`Paquete ${paqueteIndex}, Servicio ${servicioId}: ${isChecked}`);
-    // };
-
-    // const ServiciosCell = ({ row }) => (
-    //     <div className="paquetes-servicios-container">
-    //         <div className="paquetes-servicios-grid">
-    //             {row.servicios.map(servicio => (
-    //                 <div 
-    //                     key={servicio.id} 
-    //                     className={`paquetes-servicio-item ${servicio.incluido ? 'paquetes-servicio-incluido' : 'paquetes-servicio-no-incluido'}`}
-    //                     onClick={() => handleServicioChange(row.id, servicio.id, !servicio.incluido)}
-    //                 >
-    //                     <input
-    //                         type="checkbox"
-    //                         checked={servicio.incluido}
-    //                         onChange={(e) => {
-    //                             e.stopPropagation();
-    //                             handleServicioChange(row.id, servicio.id, e.target.checked);
-    //                         }}
-    //                         className="paquetes-servicio-checkbox"
-    //                     />
-    //                     <span className="paquetes-servicio-nombre">
-    //                         {servicio.nombre}
-    //                     </span>
-    //                 </div>
-    //             ))}
-    //         </div>
-    //     </div>
-    // );
     const ServiciosCell = ({ row }) => (
         <div className="paquetes-servicios-container">
           {row.servicios?.map(servicio => (
@@ -142,7 +104,6 @@ const Paquetes = () => {
       );
 
     const MultimediaCell = ({ row }) => {
-        // URLs de ejemplo hasta que la API esté implementada
         const exampleUrls = [
             'https://wallpapers.com/images/hd/hd-nature-phone-river-h14wu1u3zdvst0ch.jpg',
             'https://i.4cdn.org/wsg/1743099510944782.mp4',
@@ -261,7 +222,6 @@ const Paquetes = () => {
                         className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            console.log('Editar paquete:', row.id);
                             setSelectedPaquete(row);
                             setIsModalOpen(true);
                         }}
@@ -272,7 +232,7 @@ const Paquetes = () => {
                         className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            console.log('Eliminar paquete:', row.id);
+                            handleDeletePaquete(row._id);
                         }}
                     >
                         Eliminar
