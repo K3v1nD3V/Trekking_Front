@@ -56,6 +56,13 @@ const Admin = () => {
                                     to="/admin/clientes"
                                 />
 
+                                    
+                            <NavOption
+                                icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>groups</span>}
+                                text="Usuarios"
+                                to="/admin/usuarios"
+                            />
+
                             <NavOption
                                  icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>manage_accounts</span>}
                                 text="Roles"

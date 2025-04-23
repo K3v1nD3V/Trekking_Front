@@ -1,56 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
 import Modal from '../../common/Modal';
-import ClienteForm from "./ClienteForm.jsx";
-
-import { getClientes, deleteCliente, updateCliente } from '../../../api/clientes';
+import UsuarioForm from "./UsuarioForm.jsx";
+import { getUsuarios, deleteUsuario, updateUsuario } from '../../../api/usuarios';
 
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
 
-const Clientes = () => {
-    const [clientes, setClientes] = useState([]);
+const Usuarios = () => {
+    const [usuarios, setUsuarios] = useState([]);
     const [filterText, setFilterText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedCliente, setSelectedCliente] = useState(null);
+    const [selectedUsuario, setSelectedUsuario] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchClientes = async () => {
+        const fetchUsuarios = async () => {
             try {
-                const data = await getClientes();
-                setClientes(data);
+                const data = await getUsuarios();
+                setUsuarios(data);
             } catch (err) {
-                setError(err.message || 'Error al cargar clientes');
+                setError(err.message || 'Error al cargar usuarios');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchClientes();
+        fetchUsuarios();
     }, []);
 
-    const handleCrearCliente = () => {
-        setSelectedCliente(null);
+    const handleCrearUsuario = () => {
+        setSelectedUsuario(null);
         setIsModalOpen(true);
     };
 
-    const handleClienteClick = (row) => {
-        setSelectedCliente(row);
+    const handleUsuarioClick = (row) => {
+        setSelectedUsuario(row);
         setIsModalOpen(true);
     };
 
-    const handleDeleteCliente = async (id, nombreCompleto) => {
-        if (!window.confirm(`¿Estás seguro de eliminar a ${nombreCompleto}?`)) return;
+    const handleDeleteUsuario = async (id, nombre) => {
+        if (!window.confirm(`¿Estás seguro de eliminar a ${nombre}?`)) return;
 
         try {
-            await deleteCliente(id);
-            alert('¡Cliente eliminado exitosamente!');
-            setClientes(prev => prev.filter(cliente => cliente._id !== id));
+            await deleteUsuario(id);
+            alert('¡Usuario eliminado exitosamente!');
+            setUsuarios(prev => prev.filter(usuario => usuario._id !== id));
         } catch (err) {
-            console.error('Error eliminando cliente:', err.message);
-            alert('Error al eliminar el cliente.');
+            console.error('Error eliminando usuario:', err.message);
+            alert('Error al eliminar el usuario.');
         }
     };
 
@@ -59,35 +58,8 @@ const Clientes = () => {
         setIsModalOpen(false);
     };
 
-    const toggleEstado = async (row) => {
-        const updatedCliente = { ...row, estado: !row.estado };
-        try {
-            await updateCliente(row._id, updatedCliente);
-            setClientes(prev =>
-                prev.map(cliente =>
-                    cliente._id === row._id ? updatedCliente : cliente
-                )
-            );
-        } catch (error) {
-            console.error('Error actualizando estado:', error.message);
-            alert('Error al cambiar el estado del cliente.');
-        }
-    };
 
-    const EstadoCell = ({ row }) => (
-        <div className="estado-switch">
-            <label className="switch">
-                <input
-                    type="checkbox"
-                    checked={row.estado}
-                    onChange={() => toggleEstado(row)}
-                />
-                <span className="slider round"></span>
-            </label>
-        </div>
-    );
-
-    const filteredData = clientes.filter(item =>
+    const filteredData = usuarios.filter(item =>
         Object.values(item).some(value =>
             String(value).toLowerCase().includes(filterText.toLowerCase())
         )
@@ -95,31 +67,17 @@ const Clientes = () => {
 
     const columns = [
         {
-            name: 'Documento',
-            selector: row => row.documento,
-            sortable: true,
-            format: row => row.documento.toLocaleString(),
-            right: true,
-            width: '100px'
-        },
-        {
             name: 'Nombre',
             selector: row => row.nombre,
             sortable: true,
             cell: row =>
                 <div
                     style={{ fontWeight: 600, cursor: 'pointer' }}
-                    onClick={() => handleClienteClick(row)}
+                    onClick={() => handleUsuarioClick(row)}
                 >
                     {row.nombre}
                 </div>,
             width: '150px'
-        },
-        {
-            name: 'Apellido',
-            selector: row => row.apellido,
-            wrap: true,
-            width: '200px'
         },
         {
             name: 'Correo',
@@ -128,16 +86,10 @@ const Clientes = () => {
             width: '200px'
         },
         {
-            name: 'Teléfono',
-            selector: row => row.telefono,
-            format: row => row.telefono.toLocaleString(),
-            right: true,
-            width: '120px'
-        },
-        {
-            name: 'Estado',
-            cell: row => <EstadoCell row={row} />,
-            width: '120px'
+            name: 'Rol',
+            selector: row => row.rol,
+            wrap: true,
+            width: '200px'
         },
         {
             name: 'Acciones',
@@ -147,7 +99,7 @@ const Clientes = () => {
                         className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedCliente(row);
+                            setSelectedUsuario(row);
                             setIsModalOpen(true);
                         }}
                     >
@@ -157,7 +109,7 @@ const Clientes = () => {
                         className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleDeleteCliente(row._id, `${row.nombre} ${row.apellido}`);
+                            handleDeleteUsuario(row._id, `${row.nombre}`);
                         }}
                     >
                         Eliminar
@@ -169,26 +121,26 @@ const Clientes = () => {
         }
     ];
 
-    if (loading) return <div className="loading">Cargando clientes...</div>;
+    if (loading) return <div className="loading">Cargando usuarios...</div>;
     if (error) return <div className="error">Error: {error}</div>;
 
     return (
         <div className="table-container">
             <div className="table-header">
-                <h2 className="table-title">Clientes</h2>
+                <h2 className="table-title">Usuarios</h2>
                 <div className="table-controls">
                     <input
                         type="text"
-                        placeholder="Buscar Clientes..."
+                        placeholder="Buscar Usuarios..."
                         value={filterText}
                         onChange={e => setFilterText(e.target.value)}
                         className="table-search"
                     />
                     <button
-                        onClick={handleCrearCliente}
+                        onClick={handleCrearUsuario}
                         className="table-button"
                     >
-                        Crear Cliente
+                        Crear Usuario
                     </button>
                 </div>
             </div>
@@ -199,7 +151,7 @@ const Clientes = () => {
                 pagination
                 paginationPerPage={10}
                 highlightOnHover
-                onRowClicked={handleClienteClick}
+                onRowClicked={handleUsuarioClick}
                 customStyles={{
                     headCells: {
                         style: {
@@ -220,16 +172,16 @@ const Clientes = () => {
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <h2 className="modal-title">
-                    {selectedCliente ? 'Editar Cliente' : 'Crear Cliente'}
+                    {selectedUsuario ? 'Editar Usuario' : 'Crear Usuario'}
                 </h2>
-                <ClienteForm
+                <UsuarioForm
                     onSubmit={handleSubmit}
-                    initialData={selectedCliente || {}}
+                    initialData={selectedUsuario || {}}
                 />
             </Modal>
         </div>
     );
 };
 
-export default Clientes;
+export default Usuarios;
 

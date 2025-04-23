@@ -7,6 +7,7 @@ import Servicios from './components/admin/tablas/servicios';
 import Login from './components/auth/login';
 import PrivateRoute from './layouts/PrivateRoute';
 import RolesTable from './components/admin/tablas/roles';
+import Usuarios from './components/admin/tablas/usuarios';
 import Clientes from './components/admin/tablas/clientes';
 import Privilegios from './components/admin/tablas/privilegios';
 import Permisos from './components/admin/tablas/permisos';
@@ -138,6 +139,7 @@ const App = () => {
           <Route path="paquetes" element={<Paquetes />} />
           <Route path="servicios" element={<Servicios data={servicios} />} />
           <Route path="roles" element={<RolesTable data={roles} />} />
+          <Route path="usuarios" element={<Usuarios />} />
           <Route path="clientes" element={<Clientes data={clientes} />} />
           <Route path="privilegios" element={<Privilegios data={privilegios} />} />
           <Route path="permisos" element={<Permisos />} />
