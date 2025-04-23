@@ -1,0 +1,117 @@
+/* Estilos generales para los permisos */
+.permisos-expandibles {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Segoe UI', sans-serif;
+  margin-top: var(--space-lg);
+}
+
+/* Estilo para los permisos individuales */
+.permiso-item {
+  background-color: #fff;
+  border: 1px solid #e5c9b3;
+  border-radius: 10px;
+  padding: 10px 16px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 1px 2px rgba(56, 61, 65, 0.15);
+}
+
+.permiso-item:hover {
+  background-color: #f8f4eb;
+  box-shadow: 0 2px 4px rgba(56, 61, 65, 0.2);
+}
+
+/* Estilo para el encabezado de cada permiso */
+.permiso-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #383d41;
+  font-size: 16px;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.permiso-header:hover {
+  color: #b44f33;
+}
+
+/* Estilo de la flecha de expansión */
+.flecha {
+  font-size: 16px;
+  margin-right: 12px;
+  transition: transform 0.3s ease;
+  color: #b44f33;
+}
+
+/* Estilo para el contenido expandido */
+.privilegios-sublista {
+  margin-top: 8px;
+  margin-left: 20px;
+  padding-left: 14px;
+  border-left: 3px solid #b44f33;
+  list-style: none;
+  font-size: 14px;
+  color: #383d41;
+}
+
+/* Elementos de los privilegios */
+.priv-item {
+  padding: 6px 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #383d41;
+}
+
+.priv-item::before {
+  content: '✓';
+  color: #8b2b1b;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* Estilo de los privilegios vacíos */
+.privilegios-sublista .text-muted {
+  color: #777;
+  font-style: italic;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+/* Estilo para las celdas de permisos */
+.permisos-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 8px 16px;
+  background-color: #f9f9f9;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(56, 61, 65, 0.05);
+}
+
+/* Celda de permisos - Descripción */
+.permiso-descripcion {
+  flex: 1;
+  font-size: 14px;
+  color: #383d41;
+  font-weight: 500;
+  padding-left: 8px;
+}
+
+/* Celda de estado con switch */
+.estado-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 8px 16px;
+  background-color: #f9f9f9;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(56, 61, 65, 0.05);
+}
+
