@@ -62,7 +62,16 @@ const Admin = () => {
                                     text="Clientes"
                                     to="/admin/clientes"
                                 />
-
+                            
+                            <NavOption
+                                    icon={
+                                        <span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B' }}>
+                                            price_check
+                                        </span>
+                                    }
+                                    text="Ventas"
+                                    to="/admin/ventas"
+                                />
                                     
                             <NavOption
                                 icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>groups</span>}
