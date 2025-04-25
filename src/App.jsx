@@ -12,6 +12,7 @@ import Clientes from './components/admin/tablas/clientes';
 import Privilegios from './components/admin/tablas/privilegios';
 import Permisos from './components/admin/tablas/permisos';
 import RegisterForm from './components/auth/registerForm'; 
+import Tours from "./components/admin/tablas/Tours";
 
 const App = () => {
   const [servicios] = useState([
@@ -143,6 +144,7 @@ const App = () => {
           <Route path="clientes" element={<Clientes data={clientes} />} />
           <Route path="privilegios" element={<Privilegios data={privilegios} />} />
           <Route path="permisos" element={<Permisos />} />
+          <Route path="tours" element={<Tours />} />
         </Route>
 
         {/* Ruta por defecto */}

@@ -1,0 +1,110 @@
+import React, { useState, useEffect } from 'react';
+import { getPaquetes } from '../../../api/paquetes';
+import '../../../css/components/admin/TourForm.css';
+
+const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
+  const [formData, setFormData] = useState({
+    fechaHora: initialData.fechaHora || '',
+    id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '' // Maneja el caso en que sea un objeto o un ID
+  });
+  const [paquetes, setPaquetes] = useState([]);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    loadPaquetes();
+  }, []);
+
+  useEffect(() => {
+    // Actualiza el formulario cuando cambie `initialData`
+    setFormData({
+      fechaHora: initialData.fechaHora
+        ? new Date(initialData.fechaHora).toISOString().slice(0, 16) // Formato para datetime-local
+        : '',
+      id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '' // Maneja el caso en que sea un objeto o un ID
+    });
+  }, [initialData]);
+
+  const loadPaquetes = async () => {
+    try {
+      const response = await getPaquetes();
+      setPaquetes(response);
+    } catch (err) {
+      setError('Error al cargar los paquetes');
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.fechaHora || !formData.id_paquete) {
+      setError('Todos los campos son requeridos');
+      return;
+    }
+
+    const formattedData = {
+      fechaHora: new Date(formData.fechaHora).toISOString(), // Convertir a formato ISO
+      id_paquete: formData.id_paquete
+    };
+
+    console.log('Datos enviados desde el formulario:', formattedData);
+    onSubmit(formattedData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="tour-form-container">
+      <h2 className="tour-modal-title">
+        {initialData._id ? 'Actualizar Tour' : 'Crear Nuevo Tour'}
+      </h2>
+
+      <div className="tour-form-group">
+        <label htmlFor="fechaHora">Fecha y Hora</label>
+        <input
+          type="datetime-local"
+          id="fechaHora"
+          name="fechaHora"
+          value={formData.fechaHora}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="tour-form-group">
+        <label htmlFor="id_paquete">Paquete</label>
+        <select
+          id="id_paquete"
+          name="id_paquete"
+          value={formData.id_paquete}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Seleccione un paquete</option>
+          {paquetes.map((paquete) => (
+            <option key={paquete._id} value={paquete._id}>
+              {paquete.nombre}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {error && <p className="error-message">{error}</p>}
+
+      <div className="tour-form-buttons">
+        <button type="submit" className="tour-form-submit-button">
+          {initialData._id ? 'Actualizar' : 'Crear'} Tour
+        </button>
+        <button type="button" className="tour-form-cancel-button" onClick={onClose}>
+          Cancelar
+        </button>
+      </div>
+    </form>
+  );
+};
+
+export default TourForm;
