@@ -21,13 +21,17 @@ export const isAuthenticated = () => {
 
 // Authentication operations
 export const login = async (email, password) => {
+  console.log("Login con:", email, password);
+
   const response = await api.post('/usuarios/login', {
     correo: email,
     contraseña: password
   });
-  setAuthToken(response.token);
+
+  setAuthToken(response.token); 
   return response;
 };
+
 
 export const logout = () => {
   removeAuthToken();
