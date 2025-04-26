@@ -35,6 +35,13 @@ const Admin = () => {
                                 text="Paquetes"
                                 to="/admin/paquetes"
                             />
+
+                            <NavOption
+                                icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>map</span>}
+                                text="Tours"
+                                to="/admin/tours"
+                            />
+
                             
                             <NavOption
                                 icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>linked_services</span>}
@@ -55,7 +62,16 @@ const Admin = () => {
                                     text="Clientes"
                                     to="/admin/clientes"
                                 />
-
+                            
+                            <NavOption
+                                    icon={
+                                        <span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B' }}>
+                                            price_check
+                                        </span>
+                                    }
+                                    text="Ventas"
+                                    to="/admin/ventas"
+                                />
                                     
                             <NavOption
                                 icon={<span className="material-symbols-outlined" style={{ fontSize: '35px', color: '#8B2B1B'}}>groups</span>}
