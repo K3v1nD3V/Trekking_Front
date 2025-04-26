@@ -6,8 +6,8 @@ const UsuarioForm = ({ onSubmit, initialData = {} }) => {
     const [formData, setFormData] = React.useState({
         nombre: initialData.nombre || '',
         correo: initialData.correo || '',
-        contraseña: '',
         rol: initialData.rol || '',
+        contraseña: '' // Siempre inicia vacío
     });
 
     const handleChange = (e) => {
@@ -15,20 +15,18 @@ const UsuarioForm = ({ onSubmit, initialData = {} }) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleCheckboxChange = (e) => {
-        const { name, checked } = e.target;
-        setFormData(prev => ({ ...prev, [name]: checked }));
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
+            const dataToSubmit = { ...formData };
             if (initialData && initialData._id) {
-                await updateUsuario(initialData._id, formData);
+                // No enviar contraseña si se está editando
+                delete dataToSubmit.contraseña;
+                await updateUsuario(initialData._id, dataToSubmit);
                 alert('Usuario actualizado correctamente');
             } else {
-                await createUsuario(formData);
+                await createUsuario(dataToSubmit);
                 alert('Usuario creado correctamente');
             }
 
@@ -41,7 +39,6 @@ const UsuarioForm = ({ onSubmit, initialData = {} }) => {
 
     return (
         <form className="cliente-form" onSubmit={handleSubmit}>
-
             <div className="form-group">
                 <label>Nombre</label>
                 <input
@@ -65,18 +62,6 @@ const UsuarioForm = ({ onSubmit, initialData = {} }) => {
             </div>
 
             <div className="form-group">
-                <label>Contraseña</label>
-                <input
-                    type="password"
-                    name="contraseña"
-                    value={formData.contraseña}
-                    onChange={handleChange}
-                    required={!initialData._id}                
-                />
-            </div>
-
-            
-            <div className="form-group">
                 <label>Rol</label>
                 <input
                     type="text"
@@ -86,7 +71,19 @@ const UsuarioForm = ({ onSubmit, initialData = {} }) => {
                     required
                 />
             </div>
-        
+
+            <div className="form-group">
+                <label>Contraseña</label>
+                <input
+                    type="password"
+                    name="contraseña"
+                    value={formData.contraseña}
+                    onChange={handleChange}
+                    disabled={!!initialData._id} // Deshabilitar si se está editando
+                    placeholder={initialData._id ? 'No se puede editar la contraseña' : 'Ingrese una contraseña'}
+                />
+            </div>
+
             <button type="submit" className="form-submit-button">
                 {initialData._id ? 'Actualizar' : 'Crear'} Usuario
             </button>

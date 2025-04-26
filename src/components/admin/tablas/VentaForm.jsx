@@ -17,16 +17,16 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const nuevaVenta = {
       id_cliente: formData.cliente,
       id_paquete: formData.paquete,
-      fecha: formData.fecha,
+      fecha: new Date(formData.fecha).toISOString(), // Convertir la fecha al formato ISO
       valor: parseFloat(formData.valor)
     };
-
+  
     try {
-    console.log('Enviando venta:', nuevaVenta);
+      console.log('Enviando venta:', nuevaVenta);
       await onSubmit(nuevaVenta); // Usa el callback que se pasa desde el componente padre
     } catch (error) {
       console.error('Error al crear venta:', error);

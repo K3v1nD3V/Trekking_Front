@@ -1,6 +1,4 @@
 import api from './base';
-import axios from 'axios';
-
 
 export const getVentas = async () => {
   try {
@@ -23,14 +21,10 @@ export const getVentaById = async (id) => {
 };
 
 export const createVenta = async (nuevaVenta) => {
+  console.log("Creando venta:", nuevaVenta);
   try {
-    const token = localStorage.getItem("token"); // <--- aquí se obtiene el token
-    const response = await axios.post("http://localhost:3000/api/ventas", nuevaVenta, {
-      headers: {
-        Authorization: `Bearer ${token}` // <--- aquí se envía en el header
-      }
-    });
-    return response.data;
+    const response = await api.post("/ventas", nuevaVenta);
+    return response;
   } catch (error) {
     console.error("Error creando venta:", error.response?.data || error.message);
     throw error;
@@ -58,3 +52,4 @@ export const getPaquetes = async () => {
     }
   };
 
+  
