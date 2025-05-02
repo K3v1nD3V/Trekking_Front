@@ -2,8 +2,8 @@
 .table-container {
   padding: 1.5rem;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(56, 61, 65, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombra suave y sutil */
 }
 
 /* Encabezado de la tabla */
@@ -12,15 +12,14 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 1rem;
 }
 
 .table-title {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   color: #383D41;
-  font-weight: 600;
+  font-weight: 500; /* Peso más ligero */
+  letter-spacing: 0.2px;
 }
 
 /* Controles de la tabla */
@@ -32,53 +31,78 @@
 
 .table-search {
   padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  border: 1px solid #E0E0E0; /* Borde más suave */
+  border-radius: 8px;
   width: 250px;
   font-size: 0.95rem;
   color: #383D41;
+  transition: border 0.2s ease;
+}
+
+.table-search:focus {
+  border-color: #C81E17; /* Bordes suaves al enfocar */
 }
 
 /* Botón general */
 .table-button {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   background-color: #C81E17;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-align: center; /* Centrado del texto */
+  display: flex; /* Para que el contenido se centre */
+  justify-content: center; /* Alineación horizontal */
+  align-items: center; /* Alineación vertical */
 }
 
 .table-button:hover {
   background-color: #8B2B1B;
+  transform: translateY(-2px); /* Suave elevación */
 }
 
 /* Grupo de botones de acción */
 .action-buttons {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  align-items: center;
 }
 
 .action-button {
-  padding: 6px 10px;
+  padding: 8px 12px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 12px;
   display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: background-color 0.3s;
-  width: 75px;
-  height: 45px;
+  justify-content: center; /* Centrado del texto */
+  align-items: center; /* Alineación vertical */
+  gap: 6px;
+  transition: background-color 0.2s, transform 0.2s ease;
+  width: 90px;
+  height: 50px;
+  background-color: #f7f7f7; /* Fondo suave */
+  color: #383D41;
+} 
+
+.action-button:hover {
+  background-color: #E5C9B3;
+  transform: translateY(-2px); /* Suave elevación */
 }
 
 /* Botón editar */
 .edit-button {
   background-color: #B44F33;
   color: white;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  justify-content: center; /* Centrado del texto */
+  align-items: center; /* Alineación vertical */
 }
 
 .edit-button:hover {
@@ -89,8 +113,56 @@
 .delete-button {
   background-color: #C81E17;
   color: white;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  justify-content: center; /* Centrado del texto */
+  align-items: center; /* Alineación vertical */
 }
 
 .delete-button:hover {
   background-color: #8B2B1B;
+}
+
+/* Estilo para las celdas de la tabla */
+.table-cell {
+  padding: 12px 18px;
+  text-align: left; /* Alineación más fluida */
+  font-size: 0.95rem;
+  color: #383D41;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.table-cell:hover {
+  background-color: #f9f9f9; /* Fondo sutil al pasar el mouse */
+}
+
+/* Estilo para filas alternas */
+.table-row:nth-child(even) {
+  background-color: #fafafa; /* Fondo suave en filas pares */
+}
+
+/* Mejoras en la tabla */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  text-align: left;
+  padding: 12px 18px;
+  font-size: 0.95rem;
+  color: #383D41;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.table th {
+  background-color: #E5C9B3;
+  color: #383D41;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.table tr:hover {
+  background-color: #f1f1f1;
 }
