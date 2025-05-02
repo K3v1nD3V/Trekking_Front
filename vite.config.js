@@ -6,11 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-     '/api': {
-      target: 'https://trekking-back.onrender.com',
-      changeOrigin: true,
-      secure: false
-     }
-    }
-  }
-})
+      '/api': {
+        target: 'https://trekking-back.onrender.com',
+        changeOrigin: true,
+        secure: true, // Cambia esto a `true` para forzar la verificación SSL
+      },
+    },
+  },
+});
