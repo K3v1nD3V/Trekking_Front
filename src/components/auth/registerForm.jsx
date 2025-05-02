@@ -27,82 +27,97 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Verificar si hay campos vacíos
+  
     const newFieldErrors = {};
+  
+    // Expresión regular para validar correo
+    const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
     if (!formData.nombre) newFieldErrors.nombre = 'El nombre es requerido';
-    if (!formData.correo) newFieldErrors.correo = 'El correo es requerido';
+    if (!formData.correo) {
+      newFieldErrors.correo = 'El correo es requerido';
+    } else if (!correoRegex.test(formData.correo)) {
+      newFieldErrors.correo = 'El correo no tiene un formato válido';
+    }
     if (!formData.contraseña) newFieldErrors.contraseña = 'La contraseña es requerida';
-
+  
     if (Object.keys(newFieldErrors).length > 0) {
       setFieldErrors(newFieldErrors);
       return;
     }
-
+  
     const nuevoUsuario = {
       ...formData,
       rol: '67e355c0b60ed98a9af8e8f6',
     };
-
+  
     try {
       await api.post('/usuarios', nuevoUsuario);
       navigate('/login');
     } catch (err) {
       const rawMessage = err?.response?.data?.message || err.message;
-
-      // Verificar si el mensaje contiene "duplicate key" y específicamente el correo
+  
       if (rawMessage && rawMessage.includes('E11000') && rawMessage.includes('correo')) {
         setFieldErrors({ correo: 'Este correo ya está registrado.' });
-        setError(''); // No mostramos el error general, solo el del campo específico
+        setError('');
       } else {
         setError('Ocurrió un error al registrar. Intenta nuevamente.');
       }
     }
   };
-
   return (
-    <div className="login-container">
-      <h2>Crear cuenta</h2>
+    <div className="login-wrapper">
+      <div className="login-box">
+        {/* Imagen del lado izquierdo */}
+        <div className="login-image">
+          <img src="/src/assets/image/image_login_transparent.png" alt="Registro visual" />
+        </div>
 
-      {/* Mostrar el error global si existe */}
-      {error && <div className="error-message">{error}</div>}
+        {/* Formulario del lado derecho */}
+        <div className="login-form">
+          <h2>Crear cuenta</h2>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="nombre"
-          placeholder="Nombre completo"
-          value={formData.nombre}
-          onChange={handleChange}
-          className={fieldErrors.nombre ? 'input-error' : ''}
-        />
-        {fieldErrors.nombre && <div className="field-error">{fieldErrors.nombre}</div>}
+          {/* Mostrar el error global si existe */}
+          {error && <div className="error-message">{error}</div>}
 
-        <input
-          type="email"
-          name="correo"
-          placeholder="Correo electrónico"
-          value={formData.correo}
-          onChange={handleChange}
-          className={fieldErrors.correo ? 'input-error' : ''}
-        />
-        {fieldErrors.correo && <div className="field-error">{fieldErrors.correo}</div>}
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="nombre"
+              placeholder="Nombre completo"
+              value={formData.nombre}
+              onChange={handleChange}
+              className={fieldErrors.nombre ? 'input-error' : ''}
+            />
+            {fieldErrors.nombre && <div className="field-error">{fieldErrors.nombre}</div>}
 
-        <input
-          type="password"
-          name="contraseña"
-          placeholder="Contraseña"
-          value={formData.contraseña}
-          onChange={handleChange}
-          className={fieldErrors.contraseña ? 'input-error' : ''}
-        />
-        {fieldErrors.contraseña && <div className="field-error">{fieldErrors.contraseña}</div>}
+            <input
+              type="text" 
+              name="correo"
+              placeholder="Correo electrónico"
+              value={formData.correo}
+              onChange={handleChange}
+              className={fieldErrors.correo ? 'input-error' : ''}
+            />
+            {fieldErrors.correo && <div className="field-error">{fieldErrors.correo}</div>}
 
-        <button type="submit">Registrar</button>
-      </form>
+            <input
+              type="password"
+              name="contraseña"
+              placeholder="Contraseña"
+              value={formData.contraseña}
+              onChange={handleChange}
+              className={fieldErrors.contraseña ? 'input-error' : ''}
+            />
+            {fieldErrors.contraseña && <div className="field-error">{fieldErrors.contraseña}</div>}
 
-      <div className="login-links">
-        <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+            <button type="submit">Registrar</button>
+          </form>
+
+          <div className="login-links">
+            <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+          </div>
+        </div>
       </div>
     </div>
   );

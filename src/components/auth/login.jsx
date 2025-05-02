@@ -7,14 +7,40 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    setEmailError('');
+    setPasswordError('');
 
+    let isValid = true;
+
+    if (!email.trim()) {
+      setEmailError('El correo es obligatorio');
+      isValid = false;
+    } else if (!validateEmail(email)) {
+      setEmailError('El formato del correo no es válido');
+      isValid = false;
+    }
+
+    if (!password.trim()) {
+      setPasswordError('La contraseña es obligatoria');
+      isValid = false;
+    }
+
+    if (!isValid) return;
+
+    setLoading(true);
     try {
       await login(email, password);
       navigate('/admin'); 
@@ -26,36 +52,46 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Iniciar sesión</h2>
-      <form onSubmit={handleSubmit}>
-        <input 
-          type="email" 
-          placeholder="Correo electrónico" 
-          value={email}
-          onChange={e => setEmail(e.target.value)} 
-          required 
-        />
-        <input 
-          type="password" 
-          placeholder="Contraseña" 
-          value={password}
-          onChange={e => setPassword(e.target.value)} 
-          required 
-        />
-        {error && <p className="error">{error}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Cargando...' : 'Ingresar'}
-        </button>
-      </form>
+    <div className="login-wrapper">
+      <div className="login-box">
+        <div className="login-image">
+          <img src="/src/assets/image/image_login_transparent.png" alt="Login visual" />
+        </div>
 
-      <div className="login-links">
-        <p>
-          ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
-        </p>
-        <p>
-          ¿Olvidaste tu contraseña? <Link to="/recuperar">Recupérala aquí</Link>
-        </p>
+        <div className="login-form">
+          <h2>Iniciar sesión</h2>
+
+          <form onSubmit={handleSubmit} noValidate>
+            <input 
+              type="text" 
+              placeholder="Correo electrónico" 
+              value={email}
+              onChange={e => setEmail(e.target.value)} 
+              className={emailError ? 'input-error' : ''}
+            />
+            {emailError && <p className="field-error">{emailError}</p>}
+
+            <input 
+              type="password" 
+              placeholder="Contraseña" 
+              value={password}
+              onChange={e => setPassword(e.target.value)} 
+              className={passwordError ? 'input-error' : ''}
+            />
+            {passwordError && <p className="field-error">{passwordError}</p>}
+
+            {error && <p className="field-error">{error}</p>}
+
+            <button type="submit" disabled={loading}>
+              {loading ? 'Cargando...' : 'Ingresar'}
+            </button>
+          </form>
+
+          <div className="login-links">
+            <p>¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link></p>
+            <p>¿Olvidaste tu contraseña? <Link to="/recuperar">Recupérala aquí</Link></p>
+          </div>
+        </div>
       </div>
     </div>
   );
