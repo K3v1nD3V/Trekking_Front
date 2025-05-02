@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+// Admin Section
 import Admin from './layouts/admin';
 import Paquetes from './components/admin/tablas/paquetes';
 import Servicios from './components/admin/tablas/servicios';
@@ -14,117 +15,15 @@ import Privilegios from './components/admin/tablas/privilegios';
 import Permisos from './components/admin/tablas/permisos';
 import RegisterForm from './components/auth/registerForm'; 
 import Tours from "./components/admin/tablas/Tours";
+// Landing Section
+import Landing from './layouts/landing';
 
 const App = () => {
-  const [servicios] = useState([
-    {
-      id: 1,
-      nombre: 'Guía turístico',
-      descripcion: 'Servicio de guía profesional',
-      estado: true
-    },
-    {
-      id: 2,
-      nombre: 'Transporte',
-      descripcion: 'Traslado a los lugares de interés',
-      estado: true
-    },
-    {
-      id: 3,
-      nombre: 'Alimentación',
-      descripcion: 'Comidas incluidas',
-      estado: false
-    }
-  ]);
-
-  const [roles] = useState([
-    {
-      id: 1,
-      nombreRol: "Administrador",
-      estado: true,
-      permisos: ["Gestionar usuarios", "Ver reportes", "Acceso total"],
-      privilegios: [1, 2, 3, 4]
-    },
-    {
-      id: 2,
-      nombreRol: "Cliente",
-      estado: true,
-      permisos: ["Ver paquetes", "Reservar servicios"],
-      privilegios: [1]
-    }
-  ]);
-
-  const [clientes] = useState([
-    {
-      id: 1,
-      documento: 1001709975,
-      nombre: 'Ximena',
-      apellido: 'Castañeda',
-      correo: 'roble@gmail.com',
-      telefono: 3002934308,
-      estado: true
-    },
-    {
-      id: 2,
-      documento: 10018875454,
-      nombre: 'Mariana',
-      apellido: 'Cardona',
-      correo: 'cardonam@gmail.com',
-      telefono: 3001124408,
-      estado: true
-    },
-    {
-      id: 3,
-      documento: 1010700575,
-      nombre: 'Rosalba',
-      apellido: 'Caicedo',
-      correo: 'rosalba_cai@gmail.com',
-      telefono: 3123356670,
-      estado: true
-    },
-    {
-      id: 4,
-      documento: 1017202661,
-      nombre: 'Dario',
-      apellido: 'Galvis',
-      correo: 'dariorega@gmail.com',
-      telefono: 3015984265,
-      estado: true
-    }
-  ]);
-
-  const [privilegios] = useState([
-    {
-      id: 1,
-      descripcion: "Consultar clientes",
-      estado: true
-    },
-    {
-      id: 2,
-      descripcion: "Crear clientes",
-      estado: true
-    },
-    {
-      id: 3,
-      descripcion: "Editar clientes",
-      estado: true
-    },
-    {
-      id: 4,
-      descripcion: "Eliminar clientes",
-      estado: true
-    },
-    {
-      id: 5,
-      descripcion: "Crear roles",
-      estado: true
-    }
-  ]);
-
   return (
     <AuthProvider>
       <Routes>
         {/* Rutas públicas */}
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} /> 
 
@@ -137,16 +36,16 @@ const App = () => {
             </PrivateRoute>
           }
         >
-          <Route index element={<Paquetes />} />
-          <Route path="paquetes" element={<Paquetes />} />
-          <Route path="servicios" element={<Servicios data={servicios} />} />
-          <Route path="roles" element={<RolesTable data={roles} />} />
-          <Route path="usuarios" element={<Usuarios />} />
-          <Route path="clientes" element={<Clientes data={clientes} />} />
-          <Route path="ventas" element={<Ventas />} />
-          <Route path="privilegios" element={<Privilegios data={privilegios} />} />
-          <Route path="permisos" element={<Permisos />} />
-          <Route path="tours" element={<Tours />} />
+          <Route index element={<Paquetes/>} />
+          <Route path="paquetes" element={<Paquetes/>} />
+          <Route path="servicios" element={<Servicios />} />
+          <Route path="roles" element={<RolesTable/>} />
+          <Route path="usuarios" element={<Usuarios/>} />
+          <Route path="clientes" element={<Clientes/>} />
+          <Route path="ventas" element={<Ventas/>} />
+          <Route path="privilegios" element={<Privilegios/>} />
+          <Route path="permisos" element={<Permisos/>} />
+          <Route path="tours" element={<Tours/>} />
         </Route>
 
         {/* Ruta por defecto */}
