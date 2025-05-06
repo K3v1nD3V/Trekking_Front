@@ -7,7 +7,7 @@ const Hero = () => {
         <section className="hero">
             <div className="hero-content">
                 <h1 className="hero-title">
-                    Explora la Naturaleza con <span>Trekking San Cristóbal</span>
+                    Explora la <span> Naturaleza </span> con Trekking <span> San Cristóbal</span>
                 </h1>
                 <p className="hero-subtitle">
                     Descubre los mejores destinos y vive experiencias inolvidables en nuestras rutas de trekking.

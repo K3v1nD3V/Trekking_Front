@@ -8,11 +8,12 @@ const NavBar = () => {
             <nav className="navbar">
                 <div className="navbar-logo">
                     <a href="#home" className="logo-text">
-                        <img src="../../../assets/ORIGINAL_PNG.png" alt="Logo Trekking San Cristobal" className="logo-img" />
+                        <img src="/src/assets/ORIGINAL_PNG.png" alt="Logo Trekking San Cristobal" className="logo-img" />
                     </a>
                 </div>
                 <ul className="navbar-links">
                     <li><a href="#about" className="nav-link"><FaInfoCircle /> Sobre Nosotros</a></li>
+                    <li><a href="#servicios" className="nav-link"><FaSuitcase /> Servicios</a></li>
                     <li><a href="#portfolio" className="nav-link"><FaSuitcase /> Portafolio</a></li>
                     <li><a href="#contact" className="nav-link"><FaEnvelope /> Contacto</a></li>
                     <li><a href="#paquetes" className="nav-link"><FaHome /> Paquetes</a></li>
