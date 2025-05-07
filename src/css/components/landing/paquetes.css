@@ -1,0 +1,168 @@
+/* Sección principal de paquetes */
+.paquetes {
+    padding: var(--space-xl) var(--space-lg);
+    background-color: var(--color-secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: var(--space-xl); /* Aumentar el espacio entre paquetes */
+  }
+  
+  /* Contenedor de cada paquete */
+  .actual-paquete {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-lg);
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    max-width: 1200px; /* Aumentar el ancho máximo */
+    width: 100%;
+    height: 500px; /* Aumentar la altura */
+  }
+  
+  /* Imagen del paquete */
+  .actual-paquete img {
+    width: 50%; /* Aumentar el ancho de la imagen */
+    object-fit: cover;
+    height: 100%; /* Asegurar que la imagen ocupe toda la altura */
+  }
+  
+  /* Información del paquete */
+  .paquete-info {
+    padding: var(--space-xl); /* Aumentar el padding interno */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    justify-content: center; /* Centrar verticalmente el contenido */
+  }
+  
+  /* Título del paquete */
+  .paquete-title {
+    font-size: 2rem; /* Aumentar el tamaño del título */
+    font-weight: bold;
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+  }
+  
+  /* Ubicación, fecha y hora */
+  .paquete-location,
+  .paquete-date,
+  .paquete-hour {
+    font-size: 1.2rem; /* Aumentar el tamaño del texto */
+    color: var(--color-text-light);
+  }
+  
+  /* Descripción del paquete */
+  .paquete-description {
+    font-size: 1.1rem; /* Aumentar el tamaño del texto */
+    color: var(--color-text);
+    margin: var(--space-sm) 0;
+    line-height: 1.6; /* Mejorar la legibilidad */
+  }
+  
+  /* Precio del paquete */
+  .paquete-price {
+    font-size: 1.5rem; /* Aumentar el tamaño del precio */
+    font-weight: bold;
+    color: var(--color-accent);
+    margin-bottom: var(--space-md);
+  }
+  
+  /* Botón de contacto */
+  .btn {
+    padding: var(--space-md) var(--space-lg); /* Aumentar el tamaño del botón */
+    border-radius: var(--border-radius-md);
+    font-size: 1.1rem; /* Aumentar el tamaño del texto del botón */
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  /* Lista de otros paquetes */
+.paquete-list {
+    width: 100%;
+    max-width: 1200px;
+    margin-top: var(--space-xl);
+  }
+  
+  /* Título de la lista */
+  .paquete-list-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
+  
+  /* Contenedor de las cards */
+  .paquete-items {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las cards se ajusten en varias filas si es necesario */
+    gap: var(--space-lg);
+    justify-content: center;
+  }
+  
+  /* Card de cada paquete */
+  .paquete-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    width: 285px; /* Ancho fijo para las cards */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .paquete-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md), 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Imagen de la card */
+  .paquete-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  /* Información de la card */
+  .paquete-item-info {
+    padding: var(--space-md);
+    text-align: center;
+  }
+  
+  /* Título del paquete */
+  .paquete-item-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-primary);
+  }
+  
+  /* Ubicación del paquete */
+  .paquete-item-location {
+    font-size: 1rem;
+    color: var(--color-text-light);
+  }
+  
+  /* Precio del paquete */
+  .paquete-item-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-accent);
+  }
