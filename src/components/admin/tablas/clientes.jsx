@@ -98,46 +98,42 @@ const Clientes = () => {
             name: 'Documento',
             selector: row => row.documento,
             sortable: true,
-            format: row => row.documento.toLocaleString(),
+            format: row => 
+            row.documento.toLocaleString(),
             right: true,
-            width: '100px'
+            width: '150px',
+            cell: row => <div style={{ fontWeight: 600 }}>{row.documento}</div>
         },
         {
             name: 'Nombre',
             selector: row => row.nombre,
             sortable: true,
-            cell: row =>
-                <div
-                    style={{ fontWeight: 600, cursor: 'pointer' }}
-                    onClick={() => handleClienteClick(row)}
-                >
-                    {row.nombre}
-                </div>,
-            width: '150px'
+            cell: row => row.nombre,
+            width: '150px' 
         },
         {
             name: 'Apellido',
             selector: row => row.apellido,
             wrap: true,
-            width: '200px'
+            width: '150px'
         },
         {
             name: 'Correo',
             selector: row => row.correo,
             wrap: true,
-            width: '200px'
+            width: '150px' 
         },
         {
             name: 'Teléfono',
             selector: row => row.telefono,
             format: row => row.telefono.toLocaleString(),
             right: true,
-            width: '120px'
+            width: '150px' 
         },
         {
             name: 'Estado',
             cell: row => <EstadoCell row={row} />,
-            width: '120px'
+            width: '150px' 
         },
         {
             name: 'Acciones',
@@ -165,7 +161,7 @@ const Clientes = () => {
                 </div>
             ),
             ignoreRowClick: true,
-            width: '150px'
+            width: '200px' 
         }
     ];
 
@@ -199,7 +195,6 @@ const Clientes = () => {
                 pagination
                 paginationPerPage={10}
                 highlightOnHover
-                onRowClicked={handleClienteClick}
                 customStyles={{
                     headCells: {
                         style: {
@@ -211,7 +206,7 @@ const Clientes = () => {
                     cells: {
                         style: {
                             fontSize: '14px',
-                            padding: '12px 8px',
+                            padding: '16px 12px', // Aumenté el padding de las celdas
                             verticalAlign: 'top'
                         },
                     },
@@ -232,4 +227,3 @@ const Clientes = () => {
 };
 
 export default Clientes;
-

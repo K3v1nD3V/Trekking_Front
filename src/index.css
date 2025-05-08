@@ -49,6 +49,15 @@ header {
   margin-left: auto;
 }
 
+.logo-header-centered {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
 .icn {
   height: 10px;
 }
@@ -260,7 +269,7 @@ header {
   background-color: var(--color-fondo-claro);
   border-radius: 30px;
   box-shadow: 3px 3px 10px rgba(56, 61, 65, 0.1);
-  padding: 0px 20px 20px 20px;
+  padding: 20px;
 }
 
 /* Encabezado de reportes */
@@ -455,5 +464,7 @@ header {
   transform: translateY(-50%);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
+
+
 
 

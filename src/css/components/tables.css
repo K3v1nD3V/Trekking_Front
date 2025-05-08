@@ -1,9 +1,10 @@
 /* Contenedor de la tabla */
 .table-container {
-  padding: 1.5rem;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombra suave y sutil */
+  background-color: white;
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: 0px 0px 20px 14px rgb(0 0 0 / 10%);
+  max-width: 1200px;
 }
 
 /* Encabezado de la tabla */

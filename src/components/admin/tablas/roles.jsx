@@ -126,54 +126,58 @@ const RolesTable = () => {
       width: '120px',
     },
     {
-        name: 'Permisos y Privilegios',
-        cell: row => {
-          const privilegiosDisponibles = JSON.parse(localStorage.getItem('privilegios')) || [];
-          const permisos = row.permisos || [];
-      
-          return (
-            <div className="permisos-expandibles">
-              {permisos.length > 0 ? (
-                permisos.map((permiso, idx) => {
-                  const privilegiosAsociados = privilegiosDisponibles.filter(p =>
-                    permiso.privilegios.includes(p._id)
-                  );
-      
-                  const isExpanded = expandedPermisos?.[row._id]?.[permiso._id];
-      
-                  return (
-                    <div key={idx} className="permiso-item">
-                      <div
-                        className="permiso-header"
-                        onClick={() => togglePrivilegios(row._id, permiso._id)}
-                      >
-                        <span className="flecha">{isExpanded ? '▼' : '▶'}</span>
-                        <strong>{permiso.nombre}</strong>
-                      </div>
-      
-                      {isExpanded && privilegiosAsociados.length > 0 && (
-                        <ul className="privilegios-sublista">
-                          {privilegiosAsociados.map((priv, i) => (
-                            <li key={i} className="priv-item">– {priv.descripcion}</li>
-                          ))}
-                        </ul>
-                      )}
-      
-                      {isExpanded && privilegiosAsociados.length === 0 && (
-                        <div className="text-muted">Sin privilegios</div>
-                      )}
+      name: 'Permisos y Privilegios',
+      cell: row => {
+        const privilegiosDisponibles = JSON.parse(localStorage.getItem('privilegios')) || [];
+        const permisos = row.permisos || [];
+    
+        return (
+          <div className="permisos-expandibles">
+            {permisos.length > 0 ? (
+              permisos.map((permiso, idx) => {
+                const privilegiosAsociados = privilegiosDisponibles.filter(p =>
+                  permiso.privilegios.includes(p._id)
+                );
+    
+                const isExpanded = expandedPermisos?.[row._id]?.[permiso._id];
+    
+                return (
+                  <div key={idx} className="permiso-item">
+                    <div
+                      className="permiso-header"
+                      onClick={() => togglePrivilegios(row._id, permiso._id)}
+                    >
+                      <span className="flecha-roja">{isExpanded ? '▼' : '▶'}</span>
+                      <strong>{permiso.nombre}</strong>
                     </div>
-                  );
-                })
-              ) : (
-                <span className="text-muted">Sin permisos</span>
-              )}
-            </div>
-          );
-        },
-        width: '350px',
+    
+                    {isExpanded && (
+                      <div className="privilegios-contenedor">
+                        {privilegiosAsociados.length > 0 ? (
+                          <ul className="privilegios-sublista estilizada">
+                            {privilegiosAsociados.map((priv, i) => (
+                              <li key={i} className="priv-item">
+                                <span className="bullet-icon"></span> {priv.descripcion}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div className="text-muted">Sin privilegios</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            ) : (
+              <span className="text-muted">Sin permisos</span>
+            )}
+          </div>
+        );
       },
-    {
+      width: '400px',
+    },  
+     {
       name: 'Acciones',
       cell: row => (
         <div className="action-buttons">

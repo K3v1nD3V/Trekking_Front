@@ -127,7 +127,7 @@ const ServiciosTable = () => {
         {
             name: 'Estado',
             cell: row => <EstadoCell row={row} />,
-            width: '100px',
+            width: '200px',
         },
         {
             name: 'Acciones',
@@ -205,7 +205,6 @@ const ServiciosTable = () => {
                         },
                     },
                 }}
-                onRowClicked={handleServicioClick}
             />
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

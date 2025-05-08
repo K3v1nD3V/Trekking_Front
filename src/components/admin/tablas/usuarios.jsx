@@ -3,12 +3,14 @@ import DataTable from "react-data-table-component";
 import Modal from '../../common/Modal';
 import UsuarioForm from "./UsuarioForm.jsx";
 import { getUsuarios, deleteUsuario, updateUsuario } from '../../../api/usuarios';
+import { getRoles } from '../../../api/roles'; // Asumiendo que tienes esta función
 
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
 
 const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
+    const [roles, setRoles] = useState([]);  // Estado para almacenar roles
     const [filterText, setFilterText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUsuario, setSelectedUsuario] = useState(null);
@@ -16,18 +18,19 @@ const Usuarios = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchUsuarios = async () => {
+        const fetchUsuariosAndRoles = async () => {
             try {
-                const data = await getUsuarios();
-                setUsuarios(data);
+                const [usuariosData, rolesData] = await Promise.all([getUsuarios(), getRoles()]);
+                setUsuarios(usuariosData);
+                setRoles(rolesData);
             } catch (err) {
-                setError(err.message || 'Error al cargar usuarios');
+                setError(err.message || 'Error al cargar usuarios y roles');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchUsuarios();
+        fetchUsuariosAndRoles();
     }, []);
 
     const handleCrearUsuario = () => {
@@ -58,36 +61,35 @@ const Usuarios = () => {
         setIsModalOpen(false);
     };
 
-
     const filteredData = usuarios.filter(item =>
         Object.values(item).some(value =>
             String(value).toLowerCase().includes(filterText.toLowerCase())
         )
     );
 
+    const getRoleName = (roleId) => {
+        const role = roles.find(role => role._id === roleId);
+        console.log(role)
+        return role ? role.nombre : 'Desconocido';
+    };
+
     const columns = [
         {
             name: 'Nombre',
             selector: row => row.nombre,
             sortable: true,
-            cell: row =>
-                <div
-                    style={{ fontWeight: 600, cursor: 'pointer' }}
-                    onClick={() => handleUsuarioClick(row)}
-                >
-                    {row.nombre}
-                </div>,
+            cell: row => <div style={{ fontWeight: 600 }}>{row.nombre}</div>,
             width: '150px'
         },
         {
             name: 'Correo',
             selector: row => row.correo,
             wrap: true,
-            width: '200px'
+            width: '300px'
         },
         {
             name: 'Rol',
-            selector: row => row.rol,
+            selector: row => getRoleName(row.rol),  // Usamos la función para obtener el nombre del rol
             wrap: true,
             width: '200px'
         },
@@ -151,7 +153,6 @@ const Usuarios = () => {
                 pagination
                 paginationPerPage={10}
                 highlightOnHover
-                onRowClicked={handleUsuarioClick}
                 customStyles={{
                     headCells: {
                         style: {
@@ -184,4 +185,3 @@ const Usuarios = () => {
 };
 
 export default Usuarios;
-

@@ -51,12 +51,13 @@ const Permisos = () => {
       name: 'Nombre',
       selector: row => row.nombre,
       sortable: true,
-      width: '200px',
+      width: '250px',
+      cell: row => <div style={{ fontWeight: 600 }}>{row.nombre}</div>,
     },
     {
       name: 'Descripción',
       selector: row => row.descripcion,
-      width: '250px',
+      width: '400px',
     },
     {
       name: 'Estado',
@@ -68,7 +69,7 @@ const Permisos = () => {
           </label>
         </div>
       ),
-      width: '120px',
+      width: '200px',
     },
     {
       name: 'Privilegios',
@@ -89,7 +90,7 @@ const Permisos = () => {
               <ul className="privilegios-sublista">
                 {Array.isArray(row.privilegios) && row.privilegios.length > 0 ? (
                   row.privilegios.map((priv, idx) => (
-                    <li key={idx} className="priv-item">– {priv.descripcion}</li>
+                    <li key={idx} className="priv-item"> {priv.descripcion}</li>
                   ))
                 ) : (
                   <li className="text-muted italic">Sin privilegios</li>
