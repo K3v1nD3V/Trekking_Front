@@ -54,3 +54,14 @@
     color: #666;
   }
   
+  /* Icono */
+.icon-preview-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.icon-preview {
+  font-size: 2rem !important;
+  color: var(--color-primary) !important;
+}
