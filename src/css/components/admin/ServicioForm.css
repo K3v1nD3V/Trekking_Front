@@ -1,4 +1,4 @@
-/* =========================
+/* ========================= 
    Variables globales
 ========================= */
 :root {
@@ -6,11 +6,12 @@
   --secondary-color: #8B2B1B;
   --accent-color: #B44F33;
   --background-color1: #E5C9B3;
-  --background-color2: #E5C9B3;
+  --background-color2: #F9F5F0;
   --neutral-color: #B98E64;
   --text-color: #383D41;
   --border-radius: 12px;
-  --box-shadow: 0 4px 8px rgba(56, 61, 65, 0.1);
+  --box-shadow: 0 6px 16px rgba(56, 61, 65, 0.15);
+  --input-border-color: #ccc;
 }
 
 /* =========================
@@ -20,13 +21,20 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  padding: 1.5rem;
-  background-color: var(--background-color2); /* fondo suave */
+  padding: 2rem;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 600px;
+  margin: auto;
+  transition: box-shadow 0.3s ease;
 }
 
-/* Grupo de campos */
+.servicio-form:hover {
+  box-shadow: 0 8px 20px rgba(14, 14, 14, 0.2);
+}
+
 .servicio-form .form-group {
   display: flex;
   flex-direction: column;
@@ -36,15 +44,24 @@
 .servicio-form label {
   font-weight: 600;
   color: var(--secondary-color);
+  font-size: 1rem;
 }
 
 .servicio-form input,
 .servicio-form textarea {
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-  background-color: #fff;
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 1px;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc !important;
+  background: #f7f7f7;
+}
+
+.servicio-form input:focus,
+.servicio-form textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(200, 30, 23, 0.2);
 }
 
 .servicio-form textarea {
@@ -52,21 +69,25 @@
   resize: vertical;
 }
 
-/* Botón principal del formulario */
+/* =========================
+   Botón
+========================= */
 .form-submit-button {
-  padding: 0.75rem 1rem;
+  padding: 0.9rem 1.2rem;
   background-color: var(--primary-color);
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
+  border-radius: var(--border-radius);
+  font-size: 1.2rem !important;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  height: 50px;
 }
 
 .form-submit-button:hover {
-  background-color: var(--secondary-color);
+  background-color: var(--accent-color);
+  transform: translateY(-2px);
 }
 
 /* =========================
@@ -82,7 +103,7 @@
   position: relative;
   display: inline-block;
   width: 50px;
-  height: 24px;
+  height: 26px;
 }
 
 .switch input {
@@ -100,17 +121,17 @@
   bottom: 0;
   background-color: #ccc;
   transition: 0.4s;
-  border-radius: 24px;
+  border-radius: 50px;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 16px;
-  width: 16px;
-  left: 4px;
-  bottom: 4px;
-  background-color: #fff;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
   transition: 0.4s;
   border-radius: 50%;
 }
@@ -120,5 +141,5 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translateX(24px);
 }

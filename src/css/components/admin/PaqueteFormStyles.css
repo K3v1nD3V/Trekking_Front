@@ -177,3 +177,122 @@
   margin-bottom: var(--space-sm);
   font-weight: 500;
 }
+
+.elegante-formulario {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.seccion-formulario {
+  margin-bottom: 20px;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.grid-servicios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.checkbox-servicio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.media-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.media-item {
+  position: relative;
+}
+
+.preview-media {
+  max-width: 120px;
+  max-height: 90px;
+  border-radius: 8px;
+}
+
+.media-item button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #c81e17;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #c81e17;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-outline {
+  border: 2px dashed #8b2b1b;
+  color: #8b2b1b;
+  background: transparent;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.servicio-label {
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.btn-wide {
+  width: 600px;
+  padding: 12px 20px;
+  font-size: 1rem;
+}
+
+/* Tamaño uniforme de inputs */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.3rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  background: #f7f7f7;
+}
+
+/* Select de servicios */
+.select-servicios {
+  height: 120px;
+}
+
+/* Botones más anchos */
+.btn-wide {
+  width: 100%;
+  padding: 12px 0;
+  font-size: 1rem;
+  border-radius: 10px;
+}
+
+

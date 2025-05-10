@@ -7,11 +7,6 @@
   scrollbar-width: thin;
 }
 
-.ver-servicios {
-  font-size: 1rem; /* equivale a 20px */
-  font-weight: bold;  /* opcional, para destacarlo */
-}
-
 .paquetes-servicios-grid {
   display: grid;
   grid-auto-flow: column;
@@ -46,97 +41,10 @@
 }
 
 .paquetes-servicio-nombre {
-  font-size: 13px;
+  font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-
-
-/* Añadir estilo para los servicios desplegados */
-
-/* Estilo para el chulo y la línea vertical */
-.checkmark-line {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-}
-
-.lista-servicios {
-  position: relative;
-  padding-left: 24px; /* espacio para la línea */
-  margin-top: 10px;
-}
-
-.lista-servicios::before {
-  content: '';
-  position: absolute;
-  left: 10px; /* posición de la línea */
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background-color: #b44f33;
-}
-
-.servicio-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-  position: relative;
-}
-
-.checkmark {
-  color: #b44f33;
-  margin-right: 8px;
-  font-size: 14px;
-  margin-left: 10px;
-}
-
-
-.servicio-contenido {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-}
-
-.vertical-line {
-  width: 2px;
-  height: 20px;
-  background-color: #b44f33;
-  margin-right: 6px;
-}
-
-
-.nombre-servicio {
-  font-weight: 500;
-  color: #383D41;
-}
-
-
-/* Estilo para el texto de "Ver servicios" */
-.ver-servicios-toggle span {
-  color: #B44F33;
-  font-weight: bold;
-}
-
-.ver-servicios-toggle:hover {
-  cursor: pointer;
-  color: #C81E17; /* Color de la flecha */
-}
-
-/* Estilos para la flecha */
-.flecha {
-  transition: color 0.3s ease;
-}
-
-/* Opcional: Añadir estilos para el texto cuando el hover está activo */
-.ver-servicios-toggle {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-weight: bold;
 }
 
 .paquetes-multimedia-container {

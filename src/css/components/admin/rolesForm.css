@@ -4,109 +4,127 @@
   --color-light: #E5C9B3;
   --color-accent: #B44F33;
   --card-bg: #fff;
-  --border-radius: 1rem;
+  --border-radius: 0.8rem;
   --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-container {
-  padding: 2rem;
   display: flex;
   justify-content: center;
+  padding: 2rem;
 }
 
-.card-form {
-  position: relative;
+.form {
   background: var(--card-bg);
   padding: 2rem;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   width: 100%;
-  max-width: 700px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-.card-form h2 {
-  color: var(--color-primary);
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.card-form label {
-  display: flex;
-  flex-direction: column;
-  font-weight: 600;
-  color: var(--color-dark);
-}
-
-.card-form input[type="text"] {
-  padding: 0.6rem;
-  margin-top: 0.3rem;
-  border-radius: 0.5rem;
-  border: 1px solid #ccc;
-}
-
-.estado-toggle {
-  flex-direction: row;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.permiso-list {
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
-.permiso-card {
-  background: var(--color-light);
-  padding: 1rem;
-  border-radius: 0.8rem;
-  box-shadow: var(--shadow);
+h2 {
+  color: var(--color-primary);
+  text-align: center;
 }
 
-.permiso-card > label {
-  font-weight: bold;
-  color: var(--color-accent);
+label {
+  display: block;
+  color: var(--color-dark);
+  font-weight: 600;
 }
 
-.privilegios {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-  padding: 1rem;
-  border-left: 4px solid var(--color-secundario, #8B2B1B);
-  background-color: #fdf8f5;
-  border-radius: 0.75rem;
-  transition: background-color 0.3s ease;
+input[type="text"], .switch-input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.3rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  background: #f7f7f7;
 }
 
-.privilegios label {
+input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.switch-container {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: #ffffff;
-  padding: 0.4rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 1rem;
-  font-size: 0.9rem;
-  color: var(--color-texto, #383D41);
+}
+
+.switch-wrapper {
+  position: relative;
+}
+
+.switch-input {
+  display: none;
+}
+
+.switch {
+  position: relative;
+  display: block;
+  width: 50px;
+  height: 25px;
+  background-color: #ccc;
+  border-radius: 25px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: background 0.3s;
 }
 
-.privilegios label:hover {
-  background-color: #f3e4da;
-  border-color: var(--color-primario, #C81E17);
+.switch::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 21px;
+  height: 21px;
+  background-color: white;
+  border-radius: 50%;
+  transition: all 0.3s;
 }
 
-.privilegios input[type="checkbox"] {
-  accent-color: var(--color-primario, #C81E17);
-  transform: scale(1.1);
+.switch-input:checked + .switch {
+  background-color: var(--color-primary);
 }
+
+.switch-input:checked + .switch::before {
+  left: 19px;
+}
+
+.permissions-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+}
+
+.permissions-section h3 {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.permission-item {
+  margin-bottom: 1rem;
+}
+
+.permission-label {
+  font-weight: 600;
+}
+
+.privilegios-list {
+  margin-left: 1.5rem;
+}
+
+.privilegio-item {
+  font-size: 0.9rem;
+  display: block;
+  margin-top: 0.5rem;
+}
+
 .submit-btn {
   background-color: var(--color-primary);
   color: white;
@@ -122,5 +140,13 @@
   background-color: var(--color-accent);
 }
 
-
-
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-dark);
+}
