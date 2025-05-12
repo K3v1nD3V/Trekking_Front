@@ -27,6 +27,7 @@ export const createPaquete = async (paqueteData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
+    console.log('Respuesta del servidor:', response);
     return response;
   } catch (error) {
     if (error.response) {
