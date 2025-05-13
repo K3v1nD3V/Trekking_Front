@@ -125,10 +125,8 @@
     width: 100%;
     overflow: hidden;
     background-color: #fff;
-    border: 2px solid #C81E17;
     border-radius: 20px;
     padding: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
   
   .portfolio-track {
@@ -139,7 +137,7 @@
   
   .portfolio-track img {
     width: 300px;
-    height: 300px;
+    height: 350px;
     object-fit: cover;
     margin-right: 20px;
     border-radius: 15px;
@@ -154,4 +152,32 @@
       transform: translateX(-50%);
     }
   }
+
+  .portfolio-container {
+  position: relative;
+  overflow: hidden;
+  /* ... tus estilos existentes */
+}
+
+.portfolio-container::before,
+.portfolio-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 90px;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.portfolio-container::before {
+  left: 0;
+  background: linear-gradient(to right, white 0%, transparent 100%);
+}
+
+.portfolio-container::after {
+  right: 0;
+  background: linear-gradient(to left, white 0%, transparent 100%);
+}
+
   
