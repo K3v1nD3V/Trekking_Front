@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import '../../../css/components/admin/PaqueteFormStyles.css';
+import '../../../css/components/admin/PaqueteForm.css';
 import { updatePaquete, createPaquete } from '../../../api/paquetes';
 
 
@@ -17,7 +17,35 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
   // console.log(formData);
   
   const [newMedia, setNewMedia] = useState([]);
+  const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.nombre || formData.nombre.length < 3) {
+      newErrors.nombre = 'El nombre debe tener al menos 3 caracteres.';
+    }
+    if (!formData.valor || formData.valor <= 0) {
+      newErrors.valor = 'El valor debe ser un número positivo.';
+    }
+    if (!formData.descripcion || formData.descripcion.length < 10) {
+      newErrors.descripcion = 'La descripción debe tener al menos 10 caracteres.';
+    }
+    if (!formData.lugar_encuentro || formData.lugar_encuentro.length < 10) {
+      newErrors.lugar_encuentro = 'El lugar de encuentro debe tener al menos 10 caracteres.';
+    }
+    if (!formData.destino || formData.destino.length < 10) {
+      newErrors.destino = 'El destino debe tener al menos 10 caracteres.';
+    }
+    if (formData.servicios.length === 0) {
+      newErrors.servicios = 'Debe seleccionar al menos un servicio.';
+    }
+    if (formData.multimedia.length + newMedia.length === 0) {
+      newErrors.multimedia = 'Debe agregar al menos un archivo multimedia.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,7 +90,7 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    if (!validate()) return;
     console.log('Datos en formData:', formData);
     console.log('Archivos en newMedia:', newMedia);
   
@@ -124,8 +152,8 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
           name="nombre"
           value={formData.nombre}
           onChange={handleChange}
-          required
         />
+        {errors.nombre && <p className="form-error">{errors.nombre}</p>}
       </div>
 
       <div className="form-group">
@@ -134,8 +162,8 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
           name="descripcion"
           value={formData.descripcion}
           onChange={handleChange}
-          required
         />
+        {errors.descripcion && <p className="form-error">{errors.descripcion}</p>}
       </div>
 
       <div className="form-row">
@@ -146,8 +174,8 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
             name="valor"
             value={formData.valor}
             onChange={handleChange}
-            required
           />
+          {errors.valor && <p className="form-error">{errors.valor}</p>}
         </div>
 
         <div className="form-group">
@@ -157,8 +185,8 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
             name="lugar_encuentro"
             value={formData.lugar_encuentro}
             onChange={handleChange}
-            required
           />
+          {errors.lugar_encuentro && <p className="form-error">{errors.lugar_encuentro}</p>}
         </div>
       </div>
 
@@ -169,8 +197,8 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
           name="destino"
           value={formData.destino}
           onChange={handleChange}
-          required
         />
+        {errors.destino && <p className="form-error">{errors.destino}</p>}
       </div>
       <div className="form-group">
   <label>Servicios</label>
@@ -194,6 +222,7 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
       </div>
     ))}
   </div>
+  {errors.servicios && <p className="form-error">{errors.servicios}</p>}
 </div>
       <div className="form-group">
         <label>Multimedia</label>
@@ -211,7 +240,7 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
             {formData.multimedia.length + newMedia.length}/5
           </span>
         </div>
-
+        {errors.multimedia && <p className="form-error">{errors.multimedia}</p>}
         {formData.multimedia.length > 0 && (
           <div className="existing-media-section">
             <h4 className="media-section-title">Archivos existentes</h4>
