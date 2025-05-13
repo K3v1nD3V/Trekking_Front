@@ -1,0 +1,57 @@
+/* PaqueteFormStyles.css o VentaFormStyles.css */
+
+.venta-form {
+    display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  margin: 0 auto;
+  }
+  
+  .venta-form .form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .venta-form label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .venta-form input,
+  .venta-form select {
+    padding: 0.6rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .venta-form input:focus,
+  .venta-form select:focus {
+    border-color: #C81E17;
+    outline: none;
+  }
+  
+  .form-submit-button {
+    background-color: #C81E17;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .form-submit-button:hover {
+    background-color: #8B2B1B;
+  }
+  

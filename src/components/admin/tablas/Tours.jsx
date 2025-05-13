@@ -81,12 +81,19 @@ const Tours = () => {
       selector: (row) => row.id_paquete?.nombre || 'Sin paquete',
       sortable: true,
       wrap: true,
+      width: '250px',
+      cell: (row) => (
+        <div style={{ fontWeight: 600 }}>
+          {row.id_paquete?.nombre || 'Sin paquete'}
+        </div>
+      ),
     },
     {
       name: 'Fecha y Hora',
       selector: (row) => new Date(row.fechaHora).toLocaleString(),
       sortable: true,
       wrap: true,
+      width: '300px',
     },
     {
       name: 'Acciones',
@@ -95,7 +102,7 @@ const Tours = () => {
           <button
             className="action-button edit-button"
             onClick={(e) => {
-              e.stopPropagation(); // Evita que se active el evento de fila
+              e.stopPropagation();
               handleEditTour(row);
             }}
           >
@@ -104,7 +111,7 @@ const Tours = () => {
           <button
             className="action-button delete-button"
             onClick={(e) => {
-              e.stopPropagation(); // Evita que se active el evento de fila
+              e.stopPropagation(); 
               handleDeleteTour(row._id);
             }}
           >
@@ -113,9 +120,10 @@ const Tours = () => {
         </div>
       ),
       ignoreRowClick: true,
-      width: '150px',
+      width: '160px',
     },
   ];
+  
 
   if (loading) return <div className="loading">Cargando tours...</div>;
   if (error) return <div className="error">Error: {error}</div>;

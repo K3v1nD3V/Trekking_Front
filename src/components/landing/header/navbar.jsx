@@ -12,11 +12,11 @@ const NavBar = () => {
                     </a>
                 </div>
                 <ul className="navbar-links">
-                    <li><a href="#about" className="nav-link"><FaInfoCircle /> Sobre Nosotros</a></li>
-                    <li><a href="#servicios" className="nav-link"><FaSuitcase /> Servicios</a></li>
-                    <li><a href="#portfolio" className="nav-link"><FaSuitcase /> Portafolio</a></li>
-                    <li><a href="#contact" className="nav-link"><FaEnvelope /> Contacto</a></li>
                     <li><a href="#paquetes" className="nav-link"><FaHome /> Paquetes</a></li>
+                    <li><a href="#portfolio" className="nav-link"><FaSuitcase /> Portafolio</a></li>
+                    <li><a href="#servicios" className="nav-link"><FaSuitcase /> Servicios</a></li>
+                    <li><a href="#about" className="nav-link"><FaInfoCircle /> Sobre Nosotros</a></li>
+                    <li><a href="#contact" className="nav-link"><FaEnvelope /> Contacto</a></li>
                 </ul>
                 <div className="navbar-auth">
                     <a href="/login" className="btn btn-outline"><FaSignInAlt /> Ingresar</a>

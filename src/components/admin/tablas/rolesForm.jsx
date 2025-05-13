@@ -31,7 +31,6 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
           });
         }
       } catch (err) {
-        alert('Error cargando datos');
         console.error(err);
       }
     };
@@ -67,12 +66,10 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Obtener los IDs de los permisos seleccionados
     const permisosFinal = formData.permisos.map(p => {
       const permisoEncontrado = permisos.find(perm => perm.nombre === p.permiso);
       return permisoEncontrado?._id;
-    }).filter(id => id); // eliminar undefined
+    }).filter(id => id);
 
     const dataToSend = {
       nombre: formData.nombreRol,
@@ -82,24 +79,20 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
 
     try {
       if (initialData._id) {
-        console.log('Payload que se envía (editando):', JSON.stringify(dataToSend, null, 2));
         await updateRol(initialData._id, dataToSend);
       } else {
-        console.log('Payload que se envía (creando):', JSON.stringify(dataToSend, null, 2));
         await createRol(dataToSend);
       }
-
       onSubmit && onSubmit(dataToSend);
       onClose && onClose();
     } catch (err) {
       console.error('Error al guardar el rol:', err);
-      alert('Error al guardar');
     }
   };
 
   return (
     <div className="form-container">
-      <form className="card-form" onSubmit={handleSubmit}>
+      <form className="form" onSubmit={handleSubmit}>
         {onClose && <button className="close-btn" onClick={onClose} type="button">×</button>}
 
         <h2>{initialData._id ? 'Editar Rol' : 'Nuevo Rol'}</h2>
@@ -115,21 +108,26 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
           />
         </label>
 
-        <label className="estado-toggle">
+        <label className="switch-container">
           Estado:
-          <input
-            type="checkbox"
-            checked={formData.estado}
-            onChange={e => setFormData({ ...formData, estado: e.target.checked })}
-          />
+          <div className="switch-wrapper">
+            <input
+              type="checkbox"
+              className="switch-input"
+              checked={formData.estado}
+              onChange={e => setFormData({ ...formData, estado: e.target.checked })}
+            />
+            <span className="switch"></span>
+          </div>
         </label>
 
-        <div className="permiso-list">
+        <div className="permissions-section">
+          <h3>Permisos y Privilegios</h3>
           {permisos.map(p => {
             const permisoActivo = formData.permisos.find(pm => pm.permiso === p.nombre);
             return (
-              <div key={p._id} className="permiso-card">
-                <label>
+              <div key={p._id} className="permission-item">
+                <label className="permission-label">
                   <input
                     type="checkbox"
                     checked={!!permisoActivo}
@@ -139,9 +137,9 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
                 </label>
 
                 {permisoActivo && (
-                  <div className="privilegios">
+                  <div className="privilegios-list">
                     {privilegios.map(pr => (
-                      <label key={pr._id}>
+                      <label key={pr._id} className="privilegio-item">
                         <input
                           type="checkbox"
                           checked={permisoActivo.privilegios.includes(pr._id)}

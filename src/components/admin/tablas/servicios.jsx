@@ -211,7 +211,6 @@ const ServiciosTable = () => {
                         },
                     },
                 }}
-                onRowClicked={handleServicioClick}
             />
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

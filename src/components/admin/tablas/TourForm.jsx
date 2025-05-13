@@ -15,7 +15,6 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
   }, []);
 
   useEffect(() => {
-    // Actualiza el formulario cuando cambie `initialData`
     setFormData({
       fechaHora: initialData.fechaHora
         ? new Date(initialData.fechaHora).toISOString().slice(0, 16) // Formato para datetime-local
@@ -53,16 +52,11 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       id_paquete: formData.id_paquete
     };
 
-    console.log('Datos enviados desde el formulario:', formattedData);
     onSubmit(formattedData);
   };
 
   return (
     <form onSubmit={handleSubmit} className="tour-form-container">
-      <h2 className="tour-modal-title">
-        {initialData._id ? 'Actualizar Tour' : 'Crear Nuevo Tour'}
-      </h2>
-
       <div className="tour-form-group">
         <label htmlFor="fechaHora">Fecha y Hora</label>
         <input
@@ -98,9 +92,6 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       <div className="tour-form-buttons">
         <button type="submit" className="tour-form-submit-button">
           {initialData._id ? 'Actualizar' : 'Crear'} Tour
-        </button>
-        <button type="button" className="tour-form-cancel-button" onClick={onClose}>
-          Cancelar
         </button>
       </div>
     </form>

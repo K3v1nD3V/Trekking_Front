@@ -71,7 +71,11 @@ const Ventas = () => {
   const columns = [
     {
       name: 'Cliente',
-      selector: row => row.id_cliente ? row.id_cliente.nombre : 'Desconocido',
+      selector: row => (
+        <span style={{ fontWeight: 'bold' }}>
+          {row.id_cliente ? row.id_cliente.nombre : 'Desconocido'}
+        </span>
+      ),
       sortable: true,
     },
     {
@@ -90,6 +94,7 @@ const Ventas = () => {
       sortable: true,
     }
   ];
+  
 
   if (loading) return <div className="loading">Cargando ventas...</div>;
 

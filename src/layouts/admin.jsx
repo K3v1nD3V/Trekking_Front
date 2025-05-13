@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom'; 
+import { Outlet } from 'react-router-dom';
 import NavOption from '../components/common/NavOption';
 import logo from '../assets/image/ORIGINAL_PNG.png';
 
@@ -16,43 +16,44 @@ const iconStyle = {
 };
 
 const Admin = () => {
-  const [isMenuVisible, setIsMenuVisible] = useState(true); // Controlar visibilidad del menú
+  const [isMenuVisible, setIsMenuVisible] = useState(true);
 
   const toggleMenu = () => {
-    setIsMenuVisible(!isMenuVisible); // Cambiar estado del menú
+    setIsMenuVisible(!isMenuVisible);
   };
 
   return (
     <>
+      {/* Encabezado */}
       <header className="admin-header">
-        {/* Icono de menú (hamburguesa) al lado izquierdo */}
+        {/* Icono hamburguesa */}
         <div className="menu-icon" onClick={toggleMenu} style={{ cursor: 'pointer' }}>
           <span className="material-symbols-outlined" style={{ fontSize: '40px', color: '#8B2B1B' }}>
-            {isMenuVisible ? 'menu_open' : 'menu'} {/* Cambiar icono según estado */}
+            {isMenuVisible ? 'menu_open' : 'menu'}
           </span>
         </div>
 
-        <div className="admin-info">
-          <span className="admin-name">Bienvenido</span>
-        </div>
-
-        {/* Logo al lado derecho */}
-        <div className="logosec">
+        {/* Logo centrado */}
+        <div className="logo-header-centered">
           <img src={logo} alt="Logo Trekking San Cristóbal" style={logoStyle} />
         </div>
+
+        {/* Espacio reservado para mantener centrado el logo */}
+        <div style={{ width: '40px' }}></div>
       </header>
 
+      {/* Contenedor principal */}
       <div className="main-container">
-        {/* Menú de navegación lateral */}
+        {/* Menú lateral */}
         {isMenuVisible && (
           <div className="navcontainer">
             <nav className="nav">
               <div className="nav-upper-options">
-                {/* Sección Dashboard */}
+                {/* Dashboard */}
                 <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>dashboard</span>} text="Dashboard" to="/admin" />
                 <hr className="divider" />
 
-                {/* Sección Configuración */}
+                {/* Configuración */}
                 <div className="menu-section">
                   <h3 className="section-title">Configuración</h3>
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>manage_accounts</span>} text="Roles" to="/admin/roles" />
@@ -61,7 +62,7 @@ const Admin = () => {
                 </div>
                 <hr className="divider" />
 
-                {/* Sección de Paquetes, Tours y Servicios */}
+                {/* Servicios */}
                 <div className="menu-section">
                   <h3 className="section-title">Servicios</h3>
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>package_2</span>} text="Paquetes" to="/admin/paquetes" />
@@ -70,7 +71,7 @@ const Admin = () => {
                 </div>
                 <hr className="divider" />
 
-                {/* Sección Usuarios */}
+                {/* Usuarios */}
                 <div className="menu-section">
                   <h3 className="section-title">Usuarios</h3>
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>person</span>} text="Clientes" to="/admin/clientes" />
@@ -78,9 +79,9 @@ const Admin = () => {
                 </div>
                 <hr className="divider" />
 
-                {/* Otras Opciones */}
+                {/* Otras opciones */}
                 <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>price_check</span>} text="Ventas" to="/admin/ventas" />
-                <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>login</span>} text="Logout" to="/logout" isLogout={true} />
+                <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>logout</span>} text="Logout" to="/logout" isLogout={true} />
               </div>
             </nav>
           </div>
@@ -89,7 +90,6 @@ const Admin = () => {
         {/* Contenido principal */}
         <div className="main">
           <div className="box-container">
-            {/* Cuadros de estadísticas */}
             <div className="box box1">
               <div className="text">
                 <h2 className="topic-heading">60.5k</h2>
@@ -120,7 +120,7 @@ const Admin = () => {
             </div>
           </div>
 
-          {/* Contenedor de reportes */}
+          {/* Reportes u otros contenidos dinámicos */}
           <div className="report-container">
             <Outlet />
           </div>
