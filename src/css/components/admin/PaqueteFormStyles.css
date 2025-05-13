@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 /* Estilos para la sección de multimedia */
 .media-limit {
   position: relative;
@@ -229,7 +227,7 @@
 .media-item button {
   position: absolute;
   top: -6px;
-  right: -6px;
+  left: 110px;
   background: #c81e17;
   color: #fff;
   border: none;
@@ -298,4 +296,3 @@ select {
 }
 
 
->>>>>>> 8cb181500f7b6bf7ba1956ac4430517ac5a9565e
