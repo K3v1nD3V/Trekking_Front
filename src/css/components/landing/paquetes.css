@@ -1,0 +1,192 @@
+/* Sección principal de paquetes */
+.paquetes {
+    padding: var(--space-xl) var(--space-lg);
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: var(--space-xl); /* Espaciado entre secciones */
+}
+
+/* Paquete Actual */
+.actual-paquete {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-lg);
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.actual-paquete img {
+    width: 50%;
+    object-fit: cover;
+}
+
+.paquete-info {
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    justify-content: center;
+}
+
+.paquete-info p span{
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+.paquete-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.paquete-location,
+.paquete-date,
+.paquete-hour {
+    font-size: 1.2rem;
+    color: var(--color-text-light);
+}
+
+.paquete-description {
+    font-size: 1.1rem;
+    color: var(--color-text);
+    margin: var(--space-sm) 0;
+    line-height: 1.6;
+}
+
+.paquete-price {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--color-accent);
+}
+
+/* Botón de contacto */
+.btn {
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--border-radius-md);
+    font-size: 1.1rem;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    justify-content: center;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* Servicios incluidos */
+/* .paquete-servicios {
+    margin-top: var(--space-md);
+} */
+
+.paquete-servicios h3 {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.servicios-icons {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+.otros-servicios-icons {
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.servicio-icon {
+    font-size: 2rem;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: color 0.3s ease;
+    transform: scale(1.5);
+}
+
+.servicio-icon:hover {
+    color: var(--color-primary);
+}
+
+/* Lista de otros paquetes */
+.paquete-list {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.paquete-list-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: var(--space-lg);
+}
+
+.paquete-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    justify-content: center;
+}
+
+/* Card de cada paquete */
+.paquete-item {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    width: 285px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.paquete-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md), 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.paquete-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.paquete-item-info {
+    padding: var(--space-md);
+    text-align: center;
+}
+
+.paquete-item-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: var(--color-primary);
+}
+
+.paquete-item-location {
+    font-size: 1rem;
+    color: var(--color-text-light);
+}
+
+.paquete-item-location span{
+    color: var(--color-primary);
+}
+
+.paquete-item-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-accent);
+}

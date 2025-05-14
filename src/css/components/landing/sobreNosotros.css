@@ -107,26 +107,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* Button */
-.btn-whatsapp {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #25d366;
-  color: white;
-  font-weight: bold;
-  border-radius: var(--radius);
-  text-decoration: none !important;
-  transition: background 0.3s ease;
-  box-shadow: var(--shadow);
-}
-
-.btn-whatsapp:hover {
-  background-color: #1ebe5d;
-  color: #fdfdfd;
-}
-
 /* Animation when visible */
 [data-animate].active {
   transform: translateY(0);

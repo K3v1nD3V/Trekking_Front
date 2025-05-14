@@ -4,7 +4,6 @@ import api from './base';
 export const getTours = async () => {
   try {
     const response = await api.get('/tours');
-    console.log('response: ', response);
     return response || []; // Devuelve un array vacío si no hay datos
   } catch (error) {
     console.error('Error al obtener tours:', error.response?.data?.message || error.message);
