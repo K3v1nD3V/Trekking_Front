@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../../../css/components/admin/rolesForm.css';
-import { createRol, updateRol, getPermisos, getPrivilegios } from '../../../api/roles';
+import {
+  createRol,
+  updateRol,
+  getPermisos,
+  getPrivilegios
+} from '../../../api/roles';
 
 const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({
@@ -11,7 +16,10 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
 
   const [permisos, setPermisos] = useState([]);
   const [privilegios, setPrivilegios] = useState([]);
+  const [errorNombre, setErrorNombre] = useState('');
+  const nombreRolRef = useRef(null); // Referencia para el input del nombre
 
+  // Cargar datos iniciales
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,6 +46,7 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     fetchData();
   }, [initialData]);
 
+  // Alternar permiso (checkbox)
   const togglePermiso = (permiso) => {
     setFormData(prev => {
       const existe = prev.permisos.find(p => p.permiso === permiso);
@@ -48,6 +57,7 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     });
   };
 
+  // Alternar privilegio (checkbox)
   const togglePrivilegio = (permiso, privilegioId) => {
     setFormData(prev => ({
       ...prev,
@@ -64,19 +74,35 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     }));
   };
 
+  // Enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    const nombreTrimmed = formData.nombreRol.trim();
+  
+    if (!nombreTrimmed) {
+      setErrorNombre('El nombre del rol no puede estar vacío.');
+      nombreRolRef.current?.focus();
+      return;
+    } else if (nombreTrimmed.length < 3) {
+      setErrorNombre('El nombre del rol debe tener al menos 3 caracteres.');
+      nombreRolRef.current?.focus();
+      return;
+    } else {
+      setErrorNombre('');
+    }
+  
     const permisosFinal = formData.permisos.map(p => {
       const permisoEncontrado = permisos.find(perm => perm.nombre === p.permiso);
       return permisoEncontrado?._id;
     }).filter(id => id);
-
+  
     const dataToSend = {
       nombre: formData.nombreRol,
       estado: formData.estado,
       permisos: permisosFinal
     };
-
+  
     try {
       if (initialData._id) {
         await updateRol(initialData._id, dataToSend);
@@ -89,11 +115,13 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
       console.error('Error al guardar el rol:', err);
     }
   };
-
+  
   return (
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
-        {onClose && <button className="close-btn" onClick={onClose} type="button">×</button>}
+        {onClose && (
+          <button className="close-btn" onClick={onClose} type="button">×</button>
+        )}
 
         <h2>{initialData._id ? 'Editar Rol' : 'Nuevo Rol'}</h2>
 
@@ -102,10 +130,12 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
           <input
             type="text"
             name="nombreRol"
+            ref={nombreRolRef}
             value={formData.nombreRol}
             onChange={e => setFormData({ ...formData, nombreRol: e.target.value })}
-            required
+            className={errorNombre ? 'input-error' : ''}
           />
+          {errorNombre && <p className="error-text">{errorNombre}</p>}
         </label>
 
         <label className="switch-container">

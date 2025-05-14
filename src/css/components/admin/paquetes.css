@@ -47,6 +47,43 @@
   text-overflow: ellipsis;
 }
 
+.paquetes-servicios-expandible {
+  position: relative;
+}
+
+.lista-servicios {
+  list-style: none;
+  margin-left: 18px;
+  padding-left: 12px;
+  border-left: 2.1px solid var(--primary-color); /* Línea vertical */
+  margin-top: 10px;
+}
+
+.servicio-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.checkmark {
+  color: var(--primary-color);
+}
+
+.ver-servicios-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  cursor: pointer; 
+}
+
+.flecha {
+  transition: transform 0.3s ease;
+  cursor: pointer; 
+}
+
+
 .paquetes-multimedia-container {
   position: relative;
   height: 100px;
