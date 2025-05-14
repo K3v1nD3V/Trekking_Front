@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import '../../../css/components/admin/PaqueteForm.css';
 import '../../../css/components/admin/PaqueteFormStyles.css';
 import { updatePaquete, createPaquete } from '../../../api/paquetes';
 
@@ -16,7 +17,35 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
 
   const [newMedia, setNewMedia] = useState([]);
   const [showServicios, setShowServicios] = useState(false);
+  const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.nombre || formData.nombre.length < 3) {
+      newErrors.nombre = 'El nombre debe tener al menos 3 caracteres.';
+    }
+    if (!formData.valor || formData.valor <= 0) {
+      newErrors.valor = 'El valor debe ser un número positivo.';
+    }
+    if (!formData.descripcion || formData.descripcion.length < 10) {
+      newErrors.descripcion = 'La descripción debe tener al menos 10 caracteres.';
+    }
+    if (!formData.lugar_encuentro || formData.lugar_encuentro.length < 10) {
+      newErrors.lugar_encuentro = 'El lugar de encuentro debe tener al menos 10 caracteres.';
+    }
+    if (!formData.destino || formData.destino.length < 10) {
+      newErrors.destino = 'El destino debe tener al menos 10 caracteres.';
+    }
+    if (formData.servicios.length === 0) {
+      newErrors.servicios = 'Debe seleccionar al menos un servicio.';
+    }
+    if (formData.multimedia.length + newMedia.length === 0) {
+      newErrors.multimedia = 'Debe agregar al menos un archivo multimedia.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,6 +83,8 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!validate()) return;
+  
     const formDataToSend = new FormData();
     Object.entries({
       nombre: formData.nombre,
@@ -86,19 +117,58 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
       {/* Información Básica */}
       <div className="seccion-formulario">
         <label>Nombre</label>
-        <input name="nombre" type="text" value={formData.nombre} onChange={handleChange} required />
+        <input
+          type="text"
+          name="nombre"
+          value={formData.nombre}
+          onChange={handleChange}
+        />
+        {errors.nombre && <p className="form-error">{errors.nombre}</p>}
+      </div>
 
+      <div className="form-group">
         <label>Descripción</label>
-        <textarea name="descripcion" value={formData.descripcion} onChange={handleChange} required />
+        <textarea
+          name="descripcion"
+          value={formData.descripcion}
+          onChange={handleChange}
+        />
+        {errors.descripcion && <p className="form-error">{errors.descripcion}</p>}
+      </div>
 
-        <label>Valor</label>
-        <input name="valor" type="number" value={formData.valor} onChange={handleChange} required />
+      <div className="form-row">
+        <div className="form-group">
+          <label>Valor</label>
+          <input
+            type="number"
+            name="valor"
+            value={formData.valor}
+            onChange={handleChange}
+          />
+          {errors.valor && <p className="form-error">{errors.valor}</p>}
+        </div>
 
-        <label>Lugar de Encuentro</label>
-        <input name="lugar_encuentro" type="text" value={formData.lugar_encuentro} onChange={handleChange} required />
+        <div className="form-group">
+          <label>Lugar de Encuentro</label>
+          <input
+            type="text"
+            name="lugar_encuentro"
+            value={formData.lugar_encuentro}
+            onChange={handleChange}
+          />
+          {errors.lugar_encuentro && <p className="form-error">{errors.lugar_encuentro}</p>}
+        </div>
+      </div>
 
+      <div className="form-group">
         <label>Destino</label>
-        <input name="destino" type="text" value={formData.destino} onChange={handleChange} required />
+        <input
+          type="text"
+          name="destino"
+          value={formData.destino}
+          onChange={handleChange}
+        />
+        {errors.destino && <p className="form-error">{errors.destino}</p>}
       </div>
 
       {/* Servicios con desplegable */}
@@ -121,23 +191,52 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
             ))}
           </div>
         )}
+      {errors.servicios && <p className="form-error">{errors.servicios}</p>}
       </div>
 
-      {/* Multimedia */}
       <div className="seccion-formulario">
-        <label>Multimedia ({formData.multimedia.length + newMedia.length}/5)</label>
-
-        <div className="media-previews">
-          {formData.multimedia.map((media, index) => (
-            <div key={index} className="media-item">
-              {media.includes('.mp4') || media.includes('.webm') ? (
-                <video src={media} className="preview-media" controls />
-              ) : (
-                <img src={media} alt="" className="preview-media" />
-              )}
-              <button type="button" onClick={() => removeMedia(index, true)}>×</button>
+        <div className="form-group">
+          <label>Multimedia</label>
+          <div
+            className="media-limit"
+            data-count={formData.multimedia.length + newMedia.length}
+          >
+            <div
+              className="media-progress"
+              style={{
+                width: `${((formData.multimedia.length + newMedia.length) / 5) * 100}%`
+              }}
+            >  
             </div>
-          ))}
+            <span className="media-count">
+              {formData.multimedia.length + newMedia.length}/5
+            </span>
+          </div>
+          {errors.multimedia && <p className="form-error">{errors.multimedia}</p>}
+          {formData.multimedia.length > 0 && (
+            <div className="existing-media-section">
+              <h4 className="media-section-title">Archivos existentes</h4>
+              <div className="media-preview-container">
+                {formData.multimedia.map((media, index) => (
+                  <div key={`existing-${index}`} className="media-preview-item">
+                    {media.includes('.mp4') || media.includes('.webm') ? (
+                      <video src={media} className="preview-media" />
+                    ) : (
+                      <img src={media} alt={`Media ${index}`} className="preview-media" />
+                    )}
+                    <button
+                      type="button"
+                      className="remove-media-btn"
+                      onClick={() => removeMedia(index, true)}
+                      title="Eliminar archivo"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {newMedia.map((file, index) => (
             <div key={index} className="media-item">
               {file.type.startsWith('video/') ? (
@@ -149,7 +248,6 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
             </div>
           ))}
         </div>
-
         <input
           type="file"
           multiple

@@ -227,7 +227,7 @@
 .media-item button {
   position: absolute;
   top: -6px;
-  right: -6px;
+  left: 110px;
   background: #c81e17;
   color: #fff;
   border: none;
