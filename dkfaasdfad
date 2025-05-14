@@ -1,0 +1,322 @@
+[33mcommit 74476a4bb06861b33d5aab38865f2b4975c75fab[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Merge: 2cdd196 aec8fd7
+Author: kevin correa <kacete494@gmail.com>
+Date:   Wed May 14 12:20:16 2025 -0500
+
+    Merge branch 'master' of github.com:K3v1nD3V/Trekking_Front
+
+[33mcommit 2cdd196f0d8b6c7c83a02df4908f321e418bd70a[m
+Merge: abf361b e36810b
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Wed May 14 11:54:24 2025 -0500
+
+    merge
+
+[33mcommit aec8fd7552448f7b912e4c206e57f45e731daca7[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: f17478a abf361b
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Wed May 14 10:51:15 2025 -0500
+
+    pequeños detalles
+
+[33mcommit f17478a3578df5173eaaec898ab2bdd060f2639d[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Wed May 14 10:48:01 2025 -0500
+
+    pequeños detalles
+
+[33mcommit abf361bad9de6e85c371171439ccb84d540ac212[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Tue May 13 15:47:29 2025 -0500
+
+    validaciones en paquetes funcionales
+
+[33mcommit 0d2d3d15a42efba70fabd6f9b4fc0b86ec071f17[m
+Merge: 71a89ba f2b4444
+Author: kevin correa <kacete494@gmail.com>
+Date:   Tue May 13 13:49:30 2025 -0500
+
+    Merge branch 'master' of github.com:K3v1nD3V/Trekking_Front
+
+[33mcommit 71a89bab713b4cddeccdcd3cc721ef39213bd1ea[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Tue May 13 13:43:36 2025 -0500
+
+    Mensaje de error en el formulario de creacion y edicion de paquetes funcionando
+
+[33mcommit 308a2f26381acb260c655d3ac70ae910b0b1aa6d[m
+Merge: a8d7315 8cb1815
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Tue May 13 12:08:05 2025 -0500
+
+    solucion del merge, perdida del mensaje de error en paquetes
+
+[33mcommit a8d73153a84f669846e2635d6e8d718f96c4c60d[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Tue May 13 07:19:35 2025 -0500
+
+    Mensajes de error en el formulario  incluidos
+
+[33mcommit f2b4444b27439e8678552e946a3d38583921c21f[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Tue May 13 07:19:00 2025 -0500
+
+    Modificaciones portafolio
+
+[33mcommit 8cb181500f7b6bf7ba1956ac4430517ac5a9565e[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Mon May 12 22:29:12 2025 -0500
+
+    Portafolio
+
+[33mcommit e36810bc2a2dd8a9665349c491676d6523a11db0[m[33m ([m[1;31morigin/Paquetes[m[33m, [m[1;32mPaquetes[m[33m)[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Mon May 12 14:04:44 2025 -0500
+
+    Primera version de la estructura de paquetes para el cliente terminada
+
+[33mcommit 72d93575f5b0ce4c355fda4cf9102a8918acba5d[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Sat May 10 17:19:04 2025 -0500
+
+    Form organizados
+
+[33mcommit 3354ebc21d6a9e9b5ae70d01c62f8e590e755f67[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Fri May 9 10:15:36 2025 -0500
+
+    Se añadio el icono como nuevo campo de servicios
+
+[33mcommit 323a293beb143c96d4e9e7de2d1ea7832bf0f70a[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Thu May 8 14:29:58 2025 -0500
+
+    mejoras en las tablas
+
+[33mcommit 4812a6a10f7e57a154565faf87c1fbf5c0109232[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Wed May 7 17:28:05 2025 -0500
+
+    primera version de la seccion paquetes terminada
+
+[33mcommit bc82f62c3c85c19c4378db852e9963e77825c84b[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Wed May 7 08:39:39 2025 -0500
+
+    pequeños avances en paquetes
+
+[33mcommit cdfd23a328ca09ff4fcab10b5f1bd0c0e270e1be[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Tue May 6 09:33:12 2025 -0500
+
+    Cambios en la landing
+
+[33mcommit cf1cf9fa66345cbbd61e013296fe4f7502c15ba1[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Sat May 3 12:23:37 2025 -0500
+
+    Se crea el componente paquetes
+
+[33mcommit 610449490dab72a0f19f58a55ff0037aa28acbe3[m[33m ([m[1;31morigin/Portafolio[m[33m)[m
+Merge: eaaf6b2 68daba8
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Fri May 2 13:42:39 2025 -0500
+
+    estilos admin
+
+[33mcommit eaaf6b25449419a9b61d73a9e873df7fcc67d4ec[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Fri May 2 13:33:33 2025 -0500
+
+    Estilos admin
+
+[33mcommit 68daba8f43c5858a9add0d86cd00b0f6f37716ed[m
+Merge: 9c35117 6aca168
+Author: kevin correa <kacete494@gmail.com>
+Date:   Fri May 2 09:48:41 2025 -0500
+
+    Merge branch 'master' of github.com:K3v1nD3V/Trekking_Front
+
+[33mcommit 9c351175ae2331274cfa02fe79462ca59ecc660b[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Fri May 2 09:35:26 2025 -0500
+
+    Header y Hero terminados
+
+[33mcommit 6aca168ab33a6babd79250bf944f1a52ba09e079[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Tue Apr 29 14:53:20 2025 -0500
+
+    Estilos login
+
+[33mcommit 457c26c14afb30998758ab8aab6e55bd080441a2[m
+Merge: b60b5fc c57e982
+Author: kevin correa <kacete494@gmail.com>
+Date:   Sat Apr 26 10:02:41 2025 -0500
+
+    Merge branch 'master' of github.com:K3v1nD3V/Trekking_Front
+
+[33mcommit c57e982e3f8188f3e4182e7b0f8b4d15c3756541[m
+Author: roster <zzrosterzz@gmail.com>
+Date:   Sat Apr 26 09:24:32 2025 -0500
+
+    tTours y ventas, aun falta el buscador y organizar lo de usuarios
+
+[33mcommit 09f765bb710961a3b28274c5a2f7202bebd3278b[m
+Merge: f256bbc 9563abf
+Author: roster <zzrosterzz@gmail.com>
+Date:   Fri Apr 25 08:30:26 2025 -0500
+
+    Merge branch 'master' of https://github.com/K3v1nD3V/Trekking_Front
+
+[33mcommit f256bbc1aaba6913da996f24edc00229196f57e4[m
+Author: roster <zzrosterzz@gmail.com>
+Date:   Fri Apr 25 08:26:32 2025 -0500
+
+    Creacion de tours
+
+[33mcommit 9563abff7844bff04a1607a49dcbe1a90b857302[m
+Author: Ximena <roblemariacastaneda@gmail.com>
+Date:   Fri Apr 25 08:20:49 2025 -0500
+
+    Ventas
+
+[33mcommit b60b5fc2ff2d2ba525f8be45d8784a4e300bd890[m
+Merge: 6d7007a 6623735
+Author: kevin correa <kacete494@gmail.com>
+Date:   Wed Apr 23 06:56:16 2025 -0500
+
+    Merge branch 'master' of github.com:K3v1nD3V/Trekking_Front
+
+[33mcommit 6d7007a861197636e78f778453bf9f11369a5102[m
+Merge: 1bb1c99 a2b26f0
+Author: kevin correa <kacete494@gmail.com>
+Date:   Wed Apr 23 06:47:24 2025 -0500
+
+    Merge branch 'master' of github.com:K3v1nD3V/Trekking_Front
+
+[33mcommit 6623735cf7018b986bb93528f8c98c56cf4a114d[m
+Author: Ximena <roblemariacastaneda@gmail.com>
+Date:   Tue Apr 22 22:22:29 2025 -0500
+
+    Usuarios
+
+[33mcommit 1bb1c99c841774addf714291681a3ecb753f86ce[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Tue Apr 22 17:36:18 2025 -0500
+
+    paquetes funcional, creacion, edicion y eliminacion
+
+[33mcommit a2b26f04da262490a01c6e174541aa134c8f676e[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Wed Apr 16 17:07:33 2025 -0500
+
+    Registro usuario
+
+[33mcommit 7a80cef6560a32cb0c948ad002e84a6cf9ebfd7b[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Tue Apr 15 13:43:48 2025 -0500
+
+    Get permisos y privilegios
+
+[33mcommit e6b97ef75d0a94b7d0cb496e4aeaefde134688bf[m
+Author: Ximena <roblemariacastaneda@gmail.com>
+Date:   Wed Apr 9 21:43:02 2025 -0500
+
+    CRUD Clientes
+
+[33mcommit d4af90a7d0f7e543a7ea683bf21f2ea5ec74b41f[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Wed Apr 9 21:17:04 2025 -0500
+
+    Crud roles
+
+[33mcommit bfc4e562aa97bbcc21695e7f0ce2e317b3037dfd[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Wed Apr 9 12:23:13 2025 -0500
+
+    Primera version funcional de servicios terminada
+
+[33mcommit 559df5eede9e242ff017af2954978c180f33dbb2[m
+Author: Ximena <roblemariacastaneda@gmail.com>
+Date:   Tue Apr 8 21:41:28 2025 -0500
+
+    Privilegios
+
+[33mcommit adfd711b169bda56904a2b599945592a83739a72[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Tue Apr 8 07:23:56 2025 -0500
+
+    Limpieza de archivos
+
+[33mcommit c9f7258fbe80f52166186d64851c0c595a19e464[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Tue Apr 8 06:52:19 2025 -0500
+
+    correccion cors
+
+[33mcommit a4367d5fbce6a99135b8d1d749afb41f357ef6ea[m
+Author: Ximena <roblemariacastaneda@gmail.com>
+Date:   Mon Apr 7 19:39:56 2025 -0500
+
+    Clientes
+
+[33mcommit 328a2ac4e6ea151330f9d4c590a5a3152f9c2bdd[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Mon Apr 7 10:46:42 2025 -0500
+
+    Tabla roles y estilos
+
+[33mcommit 4a2b7a5da10c0e08cfdc9bb73ba1a7b1c48173a9[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Mon Apr 7 06:32:07 2025 -0500
+
+    avances en paquetes y servicios
+
+[33mcommit 635b1a146fc177d4740c791675707a2e046ef4c8[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Sun Apr 6 16:07:31 2025 -0500
+
+    arreglo en ruta paqueteForm
+
+[33mcommit b806f6940620a76c9dad5252ca0822398a9a3250[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Sun Apr 6 15:57:46 2025 -0500
+
+    solucion de error en el login
+
+[33mcommit 77e4af543d94c3c8fdf71f187129046ca4474ba5[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Sun Apr 6 14:51:13 2025 -0500
+
+    se elimina app_v1
+
+[33mcommit 2e2e957c834392adece7036d80725d9a0416f9bc[m
+Author: Ashmesa17 <jaramillomesaashlley@gmail.com>
+Date:   Sun Apr 6 14:45:15 2025 -0500
+
+    Creacion del login
+
+[33mcommit aa839741b0633983c814691e507a6978712c5ea1[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Sun Apr 6 12:43:17 2025 -0500
+
+    Enrutamiento actulizado, bases para el consumo de la api, cambion en el layout, y implementacion de multimedia en paquetes
+
+[33mcommit bfd61caafa04e287880d205cf5d927574051d306[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Fri Apr 4 16:36:49 2025 -0500
+
+    se crean las bases del front, paquetes y servicios
+
+[33mcommit eb63eeac9c793276c77555c55317f0ce5f97f0dd[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Thu Apr 3 06:22:30 2025 -0500
+
+    first commit
+
+[33mcommit cf8db7aae3014decfc49f219c9605d1f17dbabbf[m
+Author: K3v1nD3V <kctDEV494@gmail.com>
+Date:   Thu Apr 3 06:21:45 2025 -0500
+
+    first commit
