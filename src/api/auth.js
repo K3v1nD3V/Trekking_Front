@@ -1,4 +1,5 @@
 import api from './base';
+import axios from 'axios';
 
 const AUTH_TOKEN_KEY = 'Trekking';
 
@@ -32,6 +33,14 @@ export const login = async (email, password) => {
   return response;
 };
 
+
+export const recuperarContrasena = (correo) => {
+  return api.post('/usuarios/recuperar', { correo });
+};
+
+export const cambiarContrasena = (token, nuevaContrasena) => {
+  return api.post('/usuarios/cambiar-contrasena', { token, nuevaContrasena });
+};
 
 export const logout = () => {
   removeAuthToken();

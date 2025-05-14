@@ -6,6 +6,8 @@ import Admin from './layouts/admin';
 import Paquetes from './components/admin/tablas/paquetes';
 import Servicios from './components/admin/tablas/servicios';
 import Login from './components/auth/login';
+import RecuperarForm from './components/auth/RecuperarForm';
+import CambiarContrasenaForm from './components/auth/CambiarContrasenaForm';
 import PrivateRoute from './layouts/PrivateRoute';
 import RolesTable from './components/admin/tablas/roles';
 import Usuarios from './components/admin/tablas/usuarios';
@@ -26,6 +28,8 @@ const App = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} /> 
+        <Route path="/recuperar" element={<RecuperarForm />} />
+        <Route path="/cambiar-contrasena/:token" element={<CambiarContrasenaForm />} />
 
         {/* Rutas protegidas */}
         <Route
