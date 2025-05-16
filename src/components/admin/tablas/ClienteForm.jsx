@@ -2,6 +2,8 @@ import React from 'react';
 import { createCliente, updateCliente } from '../../../api/clientes';
 import '../../../css/components/admin/ClienteForm.css';
 
+import { showConfirm, showSuccess, showError } from '../../../alerts/alerts'; // Ajusta la ruta según dónde tengas las alertas
+
 const ClienteForm = ({ onSubmit, initialData = {} }) => {
   const [formData, setFormData] = React.useState({
     documento: initialData.documento || '',
@@ -25,19 +27,27 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Confirmación antes de enviar
+    const confirmResult = await showConfirm(
+      initialData._id ? '¿Confirmas actualizar este cliente?' : '¿Confirmas crear este cliente?',
+      'Confirmación'
+    );
+
+    if (!confirmResult.isConfirmed) return;
+
     try {
       if (initialData && initialData._id) {
         await updateCliente(initialData._id, formData);
-        alert('Cliente actualizado correctamente');
+        await showSuccess('Cliente actualizado correctamente');
       } else {
         await createCliente(formData);
-        alert('Cliente creado correctamente');
+        await showSuccess('Cliente creado correctamente');
       }
 
       onSubmit();
     } catch (error) {
-      alert('Error al guardar cliente: ' + error.message);
       console.error('Error en ClienteForm:', error);
+      await showError('Error', 'Error al guardar cliente: ' + error.message);
     }
   };
 

@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { getPaquetes } from '../../../api/paquetes';
 import '../../../css/components/admin/TourForm.css';
 
+// Importa las alertas que definiste
+import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'; // Ajusta la ruta según corresponda
+
 const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({
     fechaHora: initialData.fechaHora || '',
-    id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '' // Maneja el caso en que sea un objeto o un ID
+    id_paquete: initialData.id_paquete?._id || initialData.id_paquete || ''
   });
   const [paquetes, setPaquetes] = useState([]);
   const [error, setError] = useState('');
@@ -17,9 +20,9 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
   useEffect(() => {
     setFormData({
       fechaHora: initialData.fechaHora
-        ? new Date(initialData.fechaHora).toISOString().slice(0, 16) // Formato para datetime-local
+        ? new Date(initialData.fechaHora).toISOString().slice(0, 16)
         : '',
-      id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '' // Maneja el caso en que sea un objeto o un ID
+      id_paquete: initialData.id_paquete?._id || initialData.id_paquete || ''
     });
   }, [initialData]);
 
@@ -29,6 +32,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       setPaquetes(response);
     } catch (err) {
       setError('Error al cargar los paquetes');
+      showError('Error', 'No se pudieron cargar los paquetes.');
     }
   };
 
@@ -38,21 +42,41 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       ...prev,
       [name]: value
     }));
+    setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.fechaHora || !formData.id_paquete) {
       setError('Todos los campos son requeridos');
+      showError('Error', 'Por favor completa todos los campos.');
       return;
     }
 
-    const formattedData = {
-      fechaHora: new Date(formData.fechaHora).toISOString(), // Convertir a formato ISO
-      id_paquete: formData.id_paquete
-    };
+    // Confirmación antes de enviar
+    const result = await showConfirm(
+      initialData._id
+        ? '¿Estás seguro de actualizar este tour?'
+        : '¿Confirmas crear este tour?',
+      initialData._id ? 'Actualizar Tour' : 'Crear Tour'
+    );
 
-    onSubmit(formattedData);
+    if (result.isConfirmed) {
+      const formattedData = {
+        fechaHora: new Date(formData.fechaHora).toISOString(),
+        id_paquete: formData.id_paquete
+      };
+
+      try {
+        await onSubmit(formattedData);
+        showSuccess(
+          initialData._id ? 'Tour actualizado con éxito' : 'Tour creado con éxito'
+        );
+        onClose(); // Opcional: cierra el formulario después de éxito
+      } catch (submitError) {
+        showError('Error', 'Ocurrió un error al guardar el tour.');
+      }
+    }
   };
 
   return (

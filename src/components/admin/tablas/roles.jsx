@@ -9,6 +9,7 @@ import '../../../css/components/admin/roles.css';
 
 import { getRoles, deleteRol, updateRol } from '../../../api/roles';
 import { getPrivilegios } from '../../../api/privilegios';
+import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'
 
 // 📌 Componente principal
 const RolesTable = () => {
@@ -65,16 +66,20 @@ const RolesTable = () => {
   };
 
   const handleDeleteRol = async (id) => {
-    if (!window.confirm('¿Estás seguro de que deseas eliminar este rol?')) return;
+    const result = await showConfirm('¿Estás seguro de que deseas eliminar este rol?', 'Eliminar Rol');
+  
+    if (!result.isConfirmed) return;
+  
     try {
       await deleteRol(id);
-      alert('¡Rol eliminado exitosamente!');
+      showSuccess('¡Rol eliminado exitosamente!');
       setRoles(prev => prev.filter(rol => rol._id !== id));
     } catch (error) {
       console.error('Error eliminando el rol:', error.message);
-      alert('Hubo un error al eliminar el rol.');
+      showError('Error', 'Hubo un error al eliminar el rol.');
     }
   };
+  
 
   const handleSubmit = () => {
     window.location.reload();
@@ -90,11 +95,12 @@ const RolesTable = () => {
         setRoles(prev =>
           prev.map(r => r._id === row._id ? { ...r, estado: !row.estado } : r)
         );
+        showSuccess(`Estado cambiado a ${!row.estado ? 'Inactivo' : 'Activo'}`);
       } catch (error) {
         console.error('Error actualizando estado:', error.message);
-        alert('Hubo un error al cambiar el estado.');
+        showError('Error', 'Hubo un error al cambiar el estado.');
       }
-    };
+    };   
 
     return (
       <div className="estado-switch">

@@ -1,94 +1,110 @@
-import React from 'react';
-import { createUsuario, updateUsuario } from '../../../api/usuarios';
-import '../../../css/components/admin/ClienteForm.css';
+import React, { useState } from 'react';
+import '../../../css/components/admin/ventaForm.css';
+import { createVenta } from '../../../api/ventas';
 
-const UsuarioForm = ({ onSubmit, initialData = {} }) => {
-    const [formData, setFormData] = React.useState({
-        nombre: initialData.nombre || '',
-        correo: initialData.correo || '',
-        rol: initialData.rol || '',
-        contraseña: '' // Siempre inicia vacío
-    });
+const VentaForm = ({ onSubmit, clientes, paquetes }) => {
+  const [formData, setFormData] = useState({
+    cliente: '',
+    paquete: '',
+    fecha: '',
+    valor: ''
+  });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const nuevaVenta = {
+      id_cliente: formData.cliente,
+      id_paquete: formData.paquete,
+      fecha: new Date(formData.fecha).toISOString(),
+      valor: parseFloat(formData.valor)
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    try {
+      await onSubmit(nuevaVenta);
+    } catch (error) {
+      console.error('Error al crear venta:', error);
+      alert('Error al crear la venta.');
+    }
+  };
 
-        try {
-            const dataToSubmit = { ...formData };
-            if (initialData && initialData._id) {
-                // No enviar contraseña si se está editando
-                delete dataToSubmit.contraseña;
-                await updateUsuario(initialData._id, dataToSubmit);
-                alert('Usuario actualizado correctamente');
-            } else {
-                await createUsuario(dataToSubmit);
-                alert('Usuario creado correctamente');
-            }
+  return (
+    <form className="venta-form" onSubmit={handleSubmit}>
+      {/* Cliente */}
+      <div className="form-group">
+        <label htmlFor="cliente">Cliente</label>
+        <select
+          id="cliente"
+          name="cliente"
+          value={formData.cliente}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Selecciona un cliente</option>
+          {clientes.map(({ _id, nombre, apellido }) => (
+            <option key={_id} value={_id}>
+              {nombre} {apellido}
+            </option>
+          ))}
+        </select>
+      </div>
 
-            onSubmit(); // Actualiza estado global o cierra modal
-        } catch (error) {
-            alert('Error al guardar usuario: ' + error.message);
-            console.error('Error en UsuarioForm:', error);
-        }
-    };
+      {/* Paquete */}
+      <div className="form-group">
+        <label htmlFor="paquete">Paquete</label>
+        <select
+          id="paquete"
+          name="paquete"
+          value={formData.paquete}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Selecciona un paquete</option>
+          {paquetes.map(({ _id, nombre }) => (
+            <option key={_id} value={_id}>
+              {nombre}
+            </option>
+          ))}
+        </select>
+      </div>
 
-    return (
-        <form className="cliente-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-                <label>Nombre</label>
-                <input
-                    type="text"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
+      {/* Fecha */}
+      <div className="form-group">
+        <label htmlFor="fecha">Fecha</label>
+        <input
+          type="date"
+          id="fecha"
+          name="fecha"
+          value={formData.fecha}
+          onChange={handleChange}
+          required
+        />
+      </div>
 
-            <div className="form-group">
-                <label>Correo</label>
-                <input
-                    type="email"
-                    name="correo"
-                    value={formData.correo}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
+      {/* Valor */}
+      <div className="form-group">
+        <label htmlFor="valor">Valor</label>
+        <input
+          type="number"
+          id="valor"
+          name="valor"
+          value={formData.valor}
+          onChange={handleChange}
+          required
+        />
+      </div>
 
-            <div className="form-group">
-                <label>Rol</label>
-                <input
-                    type="text"
-                    name="rol"
-                    value={formData.rol}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-
-            <div className="form-group">
-                <label>Contraseña</label>
-                <input
-                    type="password"
-                    name="contraseña"
-                    value={formData.contraseña}
-                    onChange={handleChange}
-                    disabled={!!initialData._id} // Deshabilitar si se está editando
-                    placeholder={initialData._id ? 'No se puede editar la contraseña' : 'Ingrese una contraseña'}
-                />
-            </div>
-
-            <button type="submit" className="form-submit-button">
-                {initialData._id ? 'Actualizar' : 'Crear'} Usuario
-            </button>
-        </form>
-    );
+      {/* Botón */}
+      <button type="submit" className="form-submit-button">
+        Crear Venta
+      </button>
+    </form>
+  );
 };
 
-export default UsuarioForm;
+export default VentaForm;

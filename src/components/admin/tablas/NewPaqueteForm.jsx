@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import '../../../css/components/admin/PaqueteForm.css';
 import '../../../css/components/admin/PaqueteFormStyles.css';
 import { updatePaquete, createPaquete } from '../../../api/paquetes';
+import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'
 
 const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
   const [formData, setFormData] = useState({
@@ -82,8 +83,15 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validate()) return;
+  
+    const confirm = await showConfirm(
+      formData._id ? '¿Estás seguro de actualizar este paquete?' : '¿Deseas crear este nuevo paquete?',
+      formData._id ? 'Confirmar actualización' : 'Confirmar creación'
+    );
+  
+    if (!confirm.isConfirmed) return;
   
     const formDataToSend = new FormData();
     Object.entries({
@@ -93,24 +101,25 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
       lugar_encuentro: formData.lugar_encuentro,
       destino: formData.destino
     }).forEach(([key, value]) => formDataToSend.append(key, value));
-
+  
     formData.servicios.forEach(servicio => formDataToSend.append('servicios[]', servicio._id));
     newMedia.forEach(file => formDataToSend.append('images', file));
-
+  
     try {
       if (formData._id) {
         await updatePaquete(formData._id, formDataToSend);
-        alert('¡Paquete actualizado exitosamente!');
+        await showSuccess('¡Paquete actualizado exitosamente!');
       } else {
         await createPaquete(formDataToSend);
-        alert('¡Paquete creado exitosamente!');
+        await showSuccess('¡Paquete creado exitosamente!');
       }
       onSubmit(formData);
     } catch (error) {
-      alert('Error al procesar la solicitud.');
       console.error(error.response?.data || error.message);
+      await showError('Error al procesar la solicitud', 'Por favor, intenta nuevamente.');
     }
   };
+  
 
   return (
     <form className="paquete-form elegante-formulario" onSubmit={handleSubmit}>

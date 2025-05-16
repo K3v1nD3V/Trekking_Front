@@ -5,8 +5,10 @@ import ServicioForm from './serviciosForm';
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/servicios.css';
 
-import { getServicios } from '../../../api/servicios';
-import { deleteServicio, updateServicio } from '../../../api/servicios';
+import { getServicios, deleteServicio, updateServicio } from '../../../api/servicios';
+
+// Importa las alertas
+import { showConfirm, showSuccess, showError } from '../../../alerts/alerts';
 
 const ServiciosTable = () => {
     const [filterText, setFilterText] = useState('');
@@ -37,17 +39,19 @@ const ServiciosTable = () => {
     };
 
     const handleDeleteServicio = async (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar este servicio?')) return;
+        // Usar showConfirm para confirmar eliminación
+        const result = await showConfirm('¿Estás seguro de que deseas eliminar este servicio?', 'Confirmar eliminación');
+        if (!result.isConfirmed) return;
 
         try {
             await deleteServicio(id);
-            alert('¡Servicio eliminado exitosamente!');
+            showSuccess('¡Servicio eliminado exitosamente!');
             setServicios((prevServicios) =>
                 prevServicios.filter((servicio) => servicio._id !== id)
             );
         } catch (error) {
             console.error('Error eliminando el servicio:', error.message);
-            alert('Hubo un error al eliminar el servicio.');
+            showError('Error', 'Hubo un error al eliminar el servicio.');
         }
     };
 
@@ -57,8 +61,11 @@ const ServiciosTable = () => {
     };
 
     const handleSubmit = () => {
+        // Opcionalmente recargar datos o refrescar estado
+        // En vez de reload, podrías recargar servicios para no recargar toda la página
         window.location.reload();
         setIsModalOpen(false);
+        showSuccess(selectedServicio ? '¡Servicio actualizado exitosamente!' : '¡Servicio creado exitosamente!');
     };
 
     const filteredData = servicios.filter((item) =>
@@ -77,9 +84,10 @@ const ServiciosTable = () => {
                         servicio._id === row._id ? updatedServicio : servicio
                     )
                 );
+                showSuccess('Estado actualizado correctamente');
             } catch (error) {
                 console.error('Error actualizando estado:', error.message);
-                alert('Hubo un error al cambiar el estado.');
+                showError('Error', 'Hubo un error al cambiar el estado.');
             }
         };
 
@@ -105,9 +113,7 @@ const ServiciosTable = () => {
         },
         {
             name: 'Icono',
-            cell: (row) => {
-                return <span className="material-symbols-outlined">{row.icono}</span>;
-            },
+            cell: (row) => <span className="material-symbols-outlined">{row.icono}</span>,
             width: '100px',
         },
         {
@@ -180,10 +186,7 @@ const ServiciosTable = () => {
                         onChange={(e) => setFilterText(e.target.value)}
                         className="table-search"
                     />
-                    <button
-                        onClick={handleCrearServicio}
-                        className="table-button"
-                    >
+                    <button onClick={handleCrearServicio} className="table-button">
                         Crear Servicio
                     </button>
                 </div>
@@ -217,10 +220,7 @@ const ServiciosTable = () => {
                 <h2 className="modal-title">
                     {selectedServicio ? 'Editar Servicio' : 'Crear Nuevo Servicio'}
                 </h2>
-                <ServicioForm
-                    onSubmit={handleSubmit}
-                    initialData={selectedServicio || {}}
-                />
+                <ServicioForm onSubmit={handleSubmit} initialData={selectedServicio || {}} />
             </Modal>
         </div>
     );

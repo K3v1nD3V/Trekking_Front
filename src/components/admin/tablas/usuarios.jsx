@@ -3,14 +3,15 @@ import DataTable from "react-data-table-component";
 import Modal from '../../common/Modal';
 import UsuarioForm from "./UsuarioForm.jsx";
 import { getUsuarios, deleteUsuario, updateUsuario } from '../../../api/usuarios';
-import { getRoles } from '../../../api/roles'; // Asumiendo que tienes esta función
+import { getRoles } from '../../../api/roles';
+import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'; // importa las alertas
 
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
 
 const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
-    const [roles, setRoles] = useState([]);  // Estado para almacenar roles
+    const [roles, setRoles] = useState([]);
     const [filterText, setFilterText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUsuario, setSelectedUsuario] = useState(null);
@@ -29,7 +30,6 @@ const Usuarios = () => {
                 setLoading(false);
             }
         };
-
         fetchUsuariosAndRoles();
     }, []);
 
@@ -44,15 +44,16 @@ const Usuarios = () => {
     };
 
     const handleDeleteUsuario = async (id, nombre) => {
-        if (!window.confirm(`¿Estás seguro de eliminar a ${nombre}?`)) return;
-
         try {
-            await deleteUsuario(id);
-            alert('¡Usuario eliminado exitosamente!');
-            setUsuarios(prev => prev.filter(usuario => usuario._id !== id));
+            const result = await showConfirm(`¿Estás seguro de eliminar a ${nombre}?`, 'Confirmar eliminación');
+            if (result.isConfirmed) {
+                await deleteUsuario(id);
+                showSuccess('¡Usuario eliminado exitosamente!');
+                setUsuarios(prev => prev.filter(usuario => usuario._id !== id));
+            }
         } catch (err) {
             console.error('Error eliminando usuario:', err.message);
-            alert('Error al eliminar el usuario.');
+            showError('Error', 'No se pudo eliminar el usuario.');
         }
     };
 
@@ -69,7 +70,6 @@ const Usuarios = () => {
 
     const getRoleName = (roleId) => {
         const role = roles.find(role => role._id === roleId);
-        console.log(role)
         return role ? role.nombre : 'Desconocido';
     };
 
@@ -89,7 +89,7 @@ const Usuarios = () => {
         },
         {
             name: 'Rol',
-            selector: row => getRoleName(row.rol),  // Usamos la función para obtener el nombre del rol
+            selector: row => getRoleName(row.rol),
             wrap: true,
             width: '200px'
         },
@@ -111,7 +111,7 @@ const Usuarios = () => {
                         className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleDeleteUsuario(row._id, `${row.nombre}`);
+                            handleDeleteUsuario(row._id, row.nombre);
                         }}
                     >
                         Eliminar

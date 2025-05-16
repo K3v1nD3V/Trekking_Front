@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../../../css/components/admin/rolesForm.css';
+import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'
 import {
   createRol,
   updateRol,
@@ -104,15 +105,25 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     };
   
     try {
-      if (initialData._id) {
-        await updateRol(initialData._id, dataToSend);
-      } else {
-        await createRol(dataToSend);
+      const result = await showConfirm(
+        initialData._id ? '¿Deseas actualizar este rol?' : '¿Deseas crear este rol?',
+        'Confirma tu acción'
+      );
+  
+      if (result.isConfirmed) {
+        if (initialData._id) {
+          await showSuccess('Rol actualizado correctamente');
+          onSubmit && onSubmit(dataToSend);
+          onClose && onClose();
+        } else {
+          await showSuccess('Rol creado exitosamente');
+          onSubmit && onSubmit(dataToSend);
+          onClose && onClose();
+        }
       }
-      onSubmit && onSubmit(dataToSend);
-      onClose && onClose();
     } catch (err) {
       console.error('Error al guardar el rol:', err);
+      showError('Error al guardar el rol', 'Verifica los datos o intenta más tarde');
     }
   };
   
