@@ -19,7 +19,7 @@ const RolesTable = () => {
   const [selectedRol, setSelectedRol] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [privilegiosDisponibles, setPrivilegiosDisponibles] = useState([]);
+  // const [privilegiosDisponibles, setPrivilegiosDisponibles] = useState([]);
   const [expandedPermisos, setExpandedPermisos] = useState({});
 
   // 📦 Cargar roles y privilegios
@@ -31,7 +31,7 @@ const RolesTable = () => {
           getPrivilegios(),
         ]);
         setRoles(rolesData);
-        setPrivilegiosDisponibles(privilegiosData);
+        // setPrivilegiosDisponibles(privilegiosData);
         localStorage.setItem('privilegios', JSON.stringify(privilegiosData));
       } catch (error) {
         console.error("Error al cargar datos:", error.message);

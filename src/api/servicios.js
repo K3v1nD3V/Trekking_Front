@@ -22,7 +22,7 @@ export const getServicioById = async (id) => {
 
 export const createServicio = async (servicioData) => {
   try {
-    const response = await api.post('/servicios', servicioData);
+    const response = await api.post('/servicios', servicioData, { requiresAuth: true });
     console.log('servico: ', response);
     return response;
   } catch (error) {
@@ -33,7 +33,7 @@ export const createServicio = async (servicioData) => {
 
 export const updateServicio = async (id, servicioData) => {
   try {
-    const response = await api.put(`/servicios/${id}`, servicioData);
+    const response = await api.put(`/servicios/${id}`, servicioData, { requiresAuth: true });
     return response.data;
   } catch (error) {
     console.error(`Error updating servicio ${id}:`, error);
@@ -43,7 +43,7 @@ export const updateServicio = async (id, servicioData) => {
 
 export const deleteServicio = async (id) => {
   try {
-    const response = await api.delete(`/servicios/${id}`);
+    const response = await api.delete(`/servicios/${id}`, { requiresAuth: true });
     return response.data;
   } catch (error) {
     console.error(`Error deleting servicio ${id}:`, error);

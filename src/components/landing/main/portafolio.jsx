@@ -24,8 +24,8 @@ const Portafolio = () => {
         </div>
 
         <div className="portafolio-gallery" data-animate>
-        <div class="portfolio-container">
-            <div class="portfolio-track">
+        <div className="portfolio-container">
+            <div className="portfolio-track">
                 <img src="/public/Image/portafolio_1.jpeg" alt="Proyecto 1" />
                 <img src="/public/Image/portafolio_2.jpeg" alt="Proyecto 1" />
                 <img src="/public/Image/portafolio_3.jpeg" alt="Proyecto 1" />

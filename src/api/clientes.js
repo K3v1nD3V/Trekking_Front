@@ -2,7 +2,7 @@ import api from './base';
 
 export const getClientes = async () => {
   try {
-    const response = await api.get('/clientes');
+    const response = await api.get('/clientes', { requiresAuth: true });
     return response;
   } catch (error) {
     console.error('Error fetching clientes:', error);
@@ -12,7 +12,7 @@ export const getClientes = async () => {
 
 export const getClienteById = async (id) => {
   try {
-    const response = await api.get(`/clientes/${id}`);
+    const response = await api.get(`/clientes/${id}`, { requiresAuth: true });
     return response;
   } catch (error) {
     console.error(`Error fetching cliente ${id}:`, error);
@@ -22,7 +22,7 @@ export const getClienteById = async (id) => {
 
 export const createCliente = async (clienteData) => {
   try {
-    const response = await api.post('/clientes', clienteData);
+    const response = await api.post('/clientes', clienteData, { requiresAuth: true });
     console.log('cliente: ', response);
     return response;
   } catch (error) {
@@ -33,7 +33,7 @@ export const createCliente = async (clienteData) => {
 
 export const updateCliente = async (id, clienteData) => {
   try {
-    const response = await api.put(`/clientes/${id}`, clienteData);
+    const response = await api.put(`/clientes/${id}`, clienteData, { requiresAuth: true });
     return response.data;
   } catch (error) {
     console.error(`Error updating cliente ${id}:`, error);
@@ -43,7 +43,7 @@ export const updateCliente = async (id, clienteData) => {
 
 export const deleteCliente = async (id) => {
   try {
-    const response = await api.delete(`/clientes/${id}`);
+    const response = await api.delete(`/clientes/${id}`, { requiresAuth: true });
     return response.data;
   } catch (error) {
     console.error(`Error deleting cliente ${id}:`, error);

@@ -1,6 +1,7 @@
 import api from './base';
-
-const AUTH_TOKEN_KEY = 'Trekking';
+import jwtDecode from 'jwt-decode';
+// const AUTH_TOKEN_KEY = import.meta.env.JWT_SECRET;
+const AUTH_TOKEN_KEY = "Trekking";
 
 // Token management
 export const setAuthToken = (token) => {
@@ -8,7 +9,19 @@ export const setAuthToken = (token) => {
 };
 
 export const getAuthToken = () => {
-  return localStorage.getItem(AUTH_TOKEN_KEY);
+  const token = localStorage.getItem(AUTH_TOKEN_KEY);
+  try {
+    const decoded = jwtDecode(token);
+    if (decoded.exp * 1000 > Date.now()) {
+      return token;
+    } else {
+      removeAuthToken();
+      return null;
+    }
+  } catch {
+    removeAuthToken();
+    return null;
+  }
 };
 
 export const removeAuthToken = () => {
@@ -27,7 +40,8 @@ export const login = async (email, password) => {
     correo: email,
     contraseña: password
   });
-
+  console.log("Login response:", response);
+  
   setAuthToken(response.token); 
   return response;
 };

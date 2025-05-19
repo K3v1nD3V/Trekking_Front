@@ -2,7 +2,7 @@ import api from './base';
 
 export const getPermisos = async () => {
   try {
-    const response = await api.get('/permisos'); // Ruta de permisos
+    const response = await api.get('/permisos', { requiresAuth: true }); // Ruta de permisos
     return response;
   } catch (error) {
     console.error('Error al obtener permisos:', error);
@@ -12,7 +12,7 @@ export const getPermisos = async () => {
 
 export const getPermisoById = async (id) => {
   try {
-    const response = await api.get(`/permisos/${id}`); // Permiso específico
+    const response = await api.get(`/permisos/${id}`, { requiresAuth: true }); // Permiso específico
     return response;
   } catch (error) {
     console.error(`Error al obtener permiso con ID ${id}:`, error);
@@ -22,7 +22,7 @@ export const getPermisoById = async (id) => {
 
 export const getPrivilegios = async () => {
   try {
-    const response = await api.get('/privilegios'); // Ruta de privilegios
+    const response = await api.get('/privilegios', { requiresAuth: true }); // Ruta de privilegios
     return response;
   } catch (error) {
     console.error('Error al obtener privilegios:', error);

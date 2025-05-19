@@ -48,7 +48,7 @@ const RegisterForm = () => {
   
     const nuevoUsuario = {
       ...formData,
-      rol: '67e355c0b60ed98a9af8e8f6',
+      rol: '67f7313ad08ed50c81ccf91b',
     };
   
     try {

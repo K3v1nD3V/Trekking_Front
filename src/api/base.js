@@ -13,22 +13,25 @@ const api = axios.create({
 // Interceptor para autenticación
 api.interceptors.request.use(config => {
   const token = getAuthToken();
-  if (token) {
+
+  if (config.requiresAuth && token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
 
 api.interceptors.response.use(
-  response => response.data || response, // Devuelve `response` si `response.data` está vacío
-  error => {
+  (response) => response.data || response,
+  (error) => {
     if (error.response?.status === 401) {
       removeAuthToken();
-      window.location.href = '/login';
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
-    const errorMessage = error.response?.data?.message || 
-                         error.message || 
-                         'Error de conexión';
+    const errorMessage =
+      error.response?.data?.message || error.message || 'Error de conexión';
     return Promise.reject(new Error(errorMessage));
   }
 );

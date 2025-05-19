@@ -2,10 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../../../css/components/admin/rolesForm.css';
 import {
   createRol,
-  updateRol,
-  getPermisos,
-  getPrivilegios
+  updateRol
 } from '../../../api/roles';
+import {
+  getPermisos
+} from '../../../api/permisos';
+import {
+  getPrivilegios
+} from '../../../api/privilegios';
 
 const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({

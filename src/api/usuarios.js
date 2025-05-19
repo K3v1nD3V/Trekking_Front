@@ -2,7 +2,7 @@ import api from './base';
 
 export const getUsuarios = async () => {
   try {
-    const response = await api.get('/usuarios');
+    const response = await api.get('/usuarios', { requiresAuth: true });
     return response;
   } catch (error) {
     console.error('Error fetching usuarios:', error);
@@ -12,7 +12,7 @@ export const getUsuarios = async () => {
 
 export const getUsuarioById = async (id) => {
   try {
-    const response = await api.get(`/usuarios/${id}`);
+    const response = await api.get(`/usuarios/${id}`, { requiresAuth: true });
     return response;
   } catch (error) {
     console.error(`Error fetching usuarios ${id}:`, error);
@@ -22,7 +22,7 @@ export const getUsuarioById = async (id) => {
 
 export const createUsuario = async (usuarioData) => {
   try {
-    const response = await api.post('/usuarios', usuarioData);
+    const response = await api.post('/usuarios', usuarioData, { requiresAuth: true });
     console.log('usuario: ', response);
     return response;
   } catch (error) {
@@ -33,7 +33,7 @@ export const createUsuario = async (usuarioData) => {
 
 export const updateUsuario = async (id, usuarioData) => {
   try {
-    const response = await api.put(`/usuarios/${id}`, usuarioData);
+    const response = await api.put(`/usuarios/${id}`, usuarioData, { requiresAuth: true });
     return response.data;
   } catch (error) {
     console.error(`Error actualizando usuario${id}:`, error);
@@ -43,7 +43,7 @@ export const updateUsuario = async (id, usuarioData) => {
 
 export const deleteUsuario = async (id) => {
   try {
-    const response = await api.delete(`/usuarios/${id}`);
+    const response = await api.delete(`/usuarios/${id}`, { requiresAuth: true });
     return response.data;
   } catch (error) {
     console.error(`Error eliminando usuario ${id}:`, error);

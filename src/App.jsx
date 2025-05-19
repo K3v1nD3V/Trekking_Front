@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import RoleRoute from './components/RoleRoute';
 // Admin Section
 import Admin from './layouts/admin';
 import Paquetes from './components/admin/tablas/paquetes';
@@ -11,16 +12,18 @@ import RolesTable from './components/admin/tablas/roles';
 import Usuarios from './components/admin/tablas/usuarios';
 import Clientes from './components/admin/tablas/clientes';
 import Ventas from './components/admin/tablas/ventas';
-import Privilegios from './components/admin/tablas/privilegios';
-import Permisos from './components/admin/tablas/permisos';
 import RegisterForm from './components/auth/registerForm'; 
 import Tours from "./components/admin/tablas/Tours";
 // Landing Section
 import Landing from './layouts/landing';
+// Cliente Section
+import Cliente from './components/cliente/Cliente';
+import PaquetesCliente from './components/cliente/PaquetesCliente';
+import PaqueteDetalles from './components/cliente/PaqueteDetalles';
+import ServiciosCliente from './components/cliente/ServiciosCliente';
 
 const App = () => {
   return (
-    <AuthProvider>
       <Routes>
         {/* Rutas públicas */}
         <Route path="/" element={<Landing />} />
@@ -31,9 +34,13 @@ const App = () => {
         <Route
           path="/admin/*"
           element={
-            <PrivateRoute>
-              <Admin />
-            </PrivateRoute>
+            <AuthProvider> 
+              <RoleRoute requiredRole="admin">
+                <PrivateRoute>
+                  <Admin />
+                </PrivateRoute>
+              </RoleRoute>
+            </AuthProvider>
           }
         >
           <Route index element={<Paquetes/>} />
@@ -43,15 +50,25 @@ const App = () => {
           <Route path="usuarios" element={<Usuarios/>} />
           <Route path="clientes" element={<Clientes/>} />
           <Route path="ventas" element={<Ventas/>} />
-          <Route path="privilegios" element={<Privilegios/>} />
-          <Route path="permisos" element={<Permisos/>} />
           <Route path="tours" element={<Tours/>} />
         </Route>
 
+        {/* Rutas del cliente */}
+        <Route 
+          path="/cliente/*" 
+          element={
+            <AuthProvider>
+              <Cliente/>
+            </AuthProvider>
+          }>
+          <Route path="paquetes" element={<PaquetesCliente />} />
+          <Route path="paquetes/:id" element={<PaqueteDetalles />} />
+          <Route path="servicios" element={<ServiciosCliente />} />
+        </Route>
+
         {/* Ruta por defecto */}
-        <Route path="*" element={<Login />} />
+        <Route path="*" element={<Landing />} />
       </Routes>
-    </AuthProvider>
   );
 };
 

@@ -1,0 +1,22 @@
+/* Layout principal */
+.cliente-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Contenido dinámico */
+.cliente-content {
+    flex: 1;
+    padding: var(--space-lg);
+    background-color: var(--color-background);
+}
+
+/* Footer */
+.cliente-footer {
+    text-align: center;
+    padding: var(--space-md);
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    font-size: 0.9rem;
+}

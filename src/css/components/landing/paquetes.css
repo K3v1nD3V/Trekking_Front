@@ -190,3 +190,64 @@
     font-weight: bold;
     color: var(--color-accent);
 }
+
+/* Skeleton Loader */
+.skeleton-image {
+    width: 100%;
+    height: 200px;
+    background-color: var(--color-hover);
+    border-radius: var(--border-radius-sm);
+    animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-title {
+    width: 70%;
+    height: 20px;
+    background-color: var(--color-hover);
+    border-radius: var(--border-radius-sm);
+    animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-text {
+    width: 90%;
+    height: 15px;
+    background-color: var(--color-hover);
+    border-radius: var(--border-radius-sm);
+    animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-button {
+    width: 50%;
+    height: 30px;
+    background-color: var(--color-hover);
+    border-radius: var(--border-radius-md);
+    animation: skeleton-loading 1.5s infinite;
+}
+
+.actual-paquete-skeleton {
+    display: grid;
+    grid-template-columns: 40% 60%;
+}
+/* Animación de carga */
+@keyframes skeleton-loading {
+    0% {
+        background-color: var(--color-hover);
+    }
+    50% {
+        background-color: #e0e0e0;
+    }
+    100% {
+        background-color: var(--color-hover);
+    }
+}
+
+.no-paquete{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    padding: var(--space-lg);
+    background-color: var(--color-white);
+    height: 300px;
+}

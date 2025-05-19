@@ -42,8 +42,16 @@ const Login = () => {
 
     setLoading(true);
     try {
-      await login(email, password);
-      navigate('/admin'); 
+      const response = await login(email, password);
+
+      if (response.rol === 'admin') {
+        navigate('/admin');
+      } else if (response.rol === 'cliente') {
+        navigate('/cliente');
+      } else{
+        setError('Rol no reconocido');
+     }
+     
     } catch (err) {
       setError(err.response?.message || 'Credenciales incorrectas');
     } finally {

@@ -27,9 +27,3 @@
 .nav-option[data-logout="true"]:hover {
   background-color: rgba(220, 53, 69, 0.1);
 }
-body {
-  font-family: var(--font-main);
-  font-size: var(--font-size-base);
-  color: #8B2B1B;
-  line-height: 1.5;
-}

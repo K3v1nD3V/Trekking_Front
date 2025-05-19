@@ -57,8 +57,6 @@ const Admin = () => {
                 <div className="menu-section">
                   <h3 className="section-title">Configuración</h3>
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>manage_accounts</span>} text="Roles" to="/admin/roles" />
-                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>admin_panel_settings</span>} text="Privilegios" to="/admin/privilegios" />
-                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>verified_user</span>} text="Permisos" to="/admin/permisos" />
                 </div>
                 <hr className="divider" />
 

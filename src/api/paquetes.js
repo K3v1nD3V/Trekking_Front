@@ -25,7 +25,10 @@ export const createPaquete = async (paqueteData) => {
     const response = await api.post('/paquetes', paqueteData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-      },
+      }
+    },
+    {
+      requiresAuth: true,
     });
     console.log('Respuesta del servidor:', response);
     return response;
@@ -50,6 +53,9 @@ export const updatePaquete = async (id, paqueteData) => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+    },
+    {
+      requiresAuth: true,
     });
     return response;
   } catch (error) {
@@ -61,7 +67,9 @@ export const updatePaquete = async (id, paqueteData) => {
 export const deletePaquete = async (id) => {
   console.log(id);
   try {
-    const response = await api.delete(`/paquetes/${id}`);
+    const response = await api.delete(`/paquetes/${id}`, {
+      requiresAuth: true,
+    });
     return response;
   } catch (error) {
     console.error(`Error deleting paquete ${id}:`, error);
