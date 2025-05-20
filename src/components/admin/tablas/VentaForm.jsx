@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import '../../../css/components/admin/ventaForm.css';
-import { createVenta } from '../../../api/ventas';
-
 const VentaForm = ({ onSubmit, clientes, paquetes }) => {
   const [formData, setFormData] = useState({
     cliente: '',
     paquete: '',
     fecha: '',
-    valor: ''
+    valor: '',
+    acompañantes: [],
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, selectedOptions } = e.target;
+
+    if (type === 'select-multiple') {
+      const values = Array.from(selectedOptions, option => option.value);
+      setFormData(prev => ({ ...prev, [name]: values }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -22,7 +25,8 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
       id_cliente: formData.cliente,
       id_paquete: formData.paquete,
       fecha: new Date(formData.fecha).toISOString(),
-      valor: parseFloat(formData.valor)
+      valor: parseFloat(formData.valor),
+      acompañantes: formData.acompañantes.filter(id => id !== formData.cliente),
     };
 
     try {
@@ -99,10 +103,28 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
         />
       </div>
 
+      {/* Acompañantes */}
+      <div className="form-group">
+        <label htmlFor="acompañantes">Acompañantes</label>
+        <select
+          multiple
+          id="acompañantes"
+          name="acompañantes"
+          value={formData.acompañantes}
+          onChange={handleChange}
+        >
+          {clientes
+            .filter(c => c._id !== formData.cliente)
+            .map(({ _id, nombre, apellido }) => (
+              <option key={_id} value={_id}>
+                {nombre} {apellido}
+              </option>
+            ))}
+        </select>
+      </div>
+
       {/* Botón */}
-      <button type="submit" className="form-submit-button">
-        Crear Venta
-      </button>
+      <button type="submit" className="form-button">Guardar Venta</button>
     </form>
   );
 };

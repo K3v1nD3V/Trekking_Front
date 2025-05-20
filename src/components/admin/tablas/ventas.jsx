@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import VentaForm from './VentaForm';
+// import VentaForm from './VentaForm';
+import VentaForm from '../../../components/admin/tablas/VentaForm';
 import DataTable from "react-data-table-component"; // Añadido para usar la tabla de la misma forma
 import Modal from '../../common/Modal';
 
@@ -39,17 +40,23 @@ const Ventas = () => {
   }, []);
 
   const handleNuevaVenta = async (formData) => {
-    try {
-      await createVenta(formData);
-      alert("Venta creada con éxito.");
-      setIsModalOpen(false);
-      const ventasActualizadas = await getVentas();
-      setVentas(ventasActualizadas);
-    } catch (error) {
-      console.error(error);
-      alert("Error al crear la venta. Asegúrate de haber iniciado sesión.");
+  try {
+    if (formData.acompañantes.includes(formData.id_cliente)) {
+      alert("El cliente principal no puede ser también un acompañante.");
+      return;
     }
-  };
+
+    await createVenta(formData);
+    alert("Venta creada con éxito.");
+    setIsModalOpen(false);
+    const ventasActualizadas = await getVentas();
+    setVentas(ventasActualizadas);
+  } catch (error) {
+    console.error(error);
+    alert("Error al crear la venta. Asegúrate de haber iniciado sesión.");
+  }
+};
+
 
   const filteredVentas = ventas.filter((venta) => {
     const clienteNombre = venta.id_cliente?.nombre || '';
@@ -92,7 +99,18 @@ const Ventas = () => {
       name: 'Valor',
       selector: row => row.valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }),
       sortable: true,
-    }
+    },
+    {
+      name: 'Acompañantes',
+      selector: row => (
+      <span>
+        {Array.isArray(row.acompañantes) && row.acompañantes.length > 0
+          ? row.acompañantes.join(', ')
+          : 'Ninguno'}
+      </span>
+  ),
+}
+
   ];
   
 

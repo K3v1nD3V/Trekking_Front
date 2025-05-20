@@ -178,6 +178,7 @@ const Usuarios = () => {
                 <UsuarioForm
                     onSubmit={handleSubmit}
                     initialData={selectedUsuario || {}}
+                    roles={roles}
                 />
             </Modal>
         </div>
