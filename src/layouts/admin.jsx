@@ -50,8 +50,8 @@ const Admin = () => {
             <nav className="nav">
               <div className="nav-upper-options">
                 {/* Dashboard */}
-                <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>dashboard</span>} text="Dashboard" to="/admin" />
-                <hr className="divider" />
+                {/* <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>dashboard</span>} text="Dashboard" to="/admin" />
+                <hr className="divider" /> */}
 
                 {/* Configuración */}
                 <div className="menu-section">
@@ -78,8 +78,19 @@ const Admin = () => {
                 <hr className="divider" />
 
                 {/* Otras opciones */}
-                <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>price_check</span>} text="Ventas" to="/admin/ventas" />
-                <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>logout</span>} text="Logout" to="/logout" isLogout={true} />
+                <NavOption 
+                  icon={<span className="material-symbols-outlined" 
+                  style={iconStyle}>price_check</span>} 
+                  text="Ventas" 
+                  to="/admin/ventas" 
+                />
+                
+                <NavOption 
+                  icon={<span className="material-symbols-outlined" 
+                  style={iconStyle}>logout</span>} 
+                  text="Logout" to="/logout" 
+                  isLogout={true} 
+                />
               </div>
             </nav>
           </div>
@@ -87,7 +98,7 @@ const Admin = () => {
 
         {/* Contenido principal */}
         <div className="main">
-          <div className="box-container">
+          {/* <div className="box-container">
             <div className="box box1">
               <div className="text">
                 <h2 className="topic-heading">60.5k</h2>
@@ -116,7 +127,7 @@ const Admin = () => {
               </div>
               <span className="material-symbols-outlined" style={{ fontSize: '50px', color: '#E5C9B3' }}>check_circle</span>
             </div>
-          </div>
+          </div> */}
 
           {/* Reportes u otros contenidos dinámicos */}
           <div className="report-container">

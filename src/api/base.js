@@ -27,7 +27,8 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       removeAuthToken();
       if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+        console.log(error)
+        // window.location.href = '/login';
       }
     }
     const errorMessage =

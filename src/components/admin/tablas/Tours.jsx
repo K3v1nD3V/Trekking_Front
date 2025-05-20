@@ -96,6 +96,20 @@ const Tours = () => {
       width: '300px',
     },
     {
+      name: 'Cupos',
+      selector: (row) => row.cupos,
+      sortable: true,
+      wrap: true,
+      width: '100px',
+    },
+    {
+      name: 'Fecha Límite de Inscripción',
+      selector: (row) => new Date(row.fecha_limite_inscripcion).toLocaleDateString(),
+      sortable: true,
+      wrap: true,
+      width: '200px',
+    },
+    {
       name: 'Acciones',
       cell: (row) => (
         <div className="action-buttons">
