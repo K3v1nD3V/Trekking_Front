@@ -51,7 +51,6 @@ const SobreNosotros = () => {
         </div>
 
       </div>
-      <div className="sobre-nosotros-separador" />
 
     </section>
   );

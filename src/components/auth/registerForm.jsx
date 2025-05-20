@@ -48,8 +48,10 @@ const RegisterForm = () => {
   
     const nuevoUsuario = {
       ...formData,
+      correo: formData.correo.toLowerCase(),
       rol: '67f7313ad08ed50c81ccf91b',
     };
+
   
     try {
       await api.post('/usuarios', nuevoUsuario);

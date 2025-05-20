@@ -39,7 +39,7 @@
   
   .servicio-icon {
     font-size: 3rem;
-    color: #C81E17;
+    color: #C81E17 !important;
     margin-bottom: 1rem;
   }
   

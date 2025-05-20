@@ -1,74 +1,45 @@
-/* =============================================
-   CONTENEDOR EXTERNO CENTRADO EN PANTALLA
-============================================= */
 .login-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   background-color: var(--color-background);
-  padding: 20px;
 }
 
-/* =============================================
-   CAJA QUE CONTIENE FORMULARIO + IMAGEN
-============================================= */
 .login-box {
   display: flex;
   flex-wrap: wrap;
-  max-width: 900px;
   width: 100%;
-  background: linear-gradient(145deg, var(--color-white), var(--color-secondary));
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
   overflow: hidden;
-  transition: transform 0.3s ease;
+  max-height: 100vh;
 }
 
-.login-box:hover {
-  transform: translateY(-5px);
-}
-
-/* =============================================
-   COLUMNA DE LA IMAGEN
-============================================= */
 .login-image {
+  opacity: 0.7;
   flex: 1;
-  background-color: transparent; /* o usa otra variable, como --color-background */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px;
 }
 
 .login-image img {
   max-width: 100%;
-  height: auto;
   object-fit: contain;
 }
 
-/* =============================================
-   COLUMNA DEL FORMULARIO
-============================================= */
 .login-form {
   flex: 1;
   padding: 40px 30px;
   text-align: center;
   font-family: var(--font-main);
+  margin-top: 100px;
 }
 
-/* ----------------------------
-   TÍTULO
----------------------------- */
 .login-form h2 {
   margin-bottom: 25px;
   color: var(--color-text);
   font-size: var(--font-size-large);
 }
 
-/* ----------------------------
-   CAMPOS DE ENTRADA
----------------------------- */
 .login-form input {
   width: 100%;
   margin: 10px 0;
@@ -92,7 +63,7 @@
   background-color: #ffeaea;
 }
 
-/* Error específico por campo */
+
 .field-error {
   color: #c81e17;
   font-size: 0.85rem;
@@ -100,9 +71,6 @@
   text-align: left;
 }
 
-/* ----------------------------
-   MENSAJE DE ERROR GENERAL
----------------------------- */
 .error-message {
   color: #c81e17;
   margin-bottom: 1rem;
@@ -114,9 +82,6 @@
   text-align: center;
 }
 
-/* ----------------------------
-   BOTÓN DE ENVÍO
----------------------------- */
 .login-form button {
   width: 100%;
   padding: 14px;
@@ -141,9 +106,6 @@
   cursor: not-allowed;
 }
 
-/* ----------------------------
-   ENLACES DE ACCIÓN
----------------------------- */
 .login-links {
   margin-top: 20px;
   text-align: center;

@@ -42,7 +42,8 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const response = await login(email, password);
+      const response = await login(email.toLowerCase(), password);
+
 
       if (response.rol === 'admin') {
         navigate('/admin');
@@ -63,7 +64,7 @@ const Login = () => {
     <div className="login-wrapper">
       <div className="login-box">
         <div className="login-image">
-          <img src="/src/assets/image/image_login_transparent.png" alt="Login visual" />
+          <img src="https://i.pinimg.com/736x/d0/b7/52/d0b752418c065f7f821449a264aad39d.jpg" alt="Login visual" />
         </div>
 
         <div className="login-form">

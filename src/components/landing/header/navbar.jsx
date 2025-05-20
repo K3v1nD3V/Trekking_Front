@@ -3,9 +3,16 @@ import { FaHome, FaInfoCircle, FaSuitcase, FaEnvelope, FaSignInAlt, FaUserPlus }
 import '../../../css/components/landing/header.css';
 
 const NavBar = () => {
+    
     return (
         <header className="header">
             <nav className="navbar">
+
+                <div className="menu-toggle" id="menu-toggle">
+                    <span class="material-symbols-outlined">
+                    menu
+                    </span>                
+                </div>
                 <div className="navbar-logo">
                     <a href="#home" className="logo-text">
                         <img src="/src/assets/ORIGINAL_PNG.png" alt="Logo Trekking San Cristobal" className="logo-img" />
@@ -16,7 +23,6 @@ const NavBar = () => {
                     <li><a href="#portfolio" className="nav-link"><FaSuitcase /> Portafolio</a></li>
                     <li><a href="#servicios" className="nav-link"><FaSuitcase /> Servicios</a></li>
                     <li><a href="#about" className="nav-link"><FaInfoCircle /> Sobre Nosotros</a></li>
-                    <li><a href="#contact" className="nav-link"><FaEnvelope /> Contacto</a></li>
                 </ul>
                 <div className="navbar-auth">
                     <a href="/login" className="btn btn-outline"><FaSignInAlt /> Ingresar</a>

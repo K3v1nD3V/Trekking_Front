@@ -40,7 +40,6 @@ const Portafolio = () => {
         </div>
 
       </div>
-      <div className="portafolio-separador" />
     </section>
   );
 };
