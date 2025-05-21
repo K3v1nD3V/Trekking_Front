@@ -182,8 +182,15 @@
     max-width: 100%;
     width: 100%;
   }
+
+.success-message {
+  color: #1f8b4c;
+  font-size: 0.9rem;
+  background-color: #e7f5ec;
+  padding: 0.5rem 1rem;
+  border: 1px solid #b4e1c1;
+  border-radius: var(--border-radius-sm);
+  margin-top: 10px;
+  text-align: center;
 }
-
-
-
-
+}
