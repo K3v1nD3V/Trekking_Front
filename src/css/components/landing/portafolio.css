@@ -75,10 +75,6 @@
   transition: transform 0.4s ease;
 }
 
-.gallery-img:hover {
-  transform: scale(1.03);
-}
-
 .gallery-img.tall {
   grid-row: span 2;
   grid-column: span 2;

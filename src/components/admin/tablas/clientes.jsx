@@ -36,10 +36,10 @@ const Clientes = () => {
         setIsModalOpen(true);
     };
 
-    const handleClienteClick = (row) => {
-        setSelectedCliente(row);
-        setIsModalOpen(true);
-    };
+    // const handleClienteClick = (row) => {
+    //     setSelectedCliente(row);
+    //     setIsModalOpen(true);
+    // };
 
     const handleDeleteCliente = async (id, nombreCompleto) => {
         if (!window.confirm(`¿Estás seguro de eliminar a ${nombreCompleto}?`)) return;
@@ -129,6 +129,12 @@ const Clientes = () => {
             format: row => row.telefono.toLocaleString(),
             right: true,
             width: '150px' 
+        },
+        {
+            name: 'Observación Médica',
+            selector: row => row.observacion_medica,
+            wrap: true,
+            width: '200px'
         },
         {
             name: 'Estado',

@@ -92,7 +92,15 @@ const Ventas = () => {
       name: 'Valor',
       selector: row => row.valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }),
       sortable: true,
-    }
+    },
+    {
+      name: 'Acompañantes',
+      selector: (row) =>
+        row.acompañantes && row.acompañantes.length > 0
+          ? row.acompañantes.map((acomp) => acomp.nombre).join(', ')
+          : 'Ninguno',
+      wrap: true,
+    },
   ];
   
 

@@ -169,6 +169,8 @@
 
 .new-media-section {
   border: 1px dashed var(--color-primary);
+  display: flex;
+  gap: 10px;
 }
 
 .media-section-title {
@@ -227,7 +229,7 @@
 .media-item button {
   position: absolute;
   top: -6px;
-  left: 110px;
+  left: 77px;
   background: #c81e17;
   color: #fff;
   border: none;

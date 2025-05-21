@@ -9,6 +9,7 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
     apellido: initialData.apellido || '',
     correo: initialData.correo || '',
     telefono: initialData.telefono || '',
+    observacion_medica: initialData.observacion_medica || '',
     estado: initialData.estado ?? true,
   });
 
@@ -95,6 +96,16 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
           value={formData.telefono}
           onChange={handleChange}
           required
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Observación Médica</label>
+        <textarea
+          name="observacion_medica"
+          value={formData.observacion_medica}
+          onChange={handleChange}
+          rows="3"
         />
       </div>
 

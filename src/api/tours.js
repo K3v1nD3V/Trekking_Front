@@ -28,8 +28,9 @@ export const getTourById = async (id) => {
 // Crea un nuevo tour
 export const createTour = async (tourData) => {
   try {
-    const response = await api.post('/tours', tourData, { requiresAuth: true }); // Usa Axios para manejar el token automáticamente
-    return response; // Devuelve los datos del tour creado
+    const response = await api.post('/tours', tourData, { requiresAuth: true });
+    console.log('Respuesta del servidor:', response);
+    return response; 
   } catch (error) {
     console.error('Error al crear tour:', error.response?.data?.message || error.message);
     throw error;

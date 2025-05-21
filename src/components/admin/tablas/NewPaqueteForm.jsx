@@ -237,16 +237,18 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
               </div>
             </div>
           )}
-          {newMedia.map((file, index) => (
-            <div key={index} className="media-item">
-              {file.type.startsWith('video/') ? (
-                <video src={URL.createObjectURL(file)} className="preview-media" controls />
-              ) : (
-                <img src={URL.createObjectURL(file)} alt="" className="preview-media" />
-              )}
-              <button type="button" onClick={() => removeMedia(index, false)}>×</button>
-            </div>
-          ))}
+          <div className='new-media-section'>
+            {newMedia.map((file, index) => (
+              <div key={index} className="media-item">
+                  {file.type.startsWith('video/') ? (
+                    <video src={URL.createObjectURL(file)} className="preview-media" controls />
+                  ) : (
+                    <img src={URL.createObjectURL(file)} alt="" className="preview-media" />
+                  )}
+                <button type="button" onClick={() => removeMedia(index, false)}>×</button>
+              </div>
+            ))}
+          </div>
         </div>
         <input
           type="file"

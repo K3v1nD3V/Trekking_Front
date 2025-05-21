@@ -22,14 +22,16 @@ export const getPaqueteById = async (id) => {
 
 export const createPaquete = async (paqueteData) => {
   try {
-    const response = await api.post('/paquetes', paqueteData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    const response = await api.post(
+      '/paquetes', 
+      paqueteData, 
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        requiresAuth: true
       }
-    },
-    {
-      requiresAuth: true,
-    });
+    );
     console.log('Respuesta del servidor:', response);
     return response;
   } catch (error) {
@@ -49,14 +51,16 @@ export const createPaquete = async (paqueteData) => {
 
 export const updatePaquete = async (id, paqueteData) => {
   try {
-    const response = await api.put(`/paquetes/${id}`, paqueteData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    },
-    {
-      requiresAuth: true,
-    });
+    const response = await api.put(
+      `/paquetes/${id}`, 
+      paqueteData, 
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        requiresAuth: true
+      }
+    );
     return response;
   } catch (error) {
     console.error(`Error updating paquete ${id}:`, error);
@@ -67,9 +71,7 @@ export const updatePaquete = async (id, paqueteData) => {
 export const deletePaquete = async (id) => {
   console.log(id);
   try {
-    const response = await api.delete(`/paquetes/${id}`, {
-      requiresAuth: true,
-    });
+    const response = await api.delete(`/paquetes/${id}`, { requiresAuth: true });
     return response;
   } catch (error) {
     console.error(`Error deleting paquete ${id}:`, error);

@@ -129,10 +129,6 @@
   transition: transform 0.4s ease;
 }
 
-.gallery-img:hover {
-  transform: scale(1.03);
-}
-
 /* Imagen más alta para destacar */
 .gallery-img.tall {
   grid-row: span 2;

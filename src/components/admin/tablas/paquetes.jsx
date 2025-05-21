@@ -58,10 +58,10 @@ const Paquetes = () => {
     };
 
     const handleSubmit = () => {
-        window.location.reload();
+        // window.location.reload();
         console.log('Paquete actualizado o creado exitosamente!');
         
-        setIsModalOpen(false);
+        // setIsModalOpen(false);
     };
 
     const handleDeletePaquete = async (id) => {

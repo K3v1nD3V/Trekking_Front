@@ -1,18 +1,29 @@
 import React, { useState } from 'react';
 import '../../../css/components/admin/ventaForm.css';
-import { createVenta } from '../../../api/ventas';
 
 const VentaForm = ({ onSubmit, clientes, paquetes }) => {
   const [formData, setFormData] = useState({
     cliente: '',
     paquete: '',
     fecha: '',
-    valor: ''
+    valor: '',
+    acompañantes: [],
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+  
+  //Nueva funcion para manejar el cambio de los acompañantes
+  const toggleAcompanante = (id) => {
+    setFormData((prev) => {
+      const isSelected = prev.acompañantes.includes(id);
+      const updatedAcompanantes = isSelected
+        ? prev.acompañantes.filter((acompId) => acompId !== id)
+        : [...prev.acompañantes, id];
+      return { ...prev, acompañantes: updatedAcompanantes };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -22,7 +33,8 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
       id_cliente: formData.cliente,
       id_paquete: formData.paquete,
       fecha: new Date(formData.fecha).toISOString(),
-      valor: parseFloat(formData.valor)
+      valor: parseFloat(formData.valor),
+      acompañantes: formData.acompañantes,
     };
 
     try {
@@ -32,6 +44,10 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
       alert('Error al crear la venta.');
     }
   };
+
+  const filteredClientes = clientes.filter(
+    (cliente) => cliente._id !== formData.cliente // Excluir al cliente principal
+  );
 
   return (
     <form className="venta-form" onSubmit={handleSubmit}>
@@ -97,6 +113,26 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
           onChange={handleChange}
           required
         />
+      </div>
+
+       {/* Acompañantes */}
+      <div className="form-group">
+        <label>Acompañantes</label>
+        <div className="acompañantes-list">
+          {filteredClientes.map(({ _id, nombre, apellido }) => (
+            <div key={_id} className="acompañante-item">
+              <input
+                type="checkbox"
+                id={`acompañante-${_id}`}
+                checked={formData.acompañantes.includes(_id)}
+                onChange={() => toggleAcompanante(_id)}
+              />
+              <label htmlFor={`acompañante-${_id}`}>
+                {nombre} {apellido}
+              </label>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Botón */}

@@ -18,11 +18,17 @@ const Paquetes = () => {
         const fetchData = async () => {
             try {
                 const tours = await getTours();
+                console.log('tours', tours);
                 const tourActual = tours.find((tour) => new Date(tour.fechaHora) > new Date());
-
+                console.log('tourActual', tourActual);
+                
                 if (tourActual) {
                     const paqueteActual = tourActual.id_paquete;
+                    console.log('paqueteActual', paqueteActual);
+                    
                     const fechaHora = new Date(tourActual.fechaHora);
+                    console.log('fechaHora', fechaHora);
+                    
                     paqueteActual.fecha = fechaHora.toLocaleDateString('es-ES', {
                         day: '2-digit',
                         month: '2-digit',
@@ -43,6 +49,8 @@ const Paquetes = () => {
                 }
 
                 const paquetes = await getPaquetes();
+                console.log('paquetes', paquetes);
+                
                 const otros = paquetes.filter(
                     (paquete) => !tourActual || paquete._id !== tourActual.id_paquete
                 );
