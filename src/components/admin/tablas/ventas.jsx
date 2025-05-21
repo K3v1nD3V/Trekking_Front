@@ -7,7 +7,7 @@ import Modal from '../../common/Modal';
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/servicios.css';
 
-import { getVentas, createVenta } from '../../../api/ventas';
+import { getVentas, createVenta, updateVenta } from '../../../api/ventas';
 import { getClientes } from '../../../api/clientes';
 import { getPaquetes } from '../../../api/paquetes';
 
@@ -73,7 +73,42 @@ const Ventas = () => {
       valor.toLowerCase().includes(texto)
     );
   });
-  
+
+const toggleEstado = async (row) => {
+  const updatedVenta = {...row, estado: !row.estado};
+  try{
+    await updateVenta(row._id, updatedVenta);
+    setVentas(prev =>
+      prev.map(venta =>
+        venta._id === row._id ? updatedVenta : venta
+      )
+    );
+  }catch (error){
+    console.error('Error actualizando estado:', error.message);
+    alert('Error al cambiar el estado de la venta.');
+
+    }
+  };
+
+const EstadoCell = ({ row }) => (
+  <div className="estado-switch">
+    <label className="switch">
+      <input
+        type="checkbox"
+        checked={row.estado}
+        onChange={() => toggleEstado(row)}
+      />
+      <span className="slider round"></span>
+    </label>
+  </div>
+);
+
+
+const filteredData = ventas.filter(item =>
+        Object.values(item).some(value =>
+            String(value).toLowerCase().includes(filterText.toLowerCase())
+        )
+);
 
   const columns = [
     {
@@ -100,16 +135,27 @@ const Ventas = () => {
       selector: row => row.valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }),
       sortable: true,
     },
-    {
-      name: 'Acompañantes',
-      selector: row => (
-      <span>
-        {Array.isArray(row.acompañantes) && row.acompañantes.length > 0
-          ? row.acompañantes.join(', ')
-          : 'Ninguno'}
-      </span>
+{
+  name: 'Acompañantes',
+  selector: row => (
+    <span>
+      {Array.isArray(row.acompañantes) && row.acompañantes.length > 0
+        ? row.acompañantes
+            .map(acomp => {
+              return acomp ? `${acomp.nombre} ${acomp.apellido}` : 'Desconocido';
+            })
+            .join(', ')
+        : 'Ninguno'}
+    </span>
   ),
-}
+},
+
+   {
+            name: 'Estado',
+            cell: row => <EstadoCell row={row} />,
+            width: '150px' 
+        }
+
 
   ];
   

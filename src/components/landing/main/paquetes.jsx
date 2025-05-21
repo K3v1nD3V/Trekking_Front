@@ -78,7 +78,7 @@ const Paquetes = () => {
         // I prefere to show a button to contact us
         return (
             <div className="no-paquete">
-                <h2>No hay paquetes disponibles en este momento.</h2>
+                <h2>No se han podido cargar los paquetes, vuelve a intentarlo o contactanos.</h2>
                 <a href="https://wa.me/573238893608/?texto=Mas%Info%sobre%nueva%Coleccion%porfavor" className="btn btn-primary">
                     Contactanos Ahora
                     <svg

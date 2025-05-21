@@ -1,7 +1,7 @@
 // Footer.jsx
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWhatsapp, faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fontawesome/react-fontawesome';
+import { faWhatsapp, faInstagram, faFacebook } from '@fontawesome/free-brands-svg-icons';
 import '../../../css/components/landing/footer.css';
 
 const Footer = () => {

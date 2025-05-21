@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+
 const VentaForm = ({ onSubmit, clientes, paquetes }) => {
   const [formData, setFormData] = useState({
     cliente: '',
@@ -5,6 +7,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
     fecha: '',
     valor: '',
     acompañantes: [],
+    estado: true,  // <-- Estado inicial
   });
 
   const handleChange = (e) => {
@@ -18,8 +21,20 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
     }
   };
 
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setFormData(prev => ({ ...prev, [name]: checked }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validar fecha que sea hoy
+    const hoyStr = new Date().toISOString().split('T')[0];
+    if (formData.fecha !== hoyStr) {
+      alert("Solo puedes registrar ventas con la fecha de hoy.");
+      return;
+    }
 
     const nuevaVenta = {
       id_cliente: formData.cliente,
@@ -27,6 +42,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
       fecha: new Date(formData.fecha).toISOString(),
       valor: parseFloat(formData.valor),
       acompañantes: formData.acompañantes.filter(id => id !== formData.cliente),
+      estado: formData.estado,  // <-- Enviar estado
     };
 
     try {
@@ -39,6 +55,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
 
   return (
     <form className="venta-form" onSubmit={handleSubmit}>
+
       {/* Cliente */}
       <div className="form-group">
         <label htmlFor="cliente">Cliente</label>
@@ -123,8 +140,24 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
         </select>
       </div>
 
+      {/* Estado como switch slider */}
+      <div className="form-group">
+        <label>Estado</label>
+        <label className="switch">
+          <input
+            type="checkbox"
+            name="estado"
+            checked={formData.estado}
+            onChange={handleCheckboxChange}
+          />
+          <span className="slider round"></span>
+        </label>
+      </div>
+
       {/* Botón */}
-      <button type="submit" className="form-button">Guardar Venta</button>
+      <button type="submit" className="form-submit-button">
+        Guardar Venta
+      </button>
     </form>
   );
 };

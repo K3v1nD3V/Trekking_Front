@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../../css/components/landing/hero.css';
-import { FaHiking, FaArrowRight } from 'react-icons/fa';
+import { FaWhatsapp, FaArrowRight } from 'react-icons/fa';
 
 const Hero = () => {
     return (
@@ -13,10 +13,9 @@ const Hero = () => {
                     Descubre los mejores destinos y vive experiencias inolvidables en nuestras rutas de trekking.
                 </p>
                 <div className="hero-buttons">
-                    <a href="#paquetes" className="btn btn-primary">
-                        <FaHiking /> Ver Paquetes
-                    </a>
-                    <a href="#about" className="btn btn-outline">
+                    <a href="#about" className="btn btn-primary">
+                    <FaWhatsapp style={{ margin: 0, fontSize: '1.5rem' }} />Contactanos                    </a>
+                    <a href="#paquetes" className="btn  btn-outline">
                         Conoce Más <FaArrowRight />
                     </a>
                 </div>

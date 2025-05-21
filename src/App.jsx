@@ -18,9 +18,7 @@ import Tours from "./components/admin/tablas/Tours";
 import Landing from './layouts/landing';
 // Cliente Section
 import Cliente from './components/cliente/Cliente';
-import PaquetesCliente from './components/cliente/PaquetesCliente';
-import PaqueteDetalles from './components/cliente/PaqueteDetalles';
-import ServiciosCliente from './components/cliente/ServiciosCliente';
+import MainCliente from './components/cliente/clienteMain';
 
 const App = () => {
   return (
@@ -61,9 +59,6 @@ const App = () => {
               <Cliente/>
             </AuthProvider>
           }>
-          <Route path="paquetes" element={<PaquetesCliente />} />
-          <Route path="paquetes/:id" element={<PaqueteDetalles />} />
-          <Route path="servicios" element={<ServiciosCliente />} />
         </Route>
 
         {/* Ruta por defecto */}

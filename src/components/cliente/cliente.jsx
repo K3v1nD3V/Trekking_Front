@@ -1,18 +1,17 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import ClienteNavbar from './ClienteNavbar';
+import Navbar from '../landing/header/navbar';
 import '../../css/components/cliente/cliente.css';
+import ClienteMain from './clienteMain';
 
 const Cliente = () => {
     return (
         <div className="cliente-layout">
             {/* Navbar del cliente */}
-            <ClienteNavbar />
+            <Navbar/>
 
-            {/* Contenido dinámico (Paquetes, Servicios, etc.) */}
-            <main className="cliente-content">
-                <Outlet />
-            </main>
+            {/* Contenido principal */}
+            <ClienteMain/>
 
             {/* Footer */}
             <footer className="cliente-footer">

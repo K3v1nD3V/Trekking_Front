@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { getPaquetes } from '../../../api/paquetes';
 import '../../../css/components/admin/TourForm.css';
 
-const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
+const TourForm = ({ onSubmit, initialData = {} }) => {
   const [formData, setFormData] = useState({
     fechaHora: initialData.fechaHora || '',
-    id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '' // Maneja el caso en que sea un objeto o un ID
+    id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '', // Maneja el caso en que sea un objeto o un ID
+    cupos: initialData.cupos || '',
+    fecha_limite_inscripcion: initialData.fecha_limite_inscripcion || '',
   });
   const [paquetes, setPaquetes] = useState([]);
   const [error, setError] = useState('');
@@ -19,7 +21,11 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       fechaHora: initialData.fechaHora
         ? new Date(initialData.fechaHora).toISOString().slice(0, 16) // Formato para datetime-local
         : '',
-      id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '' // Maneja el caso en que sea un objeto o un ID
+      id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '', // Maneja el caso en que sea un objeto o un ID
+      cupos: initialData.cupos || '',
+      fecha_limite_inscripcion: initialData.fecha_limite_inscripcion
+        ? new Date(initialData.fecha_limite_inscripcion).toISOString().slice(0, 10)
+        : '',
     });
   }, [initialData]);
 
@@ -28,7 +34,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       const response = await getPaquetes();
       setPaquetes(response);
     } catch (err) {
-      setError('Error al cargar los paquetes');
+      setError('Error al cargar los paquetes', err);
     }
   };
 
@@ -49,9 +55,10 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
 
     const formattedData = {
       fechaHora: new Date(formData.fechaHora).toISOString(), // Convertir a formato ISO
-      id_paquete: formData.id_paquete
+      id_paquete: formData.id_paquete,
+      cupos: parseInt(formData.cupos, 10),
+      fecha_limite_inscripcion: new Date(formData.fecha_limite_inscripcion).toISOString(),
     };
-
     onSubmit(formattedData);
   };
 
@@ -85,6 +92,31 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
             </option>
           ))}
         </select>
+      </div>
+
+      <div className="tour-form-group">
+        <label htmlFor="cupos">Cupos</label>
+        <input
+          type="number"
+          id="cupos"
+          name="cupos"
+          value={formData.cupos}
+          onChange={handleChange}
+          min="1"
+          required
+        />
+      </div>
+      
+      <div className="tour-form-group">
+        <label htmlFor="fecha_limite_inscripcion">Fecha Límite de Inscripción</label>
+        <input
+          type="date"
+          id="fecha_limite_inscripcion"
+          name="fecha_limite_inscripcion"
+          value={formData.fecha_limite_inscripcion}
+          onChange={handleChange}
+          required
+        />
       </div>
 
       {error && <p className="error-message">{error}</p>}
