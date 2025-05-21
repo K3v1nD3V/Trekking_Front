@@ -70,10 +70,6 @@ const RegisterForm = () => {
   return (
     <div className="login-wrapper">
       <div className="login-box">
-        {/* Imagen del lado izquierdo */}
-        <div className="login-image">
-          <img src="/src/assets/image/image_login_transparent.png" alt="Registro visual" />
-        </div>
 
         {/* Formulario del lado derecho */}
         <div className="login-form">
@@ -120,6 +116,19 @@ const RegisterForm = () => {
             <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
           </div>
         </div>
+        <div className="login-image">
+        <img
+          src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg"
+          alt="Login visual"
+          className="main-image"
+        />
+        <div className="black-overlay"></div>
+        <img
+          src="/src/assets/ORIGINAL_PNG.png"  
+          alt="Logo superpuesto"
+          className="overlay-image"
+        />
+      </div>
       </div>
     </div>
   );
