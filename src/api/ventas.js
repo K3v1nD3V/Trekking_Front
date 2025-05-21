@@ -12,8 +12,8 @@ export const getVentas = async () => {
 
 export const getVentaById = async (id) => {
   try {
-    const response = await api.get(`/ventas/${id}`, { requiresAuth: true }); //Ventas específicas
-    return response;
+    const response = await api.get(`/ventas/${id}`); //Ventas específicas
+    return response.data;
   } catch (error) {
     console.error(`Error al obtener venta por ID ${id}:`, error);
     throw error;
@@ -51,5 +51,27 @@ export const getPaquetes = async () => {
       throw error;
     }
   };
+
+  export const updateVenta = async (id, data) => {
+  try {
+    const response = await fetch(`/api/ventas/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al actualizar la venta');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('updateVenta error:', error);
+    throw error;
+  }
+};
+
 
   

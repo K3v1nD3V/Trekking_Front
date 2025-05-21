@@ -11,10 +11,21 @@ const api = axios.create({
 });
 
 // Interceptor para autenticación
+// api.interceptors.request.use(config => {
+//   const token = getAuthToken();
+
+//   if (config.requiresAuth && token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+
+//   return config;
+// });
+
 api.interceptors.request.use(config => {
   const token = getAuthToken();
 
-  if (config.requiresAuth && token) {
+  // Solo omitir el token si requiresAuth es false explícitamente
+  if (token && config.requiresAuth !== false) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 

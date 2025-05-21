@@ -63,9 +63,20 @@ const Login = () => {
   return (
     <div className="login-wrapper">
       <div className="login-box">
-        <div className="login-image">
-          <img src="https://i.pinimg.com/736x/d0/b7/52/d0b752418c065f7f821449a264aad39d.jpg" alt="Login visual" />
-        </div>
+      <div className="login-image">
+        <img
+          src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg"
+          alt="Login visual"
+          className="main-image"
+        />
+        <div className="black-overlay"></div>
+        <img
+          src="/src/assets/ORIGINAL_PNG.png"  
+          alt="Logo superpuesto"
+          className="overlay-image"
+        />
+      </div>
+
 
         <div className="login-form">
           <h2>Iniciar sesión</h2>

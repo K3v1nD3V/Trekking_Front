@@ -2,6 +2,8 @@ import api from './base';
 import jwtDecode from 'jwt-decode';
 // const AUTH_TOKEN_KEY = import.meta.env.JWT_SECRET;
 const AUTH_TOKEN_KEY = "Trekking";
+import axios from 'axios';
+
 
 // Token management
 export const setAuthToken = (token) => {
@@ -46,6 +48,14 @@ export const login = async (email, password) => {
   return response;
 };
 
+
+export const recuperarContrasena = (correo) => {
+  return api.post('/usuarios/recuperar', { correo });
+};
+
+export const cambiarContrasena = (token, nuevaContrasena) => {
+  return api.post('/usuarios/cambiar-contrasena', { token, nuevaContrasena });
+};
 
 export const logout = () => {
   removeAuthToken();

@@ -2,7 +2,7 @@ import React from 'react';
 import { createUsuario, updateUsuario } from '../../../api/usuarios';
 import '../../../css/components/admin/ClienteForm.css';
 
-const UsuarioForm = ({ onSubmit, initialData = {} }) => {
+const UsuarioForm = ({ onSubmit, initialData = {}, roles = [] }) => {
     const [formData, setFormData] = React.useState({
         nombre: initialData.nombre || '',
         correo: initialData.correo || '',
@@ -61,15 +61,16 @@ const UsuarioForm = ({ onSubmit, initialData = {} }) => {
                 />
             </div>
 
-            <div className="form-group">
+         <div className="form-group">
                 <label>Rol</label>
-                <input
-                    type="text"
-                    name="rol"
-                    value={formData.rol}
-                    onChange={handleChange}
-                    required
-                />
+                <select name="rol" value={formData.rol} onChange={handleChange} required>
+                    <option value="">Seleccione un rol</option>
+                    {roles.map(rol => (
+                        <option key={rol._id} value={rol._id}>
+                            {rol.nombre}
+                        </option>
+                    ))}
+                </select>
             </div>
 
             <div className="form-group">
