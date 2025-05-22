@@ -13,6 +13,7 @@ import '../../../css/components/admin/mediaPreviewEnhanced.css';
 // API
 import { getPaquetes, deletePaquete } from '../../../api/paquetes';
 import { getServicios } from '../../../api/servicios';
+import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'
 
 const Paquetes = () => {
     const [filterText, setFilterText] = useState('');
@@ -65,18 +66,22 @@ const Paquetes = () => {
     };
 
     const handleDeletePaquete = async (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar este paquete?')) return;
-
+        const result = await showConfirm('¿Estás seguro de que deseas eliminar este paquete?', 'Eliminar paquete');
+      
+        if (!result.isConfirmed) return;
+      
         try {
-            await deletePaquete(id);
-            alert('¡Paquete eliminado exitosamente!');
-
-            setPaquetes(prevPaquetes => prevPaquetes.filter(paquete => paquete._id !== id));
+          await deletePaquete(id);
+      
+          showSuccess('¡Paquete eliminado exitosamente!');
+      
+          setPaquetes(prevPaquetes => prevPaquetes.filter(paquete => paquete._id !== id));
         } catch (error) {
-            console.error('Error eliminando el paquete:', error.message);
-            alert('Hubo un error al eliminar el paquete.');
+          console.error('Error eliminando el paquete:', error.message);
+          showError('Error al eliminar', 'Hubo un problema al intentar eliminar el paquete.');
         }
-    };
+      };
+      
 
     const paquetes_servicios = paquetes.map(paquete => ({
         ...paquete,
@@ -253,25 +258,22 @@ const Paquetes = () => {
             name: 'Acciones',
             cell: row => (
                 <div className="action-buttons">
-                    <button 
-                        className="action-button edit-button"
+                    
+                    <span className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             setSelectedPaquete(row);
                             setIsModalOpen(true);
-                        }}
-                    >
-                        Editar
-                    </button>
-                    <button 
-                        className="action-button delete-button"
+                        }} class="material-symbols-outlined">edit
+                    </span>
+
+
+                    <span className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleDeletePaquete(row._id);
-                        }}
-                    >
-                        Eliminar
-                    </button>
+                        }} class="material-symbols-outlined">delete
+                    </span>
                 </div>
             ),
             ignoreRowClick: true,
@@ -299,7 +301,8 @@ const Paquetes = () => {
                         onClick={handleCrearPaquete}
                         className="table-button"
                     >
-                        Registrar
+                        Registrar Paquete
+                        <span class="material-symbols-outlined">add_circle</span>
                     </button>
                 </div>
             </div>

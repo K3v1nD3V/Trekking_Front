@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../../../css/components/admin/rolesForm.css';
+import { showSuccess, showError, showConfirm } from '../../../alerts/alerts';
 import {
   createRol,
   updateRol,
@@ -22,9 +23,8 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [permisos, setPermisos] = useState([]);
   const [privilegios, setPrivilegios] = useState([]);
   const [errorNombre, setErrorNombre] = useState('');
-  const nombreRolRef = useRef(null); // Referencia para el input del nombre
+  const nombreRolRef = useRef(null);
 
-  // Cargar datos iniciales
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,13 +45,13 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
         }
       } catch (err) {
         console.error(err);
+        showError('Error', 'No se pudieron cargar los datos iniciales.');
       }
     };
 
     fetchData();
   }, [initialData]);
 
-  // Alternar permiso (checkbox)
   const togglePermiso = (permiso) => {
     setFormData(prev => {
       const existe = prev.permisos.find(p => p.permiso === permiso);
@@ -62,7 +62,6 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     });
   };
 
-  // Alternar privilegio (checkbox)
   const togglePrivilegio = (permiso, privilegioId) => {
     setFormData(prev => ({
       ...prev,
@@ -79,12 +78,10 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     }));
   };
 
-  // Enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const nombreTrimmed = formData.nombreRol.trim();
-  
     if (!nombreTrimmed) {
       setErrorNombre('El nombre del rol no puede estar vacío.');
       nombreRolRef.current?.focus();
@@ -94,15 +91,14 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
       nombreRolRef.current?.focus();
       return;
     }
-  
+
     try {
       const rolesExistentes = await getRoles();
-  
       const nombreDuplicado = rolesExistentes.some(r =>
         r.nombre.trim().toLowerCase() === nombreTrimmed.toLowerCase() &&
-        r._id !== initialData._id // Permitir si es el mismo rol en edición
+        r._id !== initialData._id
       );
-  
+
       if (nombreDuplicado) {
         setErrorNombre('Ya existe un rol con ese nombre.');
         nombreRolRef.current?.focus();
@@ -111,41 +107,56 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     } catch (err) {
       console.error('Error al validar nombre duplicado:', err);
     }
-  
+
     setErrorNombre('');
-  
+
     const permisosValidos = formData.permisos.filter(p => p.privilegios.length > 0);
     if (permisosValidos.length === 0) {
-      alert('Debe asignar al menos un permiso con al menos un privilegio.');
+      showError('Error', 'Debe asignar al menos un permiso con al menos un privilegio.');
       return;
     }
-  
+
     const permisosFinal = permisosValidos.map(p => {
       const permisoEncontrado = permisos.find(perm => perm.nombre === p.permiso);
       return permisoEncontrado?._id;
     }).filter(id => id);
-  
+
     const dataToSend = {
       nombre: nombreTrimmed,
       estado: formData.estado,
       permisos: permisosFinal
     };
-  
+
+    const confirm = await showConfirm(
+      initialData._id ? '¿Deseas actualizar este rol?' : '¿Deseas crear este rol?',
+      'Confirma tu acción'
+    );
+
+    if (!confirm.isConfirmed) return;
+
     try {
       if (initialData._id) {
         await updateRol(initialData._id, dataToSend);
+        showSuccess('Rol actualizado correctamente');
       } else {
         await createRol(dataToSend);
+        showSuccess('Rol creado exitosamente');
       }
-      onSubmit && onSubmit(dataToSend);
-      onClose && onClose();
-    } catch (err) {
-      console.error('Error al guardar el rol:', err);
-    }
+
+      if (initialData._id) {
+        await updateRol(initialData._id, dataToSend);
+        await showSuccess('¡Rol actualizado exitosamente!');
+      } else {
+          await createRol(dataToSend);
+          await showSuccess('¡Rol creado exitosamente!');
+      }
+      onSubmit(formData);
+      } catch (err) {
+        console.error('Error al guardar el rol:', err);
+        showError('Error al guardar el rol', 'Verifica los datos o intenta más tarde');
+      }
   };
-    
-  
-  
+
   return (
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { getPaquetes } from '../../../api/paquetes';
+import { showSuccess, showError, showConfirm } from '../../../alerts/alerts';
 import '../../../css/components/admin/TourForm.css';
 
-const TourForm = ({ onSubmit, initialData = {} }) => {
+const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({
     fechaHora: initialData.fechaHora || '',
-    id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '', // Maneja el caso en que sea un objeto o un ID
+    id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '',
     cupos: initialData.cupos || '',
     fecha_limite_inscripcion: initialData.fecha_limite_inscripcion || '',
   });
+
   const [paquetes, setPaquetes] = useState([]);
   const [error, setError] = useState('');
 
@@ -19,9 +21,9 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
   useEffect(() => {
     setFormData({
       fechaHora: initialData.fechaHora
-        ? new Date(initialData.fechaHora).toISOString().slice(0, 16) // Formato para datetime-local
+        ? new Date(initialData.fechaHora).toISOString().slice(0, 16)
         : '',
-      id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '', // Maneja el caso en que sea un objeto o un ID
+      id_paquete: initialData.id_paquete?._id || initialData.id_paquete || '',
       cupos: initialData.cupos || '',
       fecha_limite_inscripcion: initialData.fecha_limite_inscripcion
         ? new Date(initialData.fecha_limite_inscripcion).toISOString().slice(0, 10)
@@ -33,8 +35,10 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
     try {
       const response = await getPaquetes();
       setPaquetes(response);
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      setError('Error al cargar los paquetes', err);
+      setError('Error al cargar los paquetes');
+      showError('Error', 'No se pudieron cargar los paquetes.');
     }
   };
 
@@ -42,24 +46,42 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
+    setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.fechaHora || !formData.id_paquete) {
+
+    if (!formData.fechaHora || !formData.id_paquete || !formData.cupos || !formData.fecha_limite_inscripcion) {
       setError('Todos los campos son requeridos');
+      showError('Error', 'Por favor completa todos los campos.');
       return;
     }
 
-    const formattedData = {
-      fechaHora: new Date(formData.fechaHora).toISOString(), // Convertir a formato ISO
-      id_paquete: formData.id_paquete,
-      cupos: parseInt(formData.cupos, 10),
-      fecha_limite_inscripcion: new Date(formData.fecha_limite_inscripcion).toISOString(),
-    };
-    onSubmit(formattedData);
+    const result = await showConfirm(
+      initialData._id ? '¿Estás seguro de actualizar este tour?' : '¿Confirmas crear este tour?',
+      initialData._id ? 'Actualizar Tour' : 'Crear Tour'
+    );
+
+    if (result.isConfirmed) {
+      const formattedData = {
+        fechaHora: new Date(formData.fechaHora).toISOString(),
+        id_paquete: formData.id_paquete,
+        cupos: parseInt(formData.cupos, 10),
+        fecha_limite_inscripcion: new Date(formData.fecha_limite_inscripcion).toISOString(),
+      };
+
+      try {
+        await onSubmit(formattedData);
+        showSuccess(initialData._id ? 'Tour actualizado con éxito' : 'Tour creado con éxito');
+        onClose?.();
+      // eslint-disable-next-line no-unused-vars
+      } catch (submitError) {
+        showError('Error', 'Ocurrió un error al guardar el tour.');
+      }
+    }
   };
 
   return (
@@ -106,7 +128,7 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
           required
         />
       </div>
-      
+
       <div className="tour-form-group">
         <label htmlFor="fecha_limite_inscripcion">Fecha Límite de Inscripción</label>
         <input

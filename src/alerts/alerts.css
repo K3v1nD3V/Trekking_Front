@@ -1,0 +1,23 @@
+/* src/utils/alerts.css */
+.custom-alert {
+    border-radius: 1rem;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 1.5rem;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+  }
+  
+  .swal2-title {
+    font-size: 1.5rem !important;
+    color: #C81E17;
+  }
+  
+  .swal2-confirm {
+    background-color: #C81E17 !important;
+    border: none !important;
+  }
+  
+  .swal2-cancel {
+    background-color: #8B2B1B !important;
+    border: none !important;
+  }
+  

@@ -8,6 +8,9 @@ import { getClientes, deleteCliente, updateCliente } from '../../../api/clientes
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
 
+// Importa las alertas
+import { showConfirm, showSuccess, showError } from '../../../alerts/alerts'; // Ajusta la ruta si es necesario
+
 const Clientes = () => {
     const [clientes, setClientes] = useState([]);
     const [filterText, setFilterText] = useState('');
@@ -42,15 +45,18 @@ const Clientes = () => {
     // };
 
     const handleDeleteCliente = async (id, nombreCompleto) => {
-        if (!window.confirm(`¿Estás seguro de eliminar a ${nombreCompleto}?`)) return;
+        // Usar la alerta de confirmación
+        const result = await showConfirm(`¿Estás seguro de eliminar a ${nombreCompleto}?`, 'Confirmar eliminación');
+        
+        if (!result.isConfirmed) return;
 
         try {
             await deleteCliente(id);
-            alert('¡Cliente eliminado exitosamente!');
             setClientes(prev => prev.filter(cliente => cliente._id !== id));
+            showSuccess('¡Cliente eliminado exitosamente!');
         } catch (err) {
             console.error('Error eliminando cliente:', err.message);
-            alert('Error al eliminar el cliente.');
+            showError('Error', 'No se pudo eliminar el cliente.');
         }
     };
 
@@ -61,6 +67,7 @@ const Clientes = () => {
 
     const toggleEstado = async (row) => {
         const updatedCliente = { ...row, estado: !row.estado };
+    
         try {
             await updateCliente(row._id, updatedCliente);
             setClientes(prev =>
@@ -68,11 +75,13 @@ const Clientes = () => {
                     cliente._id === row._id ? updatedCliente : cliente
                 )
             );
+            showSuccess('Estado actualizado correctamente');
         } catch (error) {
             console.error('Error actualizando estado:', error.message);
-            alert('Error al cambiar el estado del cliente.');
+            showError('Error', 'No se pudo cambiar el estado del cliente.');
         }
     };
+    
 
     const EstadoCell = ({ row }) => (
         <div className="estado-switch">
@@ -145,25 +154,21 @@ const Clientes = () => {
             name: 'Acciones',
             cell: row => (
                 <div className="action-buttons">
-                    <button
-                        className="action-button edit-button"
+    
+                    <span className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             setSelectedCliente(row);
                             setIsModalOpen(true);
-                        }}
-                    >
-                        Editar
-                    </button>
-                    <button
-                        className="action-button delete-button"
+                        }} class="material-symbols-outlined">edit
+                    </span>
+
+                    <span className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteCliente(row._id, `${row.nombre} ${row.apellido}`);
-                        }}
-                    >
-                        Eliminar
-                    </button>
+                        }} class="material-symbols-outlined">delete
+                    </span>
                 </div>
             ),
             ignoreRowClick: true,
@@ -188,7 +193,8 @@ const Clientes = () => {
                 className="table-search"
               />
               <button onClick={handleCrearCliente} className="table-button">
-                Registrar
+                Registrar Cliente
+                <span class="material-symbols-outlined">add_circle</span>
               </button>
             </div>
           </div>

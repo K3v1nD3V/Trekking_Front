@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../../../css/components/admin/ServicioForm.css';
 import { updateServicio, createServicio } from '../../../api/servicios';
+import { showConfirm, showSuccess, showError } from '../../../alerts/alerts';// Ajusta la ruta
 
 const ServicioForm = ({ onSubmit, initialData = {} }) => {
     const [formData, setFormData] = useState({
@@ -21,7 +22,7 @@ const ServicioForm = ({ onSubmit, initialData = {} }) => {
     const handleIconChange = (e) => {
         const value = e.target.value;
         setFormData((prev) => ({ ...prev, icono: value }));
-        setShowPreview(false); // Ocultar la vista previa si el texto cambia
+        setShowPreview(false);
     };
 
     const handlePreview = () => {
@@ -38,21 +39,31 @@ const ServicioForm = ({ onSubmit, initialData = {} }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Mostrar confirmación antes de enviar
+        const result = await showConfirm(
+            initialData._id
+                ? '¿Quieres actualizar este servicio?'
+                : '¿Quieres crear este servicio?',
+            'Confirma la acción'
+        );
+
+        if (!result.isConfirmed) {
+            // Usuario canceló la acción
+            return;
+        }
+
         try {
             if (initialData._id) {
-                console.log(initialData);
-                console.log(formData);
-                
                 await updateServicio(initialData._id, formData);
-                alert('¡Servicio actualizado exitosamente!');
+                await showSuccess('¡Servicio actualizado exitosamente!');
             } else {
                 await createServicio(formData);
-                alert('¡Servicio creado exitosamente!');
+                await showSuccess('¡Servicio creado exitosamente!');
             }
             onSubmit(formData);
         } catch (error) {
             console.error('Error al enviar los datos:', error.message);
-            alert('Hubo un error al procesar la solicitud.');
+            await showError('Error', 'Hubo un error al procesar la solicitud.');
         }
     };
 

@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
 import Modal from '../../common/Modal';
 import UsuarioForm from "./UsuarioForm.jsx";
-import { getUsuarios, deleteUsuario, updateUsuario } from '../../../api/usuarios';
-import { getRoles } from '../../../api/roles'; // Asumiendo que tienes esta función
+import { getUsuarios, deleteUsuario } from '../../../api/usuarios';
+import { getRoles } from '../../../api/roles';
+import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'; // importa las alertas
 
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
 
 const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
-    const [roles, setRoles] = useState([]);  // Estado para almacenar roles
+    const [roles, setRoles] = useState([]);
     const [filterText, setFilterText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUsuario, setSelectedUsuario] = useState(null);
@@ -29,7 +30,6 @@ const Usuarios = () => {
                 setLoading(false);
             }
         };
-
         fetchUsuariosAndRoles();
     }, []);
 
@@ -38,21 +38,17 @@ const Usuarios = () => {
         setIsModalOpen(true);
     };
 
-    const handleUsuarioClick = (row) => {
-        setSelectedUsuario(row);
-        setIsModalOpen(true);
-    };
-
     const handleDeleteUsuario = async (id, nombre) => {
-        if (!window.confirm(`¿Estás seguro de eliminar a ${nombre}?`)) return;
-
         try {
-            await deleteUsuario(id);
-            alert('¡Usuario eliminado exitosamente!');
-            setUsuarios(prev => prev.filter(usuario => usuario._id !== id));
+            const result = await showConfirm(`¿Estás seguro de eliminar a ${nombre}?`, 'Confirmar eliminación');
+            if (result.isConfirmed) {
+                await deleteUsuario(id);
+                showSuccess('¡Usuario eliminado exitosamente!');
+                setUsuarios(prev => prev.filter(usuario => usuario._id !== id));
+            }
         } catch (err) {
             console.error('Error eliminando usuario:', err.message);
-            alert('Error al eliminar el usuario.');
+            showError('Error', 'No se pudo eliminar el usuario.');
         }
     };
 
@@ -69,7 +65,6 @@ const Usuarios = () => {
 
     const getRoleName = (roleId) => {
         const role = roles.find(role => role._id === roleId);
-        console.log(role)
         return role ? role.nombre : 'Desconocido';
     };
 
@@ -79,7 +74,7 @@ const Usuarios = () => {
             selector: row => row.nombre,
             sortable: true,
             cell: row => <div style={{ fontWeight: 600 }}>{row.nombre}</div>,
-            width: '150px'
+            width: '250px'
         },
         {
             name: 'Correo',
@@ -89,33 +84,29 @@ const Usuarios = () => {
         },
         {
             name: 'Rol',
-            selector: row => getRoleName(row.rol),  // Usamos la función para obtener el nombre del rol
+            selector: row => getRoleName(row.rol),
             wrap: true,
-            width: '200px'
+            width: '300px'
         },
         {
             name: 'Acciones',
             cell: row => (
                 <div className="action-buttons">
-                    <button
-                        className="action-button edit-button"
+                    <span className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             setSelectedUsuario(row);
                             setIsModalOpen(true);
-                        }}
-                    >
-                        Editar
-                    </button>
-                    <button
-                        className="action-button delete-button"
+                        }} class="material-symbols-outlined">edit
+                    </span>
+
+
+                    <span className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleDeleteUsuario(row._id, `${row.nombre}`);
-                        }}
-                    >
-                        Eliminar
-                    </button>
+                            handleDeleteUsuario(row._id, row.nombre);
+                        }} class="material-symbols-outlined">delete
+                    </span>
                 </div>
             ),
             ignoreRowClick: true,
@@ -140,7 +131,8 @@ const Usuarios = () => {
                 className="table-search"
               />
               <button onClick={handleCrearUsuario} className="table-button">
-                Resgistrar
+                Registrar Usuario
+                <span class="material-symbols-outlined">add_circle</span>
               </button>
             </div>
           </div>

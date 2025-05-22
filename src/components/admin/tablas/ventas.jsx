@@ -169,7 +169,8 @@ const EstadoCell = ({ row }) => (
             className="table-search"
           />
           <button onClick={() => setIsModalOpen(true)} className="table-button">
-            Registrar
+            Registrar Venta
+            <span class="material-symbols-outlined">add_circle</span>
           </button>
         </div>
       </div>

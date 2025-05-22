@@ -5,8 +5,8 @@ import ServicioForm from './serviciosForm';
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/servicios.css';
 
-import { getServicios } from '../../../api/servicios';
-import { deleteServicio, updateServicio } from '../../../api/servicios';
+import { getServicios, deleteServicio, updateServicio } from '../../../api/servicios';
+import { showConfirm, showSuccess, showError } from '../../../alerts/alerts';
 
 const ServiciosTable = () => {
     const [filterText, setFilterText] = useState('');
@@ -37,17 +37,16 @@ const ServiciosTable = () => {
     };
 
     const handleDeleteServicio = async (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar este servicio?')) return;
+        const result = await showConfirm('¿Estás seguro de que deseas eliminar este servicio?', 'Confirmar eliminación');
+        if (!result.isConfirmed) return;
 
         try {
             await deleteServicio(id);
-            alert('¡Servicio eliminado exitosamente!');
-            setServicios((prevServicios) =>
-                prevServicios.filter((servicio) => servicio._id !== id)
-            );
+            showSuccess('¡Servicio eliminado exitosamente!');
+            setServicios((prev) => prev.filter((servicio) => servicio._id !== id));
         } catch (error) {
             console.error('Error eliminando el servicio:', error.message);
-            alert('Hubo un error al eliminar el servicio.');
+            showError('Error', 'Hubo un error al eliminar el servicio.');
         }
     };
 
@@ -57,8 +56,9 @@ const ServiciosTable = () => {
     };
 
     const handleSubmit = () => {
-        window.location.reload();
+        window.location.reload(); // Considera mejorar esto por una actualización del estado
         setIsModalOpen(false);
+        showSuccess(selectedServicio ? '¡Servicio actualizado exitosamente!' : '¡Servicio creado exitosamente!');
     };
 
     const filteredData = servicios.filter((item) =>
@@ -77,9 +77,10 @@ const ServiciosTable = () => {
                         servicio._id === row._id ? updatedServicio : servicio
                     )
                 );
+                showSuccess('Estado actualizado correctamente');
             } catch (error) {
                 console.error('Error actualizando estado:', error.message);
-                alert('Hubo un error al cambiar el estado.');
+                showError('Error', 'Hubo un error al cambiar el estado.');
             }
         };
 
@@ -105,10 +106,8 @@ const ServiciosTable = () => {
         },
         {
             name: 'Icono',
-            cell: (row) => {
-                return <span className="material-symbols-outlined">{row.icono}</span>;
-            },
-            width: '100px',
+            cell: (row) => <span className="material-symbols-outlined">{row.icono}</span>,
+            width: '150px',
         },
         {
             name: 'Nombre',
@@ -128,36 +127,33 @@ const ServiciosTable = () => {
             name: 'Descripción',
             selector: (row) => row.descripcion,
             wrap: true,
-            width: '300px',
+            width: '320px',
         },
         {
             name: 'Estado',
             cell: (row) => <EstadoCell row={row} />,
-            width: '100px',
+            width: '220px',
         },
         {
             name: 'Acciones',
             cell: (row) => (
                 <div className="action-buttons">
-                    <button
-                        className="action-button edit-button"
+                   
+                    <span className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             setSelectedServicio(row);
                             setIsModalOpen(true);
-                        }}
-                    >
-                        Editar
-                    </button>
-                    <button
-                        className="action-button delete-button"
+                        }} class="material-symbols-outlined">edit
+                    </span>
+
+
+                    <span className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteServicio(row._id);
-                        }}
-                    >
-                        Eliminar
-                    </button>
+                        }} class="material-symbols-outlined">delete
+                    </span>
                 </div>
             ),
             ignoreRowClick: true,
@@ -170,61 +166,60 @@ const ServiciosTable = () => {
 
     return (
         <>
-          {/* Header separado */}
-          <div className="table-header">
-            <h2 className="table-title">Gestion de Servicios</h2>
-            <div className="table-controls">
-              <input
-                type="text"
-                placeholder="Buscar servicios..."
-                value={filterText}
-                onChange={(e) => setFilterText(e.target.value)}
-                className="table-search"
-              />
-              <button onClick={handleCrearServicio} className="table-button">
-                Registrar
-              </button>
+            <div className="table-header">
+                <h2 className="table-title">Gestión de Servicios</h2>
+                <div className="table-controls">
+                    <input
+                        type="text"
+                        placeholder="Buscar servicios..."
+                        value={filterText}
+                        onChange={(e) => setFilterText(e.target.value)}
+                        className="table-search"
+                    />
+                    <button onClick={handleCrearServicio} className="table-button">
+                        Registrar Servicio
+                        <span class="material-symbols-outlined">add_circle</span>
+                    </button>
+                </div>
             </div>
-          </div>
-      
-          {/* Contenedor solo para la tabla */}
-          <div className="table-container">
-            <DataTable
-              columns={columns}
-              data={filteredData}
-              pagination
-              paginationPerPage={10}
-              highlightOnHover
-              customStyles={{
-                headCells: {
-                  style: {
-                    backgroundColor: '#fafafa',
-                    fontWeight: '600',
-                    fontSize: '14px',
-                  },
-                },
-                cells: {
-                  style: {
-                    fontSize: '14px',
-                    padding: '12px 8px',
-                    verticalAlign: 'top',
-                  },
-                },
-              }}
-            />
-          </div>
-      
-          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-            <h2 className="modal-title">
-              {selectedServicio ? 'Editar Servicio' : 'Crear Nuevo Servicio'}
-            </h2>
-            <ServicioForm
-              onSubmit={handleSubmit}
-              initialData={selectedServicio || {}}
-            />
-          </Modal>
+
+            <div className="table-container">
+                <DataTable
+                    columns={columns}
+                    data={filteredData}
+                    pagination
+                    paginationPerPage={10}
+                    highlightOnHover
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                backgroundColor: '#fafafa',
+                                fontWeight: '600',
+                                fontSize: '14px',
+                            },
+                        },
+                        cells: {
+                            style: {
+                                fontSize: '14px',
+                                padding: '12px 8px',
+                                verticalAlign: 'top',
+                            },
+                        },
+                    }}
+                />
+            </div>
+
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <h2 className="modal-title">
+                    {selectedServicio ? 'Editar Servicio' : 'Crear Nuevo Servicio'}
+                </h2>
+                <ServicioForm
+                    onSubmit={handleSubmit}
+                    initialData={selectedServicio || {}}
+                />
+            </Modal>
         </>
-      );
-    }      
+    );
+};
 
 export default ServiciosTable;

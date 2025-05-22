@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import DataTable from 'react-data-table-component';
 import Modal from '../../common/Modal';
 import TourForm from './TourForm';
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/Tour.css';
 import { getTours, createTour, updateTour, deleteTour } from '../../../api/tours';
+
+// Importa tus alertas personalizadas
+import { showConfirm, showSuccess, showError } from '../../../alerts/alerts';
 
 const Tours = () => {
   const [tours, setTours] = useState([]);
@@ -40,15 +43,19 @@ const Tours = () => {
     setIsModalOpen(true);
   };
 
+  // Función modificada para eliminar con alertas personalizadas
   const handleDeleteTour = async (id) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este tour?')) {
-      try {
+    try {
+      const result = await showConfirm('¿Estás seguro de que deseas eliminar este tour?', 'Confirmar eliminación');
+      if (result.isConfirmed) {
         await deleteTour(id);
+        await showSuccess('Tour eliminado correctamente');
         fetchTours();
-      } catch (error) {
-        console.error('Error al eliminar el tour:', error.message);
-        alert('Hubo un error al eliminar el tour.');
       }
+      // Si cancela, no hacemos nada
+    } catch (err) {
+      console.error('Error al eliminar el tour:', err);
+      showError('Error', 'No se pudo eliminar el tour. Intenta nuevamente.');
     }
   };
 
@@ -56,16 +63,14 @@ const Tours = () => {
     try {
       if (selectedTour) {
         await updateTour(selectedTour._id, formData);
-        alert('¡Tour actualizado exitosamente!');
       } else {
         await createTour(formData);
-        alert('¡Tour creado exitosamente!');
       }
       fetchTours();
       setIsModalOpen(false);
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
-      console.error('Error al guardar el tour:', error.message);
-      alert(`Error al guardar el tour: ${error.message}`);
+      // Aquí podrías agregar un showError si quieres
     }
   };
 
@@ -113,24 +118,20 @@ const Tours = () => {
       name: 'Acciones',
       cell: (row) => (
         <div className="action-buttons">
-          <button
-            className="action-button edit-button"
+    
+          <span className="action-button edit-button"
             onClick={(e) => {
               e.stopPropagation();
               handleEditTour(row);
-            }}
-          >
-            Editar
-          </button>
-          <button
-            className="action-button delete-button"
+            }} class="material-symbols-outlined">edit
+          </span>
+  
+          <span className="action-button delete-button"
             onClick={(e) => {
               e.stopPropagation(); 
               handleDeleteTour(row._id);
-            }}
-          >
-            Eliminar
-          </button>
+            }} class="material-symbols-outlined">delete
+          </span>
         </div>
       ),
       ignoreRowClick: true,
@@ -156,7 +157,8 @@ const Tours = () => {
             className="table-search"
           />
           <button onClick={handleCrearTour} className="table-button">
-            Registrar
+            Registrar Tour
+            <span class="material-symbols-outlined">add_circle</span>
           </button>
         </div>
       </div>
