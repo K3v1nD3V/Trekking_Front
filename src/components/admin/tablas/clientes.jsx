@@ -101,8 +101,8 @@ const Clientes = () => {
             format: row => 
             row.documento.toLocaleString(),
             right: true,
+            cell: row => <div style={{ fontWeight: 600 }}>{row.documento}</div>,
             width: '150px',
-            cell: row => <div style={{ fontWeight: 600 }}>{row.documento}</div>
         },
         {
             name: 'Nombre',
@@ -175,61 +175,62 @@ const Clientes = () => {
     if (error) return <div className="error">Error: {error}</div>;
 
     return (
-        <div className="table-container">
-            <div className="table-header">
-                <h2 className="table-title">Clientes</h2>
-                <div className="table-controls">
-                    <input
-                        type="text"
-                        placeholder="Buscar Clientes..."
-                        value={filterText}
-                        onChange={e => setFilterText(e.target.value)}
-                        className="table-search"
-                    />
-                    <button
-                        onClick={handleCrearCliente}
-                        className="table-button"
-                    >
-                        Crear Cliente
-                    </button>
-                </div>
+        <>
+          {/* Table Header separado */}
+          <div className="table-header">
+            <h2 className="table-title">Gestion de Clientes</h2>
+            <div className="table-controls">
+              <input
+                type="text"
+                placeholder="Buscar Clientes..."
+                value={filterText}
+                onChange={e => setFilterText(e.target.value)}
+                className="table-search"
+              />
+              <button onClick={handleCrearCliente} className="table-button">
+                Registrar
+              </button>
             </div>
-
+          </div>
+      
+          {/* Contenedor sólo para tabla y modal */}
+          <div className="table-container">
             <DataTable
-                columns={columns}
-                data={filteredData}
-                pagination
-                paginationPerPage={10}
-                highlightOnHover
-                customStyles={{
-                    headCells: {
-                        style: {
-                            backgroundColor: '#fafafa',
-                            fontWeight: '600',
-                            fontSize: '14px'
-                        },
-                    },
-                    cells: {
-                        style: {
-                            fontSize: '14px',
-                            padding: '16px 12px', // Aumenté el padding de las celdas
-                            verticalAlign: 'top'
-                        },
-                    },
-                }}
+              columns={columns}
+              data={filteredData}
+              pagination
+              paginationPerPage={10}
+              highlightOnHover
+              customStyles={{
+                headCells: {
+                  style: {
+                    backgroundColor: '#fafafa',
+                    fontWeight: '600',
+                    fontSize: '14px',
+                  },
+                },
+                cells: {
+                  style: {
+                    fontSize: '14px',
+                    padding: '16px 12px', 
+                    verticalAlign: 'top',
+                  },
+                },
+              }}
             />
-
+      
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <h2 className="modal-title">
-                    {selectedCliente ? 'Editar Cliente' : 'Crear Cliente'}
-                </h2>
-                <ClienteForm
-                    onSubmit={handleSubmit}
-                    initialData={selectedCliente || {}}
-                />
+              <h2 className="modal-title">
+                {selectedCliente ? 'Editar Cliente' : 'Crear Cliente'}
+              </h2>
+              <ClienteForm
+                onSubmit={handleSubmit}
+                initialData={selectedCliente || {}}
+              />
             </Modal>
-        </div>
-    );
+          </div>
+        </>
+      );      
 };
 
 export default Clientes;

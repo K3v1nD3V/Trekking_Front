@@ -143,9 +143,10 @@ const Tours = () => {
   if (error) return <div className="error">Error: {error}</div>;
 
   return (
-    <div className="table-container">
+    <>
+      {/* Header separado */}
       <div className="table-header">
-        <h2 className="table-title">Tours</h2>
+        <h2 className="table-title">Gestion de Tours</h2>
         <div className="table-controls">
           <input
             type="text"
@@ -155,35 +156,38 @@ const Tours = () => {
             className="table-search"
           />
           <button onClick={handleCrearTour} className="table-button">
-            Crear Tour
+            Registrar
           </button>
         </div>
       </div>
-
-      <DataTable
-        columns={columns}
-        data={filteredData}
-        pagination
-        paginationPerPage={10}
-        highlightOnHover
-        customStyles={{
-          headCells: {
-            style: {
-              backgroundColor: '#fafafa',
-              fontWeight: '600',
-              fontSize: '14px',
+  
+      {/* Contenedor solo para la tabla */}
+      <div className="table-container">
+        <DataTable
+          columns={columns}
+          data={filteredData}
+          pagination
+          paginationPerPage={10}
+          highlightOnHover
+          customStyles={{
+            headCells: {
+              style: {
+                backgroundColor: '#fafafa',
+                fontWeight: '600',
+                fontSize: '14px',
+              },
             },
-          },
-          cells: {
-            style: {
-              fontSize: '14px',
-              padding: '12px 8px',
-              verticalAlign: 'top',
+            cells: {
+              style: {
+                fontSize: '14px',
+                padding: '12px 8px',
+                verticalAlign: 'top',
+              },
             },
-          },
-        }}
-      />
-
+          }}
+        />
+      </div>
+  
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2 className="modal-title">
           {selectedTour ? 'Editar Tour' : 'Crear Nuevo Tour'}
@@ -194,8 +198,8 @@ const Tours = () => {
           initialData={selectedTour || {}}
         />
       </Modal>
-    </div>
-  );
+    </>
+  );  
 };
 
 export default Tours;

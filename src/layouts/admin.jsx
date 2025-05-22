@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import NavOption from '../components/common/NavOption';
 import logo from '../assets/image/ORIGINAL_PNG.png';
 
+
 // Estilos
 const logoStyle = {
   height: '170px',
@@ -53,16 +54,10 @@ const Admin = () => {
                 {/* <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>dashboard</span>} text="Dashboard" to="/admin" />
                 <hr className="divider" /> */}
 
-                {/* Configuración */}
-                <div className="menu-section">
-                  <h3 className="section-title">Configuración</h3>
-                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>manage_accounts</span>} text="Roles" to="/admin/roles" />
-                </div>
-                <hr className="divider" />
 
                 {/* Servicios */}
                 <div className="menu-section">
-                  <h3 className="section-title">Servicios</h3>
+                  <h3 className="section-title">Gestion Servicios</h3>
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>package_2</span>} text="Paquetes" to="/admin/paquetes" />
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>map</span>} text="Tours" to="/admin/tours" />
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>linked_services</span>} text="Servicios" to="/admin/servicios" />
@@ -71,26 +66,26 @@ const Admin = () => {
 
                 {/* Usuarios */}
                 <div className="menu-section">
-                  <h3 className="section-title">Usuarios</h3>
+                  <h3 className="section-title">Gestion Usuarios</h3>
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>person</span>} text="Clientes" to="/admin/clientes" />
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>groups</span>} text="Usuarios" to="/admin/usuarios" />
                 </div>
                 <hr className="divider" />
 
                 {/* Otras opciones */}
-                <NavOption 
-                  icon={<span className="material-symbols-outlined" 
-                  style={iconStyle}>price_check</span>} 
-                  text="Ventas" 
-                  to="/admin/ventas" 
-                />
+                <div className="menu-section">
+                <h3 className="section-title">Gestion Ventas</h3>
+                <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>price_check</span>} text="Ventas" to="/admin/ventas" />
+                </div>
+                <hr className="divider" />
                 
-                <NavOption 
-                  icon={<span className="material-symbols-outlined" 
-                  style={iconStyle}>logout</span>} 
-                  text="Logout" to="/logout" 
-                  isLogout={true} 
-                />
+                {/* Configuración */}
+                <div className="menu-section">
+                  <h3 className="section-title">Gestion Configuración</h3>
+                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>manage_accounts</span>} text="Roles" to="/admin/roles" />
+                <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>logout</span>} text="Cerrar Sesión" to="/logout" isLogout={true} />
+                </div>
+
               </div>
             </nav>
           </div>

@@ -10,24 +10,6 @@
   --radius: 12px;
 }
 
-/* TÍTULO Y CABECERA */
-.table-header {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  color: #383d41;
-  font-size: 16px;
-  font-weight: 600;
-  transition: color 0.2s ease;
-
-}
-
-.table-title {
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: var(--color-primary);
-}
-
 .table-controls {
   display: flex;
   align-items: center;

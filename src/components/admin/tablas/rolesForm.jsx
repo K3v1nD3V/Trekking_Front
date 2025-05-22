@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../../../css/components/admin/rolesForm.css';
 import {
   createRol,
-  updateRol
+  updateRol,
+  getRoles
 } from '../../../api/roles';
 import {
   getPermisos
@@ -92,17 +93,40 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
       setErrorNombre('El nombre del rol debe tener al menos 3 caracteres.');
       nombreRolRef.current?.focus();
       return;
-    } else {
-      setErrorNombre('');
     }
   
-    const permisosFinal = formData.permisos.map(p => {
+    try {
+      const rolesExistentes = await getRoles();
+  
+      const nombreDuplicado = rolesExistentes.some(r =>
+        r.nombre.trim().toLowerCase() === nombreTrimmed.toLowerCase() &&
+        r._id !== initialData._id // Permitir si es el mismo rol en edición
+      );
+  
+      if (nombreDuplicado) {
+        setErrorNombre('Ya existe un rol con ese nombre.');
+        nombreRolRef.current?.focus();
+        return;
+      }
+    } catch (err) {
+      console.error('Error al validar nombre duplicado:', err);
+    }
+  
+    setErrorNombre('');
+  
+    const permisosValidos = formData.permisos.filter(p => p.privilegios.length > 0);
+    if (permisosValidos.length === 0) {
+      alert('Debe asignar al menos un permiso con al menos un privilegio.');
+      return;
+    }
+  
+    const permisosFinal = permisosValidos.map(p => {
       const permisoEncontrado = permisos.find(perm => perm.nombre === p.permiso);
       return permisoEncontrado?._id;
     }).filter(id => id);
   
     const dataToSend = {
-      nombre: formData.nombreRol,
+      nombre: nombreTrimmed,
       estado: formData.estado,
       permisos: permisosFinal
     };
@@ -119,6 +143,8 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
       console.error('Error al guardar el rol:', err);
     }
   };
+    
+  
   
   return (
     <div className="form-container">

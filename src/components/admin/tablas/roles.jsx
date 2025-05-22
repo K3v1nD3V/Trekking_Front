@@ -206,9 +206,9 @@ const RolesTable = () => {
   if (error) return <div className="error">Error: {error}</div>;
 
   return (
-    <div className="table-container">
-      <div className="table-header">
-        <h2 className="table-title">Roles</h2>
+    <>
+      <div className="table-header"> 
+        <h2 className="table-title">Gestion de Roles</h2>
         <div className="table-controls">
           <input
             type="text"
@@ -218,41 +218,43 @@ const RolesTable = () => {
             className="table-search"
           />
           <button className="table-button" onClick={handleCrearRol}>
-            Crear Rol
+            Registrar
           </button>
         </div>
       </div>
-
-      <DataTable
-        columns={columns}
-        data={filteredData}
-        pagination
-        paginationPerPage={10}
-        highlightOnHover
-        onRowClicked={handleRolClick}
-        customStyles={{
-          headCells: {
-            style: {
-              backgroundColor: '#fafafa',
-              fontWeight: '600',
-              fontSize: '14px',
+  
+      <div className="table-container"> 
+        <DataTable
+          columns={columns}
+          data={filteredData}
+          pagination
+          paginationPerPage={10}
+          highlightOnHover
+          onRowClicked={handleRolClick}
+          customStyles={{
+            headCells: {
+              style: {
+                backgroundColor: '#fafafa',
+                fontWeight: '600',
+                fontSize: '14px',
+              },
             },
-          },
-          cells: {
-            style: {
-              fontSize: '14px',
-              padding: '12px 8px',
-              verticalAlign: 'top',
+            cells: {
+              style: {
+                fontSize: '14px',
+                padding: '12px 8px',
+                verticalAlign: 'top',
+              },
             },
-          },
-        }}
-      />
-
+          }}
+        />
+      </div>
+  
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <RolForm onSubmit={handleSubmit} initialData={selectedRol || {}} />
       </Modal>
-    </div>
+    </>
   );
-};
-
+}
+  
 export default RolesTable;

@@ -127,62 +127,63 @@ const Usuarios = () => {
     if (error) return <div className="error">Error: {error}</div>;
 
     return (
-        <div className="table-container">
-            <div className="table-header">
-                <h2 className="table-title">Usuarios</h2>
-                <div className="table-controls">
-                    <input
-                        type="text"
-                        placeholder="Buscar Usuarios..."
-                        value={filterText}
-                        onChange={e => setFilterText(e.target.value)}
-                        className="table-search"
-                    />
-                    <button
-                        onClick={handleCrearUsuario}
-                        className="table-button"
-                    >
-                        Crear Usuario
-                    </button>
-                </div>
+        <>
+          {/* Table Header separado */}
+          <div className="table-header">
+            <h2 className="table-title">Gestion de Usuarios</h2>
+            <div className="table-controls">
+              <input
+                type="text"
+                placeholder="Buscar Usuarios..."
+                value={filterText}
+                onChange={e => setFilterText(e.target.value)}
+                className="table-search"
+              />
+              <button onClick={handleCrearUsuario} className="table-button">
+                Resgistrar
+              </button>
             </div>
-
+          </div>
+      
+          {/* Contenedor solo para la tabla y modal */}
+          <div className="table-container">
             <DataTable
-                columns={columns}
-                data={filteredData}
-                pagination
-                paginationPerPage={10}
-                highlightOnHover
-                customStyles={{
-                    headCells: {
-                        style: {
-                            backgroundColor: '#fafafa',
-                            fontWeight: '600',
-                            fontSize: '14px'
-                        },
-                    },
-                    cells: {
-                        style: {
-                            fontSize: '14px',
-                            padding: '12px 8px',
-                            verticalAlign: 'top'
-                        },
-                    },
-                }}
+              columns={columns}
+              data={filteredData}
+              pagination
+              paginationPerPage={10}
+              highlightOnHover
+              customStyles={{
+                headCells: {
+                  style: {
+                    backgroundColor: '#fafafa',
+                    fontWeight: '600',
+                    fontSize: '14px',
+                  },
+                },
+                cells: {
+                  style: {
+                    fontSize: '14px',
+                    padding: '12px 8px',
+                    verticalAlign: 'top',
+                  },
+                },
+              }}
             />
-
+      
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <h2 className="modal-title">
-                    {selectedUsuario ? 'Editar Usuario' : 'Crear Usuario'}
-                </h2>
-                <UsuarioForm
-                    onSubmit={handleSubmit}
-                    initialData={selectedUsuario || {}}
-                    roles={roles}
-                />
+              <h2 className="modal-title">
+                {selectedUsuario ? 'Editar Usuario' : 'Crear Usuario'}
+              </h2>
+              <UsuarioForm
+                onSubmit={handleSubmit}
+                initialData={selectedUsuario || {}}
+                roles={roles}
+              />
             </Modal>
-        </div>
-    );
+          </div>
+        </>
+      );      
 };
 
 export default Usuarios;

@@ -156,7 +156,8 @@ const EstadoCell = ({ row }) => (
   if (loading) return <div className="loading">Cargando ventas...</div>;
 
   return (
-    <div className="table-container">
+    <>
+      {/* Encabezado separado */}
       <div className="table-header">
         <h2 className="table-title">Gestión de Ventas</h2>
         <div className="table-controls">
@@ -168,51 +169,54 @@ const EstadoCell = ({ row }) => (
             className="table-search"
           />
           <button onClick={() => setIsModalOpen(true)} className="table-button">
-            Crear Venta
+            Registrar
           </button>
         </div>
       </div>
-
-      <DataTable
-        columns={columns}
-        data={filteredVentas}
-        pagination
-        paginationPerPage={10}
-        highlightOnHover
-        customStyles={{
-          headCells: {
-            style: {
-              backgroundColor: '#fafafa',
-              fontWeight: '600',
-              fontSize: '14px'
+  
+      {/* Contenedor solo de la tabla y el modal */}
+      <div className="table-container">
+        <DataTable
+          columns={columns}
+          data={filteredVentas}
+          pagination
+          paginationPerPage={10}
+          highlightOnHover
+          customStyles={{
+            headCells: {
+              style: {
+                backgroundColor: '#fafafa',
+                fontWeight: '600',
+                fontSize: '14px',
+              },
             },
-          },
-          cells: {
-            style: {
-              fontSize: '14px',
-              padding: '12px 8px',
-              verticalAlign: 'top'
+            cells: {
+              style: {
+                fontSize: '14px',
+                padding: '12px 8px',
+                verticalAlign: 'top',
+              },
             },
-          },
-        }}
-      />
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2 className="modal-title">Crear Venta</h2>
-        <VentaForm
-          onSubmit={handleNuevaVenta}
-          clientes={clientes}
-          paquetes={paquetes}
+          }}
         />
-      </Modal>
-
-      {ventas.length === 0 && (
-        <p style={{ textAlign: 'center', padding: '1rem' }}>
-          No hay ventas registradas.
-        </p>
-      )}
-    </div>
-  );
+  
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <h2 className="modal-title">Crear Venta</h2>
+          <VentaForm
+            onSubmit={handleNuevaVenta}
+            clientes={clientes}
+            paquetes={paquetes}
+          />
+        </Modal>
+  
+        {ventas.length === 0 && (
+          <p style={{ textAlign: 'center', padding: '1rem' }}>
+            No hay ventas registradas.
+          </p>
+        )}
+      </div>
+    </>
+  );  
 };
 
 export default Ventas;

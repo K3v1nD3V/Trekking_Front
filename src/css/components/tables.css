@@ -1,10 +1,9 @@
 /* Contenedor de la tabla */
 .table-container {
   background-color: white;
-  padding: 20px;
-  border-radius: var(--radius);
-  box-shadow: 0px 0px 20px 14px rgb(0 0 0 / 10%);
+  padding: 10px;
   max-width: 1200px;
+  margin-left: 25px;
 }
 
 /* Encabezado de la tabla */
@@ -19,8 +18,8 @@
   margin: 0;
   font-size: 1.5rem;
   color: #383D41;
-  font-weight: 500; /* Peso más ligero */
-  letter-spacing: 0.2px;
+  font-weight: 700; 
+  margin-left: 50px;
 }
 
 /* Controles de la tabla */
@@ -32,7 +31,7 @@
 
 .table-search {
   padding: 0.5rem 1rem;
-  border: 1px solid #E0E0E0; /* Borde más suave */
+  border: 1px solid #E0E0E0;
   border-radius: 8px;
   width: 250px;
   font-size: 0.95rem;
@@ -145,8 +144,9 @@
 
 /* Mejoras en la tabla */
 .table {
-  width: 100%;
+  width: 100px;
   border-collapse: collapse;
+
 }
 
 .table th, .table td {

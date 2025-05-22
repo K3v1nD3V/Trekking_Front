@@ -283,9 +283,10 @@ const Paquetes = () => {
     if (error) return <div className="error">Error: {error}</div>;
 
     return (
-        <div className="table-container">
+        <>
+            {/* Table Header separado fuera del contenedor de la tabla */}
             <div className="table-header">
-                <h2 className="table-title">Paquetes Turísticos</h2>
+                <h2 className="table-title">Gestion de Paquetes</h2>
                 <div className="table-controls">
                     <input
                         type="text"
@@ -298,54 +299,57 @@ const Paquetes = () => {
                         onClick={handleCrearPaquete}
                         className="table-button"
                     >
-                        Crear Paquete
+                        Registrar
                     </button>
                 </div>
             </div>
-
-            <DataTable
-                columns={columns}
-                data={filteredData}
-                pagination
-                paginationPerPage={10}
-                highlightOnHover
-                customStyles={{
-                    headCells: {
-                        style: {
-                            backgroundColor: '#fafafa',
-                            fontWeight: '600',
-                            fontSize: '14px'
+    
+            {/* Aquí solo la tabla dentro del contenedor */}
+            <div className="table-container">
+                <DataTable
+                    columns={columns}
+                    data={filteredData}
+                    pagination
+                    paginationPerPage={10}
+                    highlightOnHover
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                backgroundColor: '#fafafa',
+                                fontWeight: '600',
+                                fontSize: '14px'
+                            },
                         },
-                    },
-                    cells: {
-                        style: {
-                            fontSize: '14px',
-                            padding: '12px 8px',
-                            verticalAlign: 'top'
+                        cells: {
+                            style: {
+                                fontSize: '14px',
+                                padding: '12px 8px',
+                                verticalAlign: 'top'
+                            },
                         },
-                    },
-                }}
-                onRowClicked={handlePaqueteClick}
-            />
-
+                    }}
+                    onRowClicked={handlePaqueteClick}
+                />
+            </div>
+    
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <h2 className="modal-title">
                     {selectedPaquete ? 'Editar Paquete' : 'Crear Nuevo Paquete'}
                 </h2>
                 <NewPaqueteForm
-                    onSubmit={handleSubmit} 
+                    onSubmit={handleSubmit}
                     initialData={selectedPaquete || {}}
                     servicios={servicios}
                 />
             </Modal>
-
+    
             {/* Modal para galería de miniaturas */}
             <Modal isOpen={isMediaModalOpen} onClose={() => setIsMediaModalOpen(false)}>
                 <div className="media-gallery">
                     <h2 className="modal-title">Multimedia del Paquete</h2>
                     <div className="media-thumbnails">
                         {selectedMedia?.map((media, index) => (
-                            <div 
+                            <div
                                 key={index}
                                 className={`media-thumbnail ${currentMediaIndex === index ? 'active' : ''}`}
                                 onClick={() => {
@@ -363,20 +367,21 @@ const Paquetes = () => {
                     </div>
                 </div>
             </Modal>
-
+    
             {/* Modal para visualización expandida */}
             <NewExpandedModal
                 isOpen={isExpandedModalOpen}
                 onClose={() => setIsExpandedModalOpen(false)}
                 mediaUrl={selectedMedia?.[currentMediaIndex]}
                 mediaType={
-                    selectedMedia?.[currentMediaIndex]?.includes('.mp4') || 
-                    selectedMedia?.[currentMediaIndex]?.includes('.webm') 
-                    ? 'video' : 'image'
+                    selectedMedia?.[currentMediaIndex]?.includes('.mp4') ||
+                    selectedMedia?.[currentMediaIndex]?.includes('.webm')
+                        ? 'video'
+                        : 'image'
                 }
             />
-        </div>
+        </>
     );
-};
+ }
 
 export default Paquetes;
