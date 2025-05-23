@@ -20,16 +20,17 @@
 }
 
 /* Logo */
-.navbar-logo .logo-text {
-  text-decoration: none;
+.navbar-logo {
   display: flex;
   align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  text-decoration: none;
 }
 
-.logo-img {
-  height: 160px;
-  width: 200px;
-  object-fit: contain;
+.navbar-logo:hover {
+  color: var(--color-primary-hover);
 }
 
 /* Links centrados */
@@ -42,7 +43,7 @@
 }
 
 .navbar-links .nav-link {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #202121;
   text-decoration: none;
   display: flex;
@@ -80,15 +81,16 @@
 
 .btn {
   border-radius: 8px;
-  font-size: 0.8rem !important;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   text-decoration: none;
   transition: all 0.3s ease;
   height: 40px;
+  padding: 0 1rem;
 }
 
-/* Primario */
+/* Botón primario */
 .btn-primary {
   background-color: var(--color-primary);
   color: white;
@@ -101,7 +103,19 @@
   color: white;
 }
 
-/* Contorno */
+/* Botón secundario */
+.btn-secondary {
+  background-color: var(--color-border);
+  color: white;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-text-light);
+  transform: scale(1.03);
+}
+
+/* Botón de contorno */
 .btn-outline {
   background-color: transparent;
   color: var(--color-primary);
@@ -112,12 +126,6 @@
   background-color: var(--color-primary);
   color: white;
   transform: scale(1.03);
-}
-
-/* Logo wrapper */
-.navbar-logo {
-  display: flex;
-  align-items: center;
 }
 
 /* Botón hamburguesa */
@@ -180,7 +188,3 @@
     margin: 0;
   }
 }
-
-
-
-

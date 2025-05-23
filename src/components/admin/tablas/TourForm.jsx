@@ -10,7 +10,7 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
     fecha_limite_inscripcion: initialData.fecha_limite_inscripcion || '',
   });
   const [paquetes, setPaquetes] = useState([]);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     loadPaquetes();
@@ -34,7 +34,7 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
       const response = await getPaquetes();
       setPaquetes(response);
     } catch (err) {
-      setError('Error al cargar los paquetes', err);
+      console.log('Error al cargar los paquetes', err);
     }
   };
 
@@ -46,19 +46,59 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
     }));
   };
 
+  const validate = () => {
+    const newErrors = {};
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Ignorar la hora para comparar solo la fecha
+  
+    if (!formData.fechaHora) {
+      newErrors.fechaHora = 'Debe seleccionar una fecha y hora.';
+    } else {
+      const fechaHora = new Date(formData.fechaHora);
+      if (fechaHora < today) {
+        newErrors.fechaHora = 'La fecha y hora del tour no pueden ser menores a la fecha actual.';
+      }
+    }
+  
+    if (!formData.id_paquete) {
+      newErrors.id_paquete = 'Debe seleccionar un paquete.';
+    }
+  
+    if (!formData.cupos || formData.cupos <= 0) {
+      newErrors.cupos = 'Debe ingresar un número de cupos mayor a 0.';
+    }
+  
+    if (!formData.fecha_limite_inscripcion) {
+      newErrors.fecha_limite_inscripcion = 'Debe seleccionar una fecha límite de inscripción.';
+    } else {
+      const fechaLimite = new Date(formData.fecha_limite_inscripcion);
+      const fechaHora = new Date(formData.fechaHora);
+  
+      if (fechaLimite < today) {
+        newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción no puede ser menor a la fecha actual.';
+      }
+  
+      if (fechaLimite >= fechaHora) {
+        newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción no puede ser mayor o igual a la fecha y hora del tour.';
+      }
+    }
+  
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.fechaHora || !formData.id_paquete) {
-      setError('Todos los campos son requeridos');
-      return;
-    }
+
+    if (!validate()) return;
 
     const formattedData = {
-      fechaHora: new Date(formData.fechaHora).toISOString(), // Convertir a formato ISO
+      fechaHora: new Date(formData.fechaHora).toISOString(),
       id_paquete: formData.id_paquete,
       cupos: parseInt(formData.cupos, 10),
       fecha_limite_inscripcion: new Date(formData.fecha_limite_inscripcion).toISOString(),
     };
+
     onSubmit(formattedData);
   };
 
@@ -74,6 +114,7 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
           onChange={handleChange}
           required
         />
+        {errors.fechaHora && <p className="form-error">{errors.fechaHora}</p>}
       </div>
 
       <div className="tour-form-group">
@@ -92,6 +133,7 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
             </option>
           ))}
         </select>
+        {errors.id_paquete && <p className="form-error">{errors.id_paquete}</p>}
       </div>
 
       <div className="tour-form-group">
@@ -105,6 +147,7 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
           min="1"
           required
         />
+        {errors.cupos && <p className="form-error">{errors.cupos}</p>}
       </div>
       
       <div className="tour-form-group">
@@ -117,9 +160,8 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
           onChange={handleChange}
           required
         />
+        {errors.fecha_limite_inscripcion && <p className="form-error">{errors.fecha_limite_inscripcion}</p>}
       </div>
-
-      {error && <p className="error-message">{error}</p>}
 
       <div className="tour-form-buttons">
         <button type="submit" className="tour-form-submit-button">

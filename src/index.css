@@ -42,11 +42,8 @@ header {
   align-items: center;
 }
 
-.logo {
-  font-size: 27px;
-  font-weight: 600;
-  color: var(--color-principal);
-  margin-left: auto;
+.logo-img {
+  width: 200px;
 }
 
 .logo-header-centered {

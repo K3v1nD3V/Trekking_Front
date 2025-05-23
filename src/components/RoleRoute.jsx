@@ -9,7 +9,7 @@ const RoleRoute = ({ children, requiredRole }) => {
   }
 
   if (!user || user.rol !== requiredRole) {
-    return <div>Acceso denegado. No tienes permiso para ver esta página.</div>;
+    return <div className='acceso_denegado-container'>Acceso denegado. No tienes permiso para ver esta página.</div>;
   }
 
   return children;

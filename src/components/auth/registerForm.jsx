@@ -49,7 +49,7 @@ const RegisterForm = () => {
     const nuevoUsuario = {
       ...formData,
       correo: formData.correo.toLowerCase(),
-      rol: '67f7313ad08ed50c81ccf91b',
+      rol: '682dc54f9765c3bf2ca47b0b',
     };
 
   

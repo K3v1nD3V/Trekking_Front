@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import NavOption from '../components/common/NavOption';
 import logo from '../assets/image/ORIGINAL_PNG.png';
 
@@ -17,7 +18,7 @@ const iconStyle = {
 
 const Admin = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
-
+  const navigate = useNavigate();
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
   };
@@ -39,7 +40,11 @@ const Admin = () => {
         </div>
 
         {/* Espacio reservado para mantener centrado el logo */}
-        <div style={{ width: '40px' }}></div>
+        <div>
+          <button className="btn btn-primary" onClick={() => navigate('/')}>
+            Home
+          </button>
+        </div>
       </header>
 
       {/* Contenedor principal */}

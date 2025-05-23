@@ -15,9 +15,9 @@ const Hero = () => {
                 <div className="hero-buttons">
                     <a href="#about" className="btn btn-primary">
                     <FaWhatsapp style={{ margin: 0, fontSize: '1.5rem' }} />Contactanos                    </a>
-                    <a href="#paquetes" className="btn  btn-outline">
+                    {/* <a href="#paquetes" className="btn  btn-outline">
                         Conoce Más <FaArrowRight />
-                    </a>
+                    </a> */}
                 </div>
             </div>
         </section>
