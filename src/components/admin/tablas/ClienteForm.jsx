@@ -4,7 +4,7 @@ import '../../../css/components/admin/ClienteForm.css';
 
 import { showConfirm, showSuccess, showError } from '../../../alerts/alerts'; // Ajusta la ruta según dónde tengas las alertas
 
-const ClienteForm = ({ onSubmit, initialData = {} }) => {
+const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = React.useState({
     documento: initialData.documento || '',
     nombre: initialData.nombre || '',
@@ -133,8 +133,15 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
       </div>
 
       <button type="submit" className="form-submit-button">
-        {initialData._id ? 'Actualizar' : 'Crear'} Cliente
+        {initialData._id ? 'Actualizar' : 'Registrar'} 
       </button>
+      <button
+          type="button"
+          className="cancel-btn"
+          onClick={onClose}
+        >
+          Cancelar
+        </button>
     </form>
   );
 };

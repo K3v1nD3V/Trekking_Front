@@ -165,10 +165,11 @@ const Usuarios = () => {
       
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
               <h2 className="modal-title">
-                {selectedUsuario ? 'Editar Usuario' : 'Crear Usuario'}
+                {selectedUsuario ? 'Actualizar Usuario' : 'Registrar Usuario'}
               </h2>
               <UsuarioForm
                 onSubmit={handleSubmit}
+                onClose={() => setIsModalOpen(false)}
                 initialData={selectedUsuario || {}}
                 roles={roles}
               />

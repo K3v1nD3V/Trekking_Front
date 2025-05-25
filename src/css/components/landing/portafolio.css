@@ -83,38 +83,6 @@
 .gallery-img.wide {
   grid-column: span 2;
 }
-
-/* Animación */
-[data-animate].active {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.portfolio-track img {
-    width: 300px;
-    height: 300px;
-    object-fit: cover;
-    margin-right: 20px;
-    border-radius: 15px;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-  }
-  
-  /* Efecto al pasar el cursor */
-  .portfolio-track img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    z-index: 2;
-  }
-  
-
-/* portafolio.css */
-.portfolio-container {
-    width: 100%;
-    overflow: hidden;
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 10px;
-  }
   
   .portfolio-track {
     display: flex;
@@ -122,49 +90,73 @@
     animation: scrollPortfolio 30s linear infinite;
   }
   
-  .portfolio-track img {
-    width: 300px;
-    height: 350px;
-    object-fit: cover;
-    margin-right: 20px;
-    border-radius: 15px;
-  }
-  
-  /* Animación */
-  @keyframes scrollPortfolio {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-
   .portfolio-container {
   position: relative;
   overflow: hidden;
   /* ... tus estilos existentes */
 }
 
-.portfolio-container::before,
-.portfolio-container::after {
-  content: '';
+.carousel-container {
+  position: relative;
+  width: 100%;
+  max-width: 10000px; 
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: #fff;
+  padding: 10px 40px; /* espacio para botones */
+  box-shadow: var(--shadow);
+  margin-top: 90px;
+}
+
+.carousel-track-wrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  /* sin animación automática */
+}
+
+.carousel-image {
+  width: 300px;
+  height: 350px;
+  object-fit: cover;
+  margin-right: 20px;
+  border-radius: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Botones flechas */
+.carousel-btn {
   position: absolute;
-  top: 0;
-  width: 90px;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+  font-size: 24px;
+  user-select: none;
+  z-index: 10;
 }
 
-.portfolio-container::before {
-  left: 0;
-  background: linear-gradient(to right, white 0%, transparent 100%);
+.carousel-btn:hover {
+  opacity: 1;
 }
 
-.portfolio-container::after {
-  right: 0;
-  background: linear-gradient(to left, white 0%, transparent 100%);
+.carousel-btn.prev {
+  left: 10px;
+}
+
+.carousel-btn.next {
+  right: 10px;
 }
 
   

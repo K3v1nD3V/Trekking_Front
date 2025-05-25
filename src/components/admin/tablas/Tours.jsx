@@ -192,7 +192,7 @@ const Tours = () => {
   
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2 className="modal-title">
-          {selectedTour ? 'Editar Tour' : 'Crear Nuevo Tour'}
+          {selectedTour ? 'Actualizar Tour' : 'Registrar Tour'}
         </h2>
         <TourForm
           onSubmit={handleSubmit}

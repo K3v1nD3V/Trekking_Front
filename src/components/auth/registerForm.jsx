@@ -12,8 +12,9 @@ const RegisterForm = () => {
     contraseña: '',
   });
 
+  const [showPassword, setShowPassword] = useState(false); // <-- estado para mostrar/ocultar
   const [error, setError] = useState('');
-  const [fieldErrors, setFieldErrors] = useState({}); // Para inputs individuales
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,18 +22,15 @@ const RegisterForm = () => {
       ...prevData,
       [name]: value
     }));
-    setError(''); // Limpiar el error global cuando un campo cambia
-    setFieldErrors({}); // Limpiar los errores de los campos
+    setError('');
+    setFieldErrors({});
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     const newFieldErrors = {};
-  
-    // Expresión regular para validar correo
     const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
+
     if (!formData.nombre) newFieldErrors.nombre = 'El nombre es requerido';
     if (!formData.correo) {
       newFieldErrors.correo = 'El correo es requerido';
@@ -40,25 +38,23 @@ const RegisterForm = () => {
       newFieldErrors.correo = 'El correo no tiene un formato válido';
     }
     if (!formData.contraseña) newFieldErrors.contraseña = 'La contraseña es requerida';
-  
+
     if (Object.keys(newFieldErrors).length > 0) {
       setFieldErrors(newFieldErrors);
       return;
     }
-  
+
     const nuevoUsuario = {
       ...formData,
       correo: formData.correo.toLowerCase(),
       rol: '67f7313ad08ed50c81ccf91b',
     };
 
-  
     try {
       await api.post('/usuarios', nuevoUsuario);
       navigate('/login');
     } catch (err) {
       const rawMessage = err?.response?.data?.message || err.message;
-  
       if (rawMessage && rawMessage.includes('E11000') && rawMessage.includes('correo')) {
         setFieldErrors({ correo: 'Este correo ya está registrado.' });
         setError('');
@@ -67,15 +63,14 @@ const RegisterForm = () => {
       }
     }
   };
+
   return (
     <div className="login-wrapper">
       <div className="login-box">
 
-        {/* Formulario del lado derecho */}
         <div className="login-form">
           <h2>Crear cuenta</h2>
 
-          {/* Mostrar el error global si existe */}
           {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={handleSubmit}>
@@ -90,7 +85,7 @@ const RegisterForm = () => {
             {fieldErrors.nombre && <div className="field-error">{fieldErrors.nombre}</div>}
 
             <input
-              type="text" 
+              type="text"
               name="correo"
               placeholder="Correo electrónico"
               value={formData.correo}
@@ -99,14 +94,22 @@ const RegisterForm = () => {
             />
             {fieldErrors.correo && <div className="field-error">{fieldErrors.correo}</div>}
 
-            <input
-              type="password"
-              name="contraseña"
-              placeholder="Contraseña"
-              value={formData.contraseña}
-              onChange={handleChange}
-              className={fieldErrors.contraseña ? 'input-error' : ''}
-            />
+            <div className={`password-container ${fieldErrors.contraseña ? 'input-error' : ''}`}>
+              <input
+                type={showPassword ? 'text' : 'password'}  // <-- aquí el cambio de tipo
+                name="contraseña"
+                placeholder="Contraseña"
+                value={formData.contraseña}
+                onChange={handleChange}
+              />
+              <span
+                className="material-icons toggle-password"
+                onClick={() => setShowPassword(prev => !prev)}
+                style={{ cursor: 'pointer', userSelect: 'none' }}
+              >
+                {showPassword ? 'visibility_off' : 'visibility'}
+              </span>
+            </div>
             {fieldErrors.contraseña && <div className="field-error">{fieldErrors.contraseña}</div>}
 
             <button type="submit">Registrar</button>
@@ -116,19 +119,21 @@ const RegisterForm = () => {
             <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
           </div>
         </div>
+
         <div className="login-image">
-        <img
-          src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg"
-          alt="Login visual"
-          className="main-image"
-        />
-        <div className="black-overlay"></div>
-        <img
-          src="/src/assets/ORIGINAL_PNG.png"  
-          alt="Logo superpuesto"
-          className="overlay-image"
-        />
-      </div>
+          <img
+            src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg"
+            alt="Login visual"
+            className="main-image"
+          />
+          <div className="black-overlay"></div>
+          <img
+            src="/src/assets/ORIGINAL_PNG.png"
+            alt="Logo superpuesto"
+            className="overlay-image"
+          />
+        </div>
+
       </div>
     </div>
   );

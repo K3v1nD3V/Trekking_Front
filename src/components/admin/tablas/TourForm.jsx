@@ -145,7 +145,14 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
 
       <div className="tour-form-buttons">
         <button type="submit" className="tour-form-submit-button">
-          {initialData._id ? 'Actualizar' : 'Crear'} Tour
+          {initialData._id ? 'Actualizar' : 'Registrar'}
+        </button>
+        <button
+          type="button"
+          className="cancel-btn"
+          onClick={onClose}
+        >
+          Cancelar
         </button>
       </div>
     </form>

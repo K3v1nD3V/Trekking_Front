@@ -227,10 +227,11 @@ const Clientes = () => {
       
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
               <h2 className="modal-title">
-                {selectedCliente ? 'Editar Cliente' : 'Crear Cliente'}
+                {selectedCliente ? 'Actualizar Cliente' : 'Registrar Cliente'}
               </h2>
               <ClienteForm
                 onSubmit={handleSubmit}
+                onClose={() => setIsModalOpen(false)}
                 initialData={selectedCliente || {}}
               />
             </Modal>

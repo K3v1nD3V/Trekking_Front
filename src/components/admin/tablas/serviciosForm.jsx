@@ -3,7 +3,7 @@ import '../../../css/components/admin/ServicioForm.css';
 import { updateServicio, createServicio } from '../../../api/servicios';
 import { showConfirm, showSuccess, showError } from '../../../alerts/alerts';// Ajusta la ruta
 
-const ServicioForm = ({ onSubmit, initialData = {} }) => {
+const ServicioForm = ({ onSubmit, onClose, initialData = {} }) => {
     const [formData, setFormData] = useState({
         nombre: initialData.nombre || '',
         descripcion: initialData.descripcion || '',
@@ -144,8 +144,15 @@ const ServicioForm = ({ onSubmit, initialData = {} }) => {
             </div>
 
             <button type="submit" className="form-submit-button">
-                {initialData._id ? 'Actualizar' : 'Crear'} Servicio
+                {initialData._id ? 'Actualizar' : 'Registrar'} 
             </button>
+            <button
+          type="button"
+          className="cancel-btn"
+          onClick={onClose}
+        >
+          Cancelar
+        </button>
         </form>
     );
 };

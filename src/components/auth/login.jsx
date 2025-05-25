@@ -3,9 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../../api/auth';
 import './LoginForm.css';
 
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -44,15 +46,14 @@ const Login = () => {
     try {
       const response = await login(email.toLowerCase(), password);
 
-
       if (response.rol === 'admin') {
         navigate('/admin');
       } else if (response.rol === 'cliente') {
         navigate('/cliente');
-      } else{
+      } else {
         setError('Rol no reconocido');
-     }
-     
+      }
+
     } catch (err) {
       setError(err.response?.message || 'Credenciales incorrectas');
     } finally {
@@ -63,20 +64,20 @@ const Login = () => {
   return (
     <div className="login-wrapper">
       <div className="login-box">
-      <div className="login-image">
-        <img
-          src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg"
-          alt="Login visual"
-          className="main-image"
-        />
-        <div className="black-overlay"></div>
-        <img
-          src="/src/assets/ORIGINAL_PNG.png"  
-          alt="Logo superpuesto"
-          className="overlay-image"
-        />
-      </div>
 
+        <div className="login-image">
+          <img
+            src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg"
+            alt="Login visual"
+            className="main-image"
+          />
+          <div className="black-overlay"></div>
+          <img
+            src="/src/assets/ORIGINAL_PNG.png"
+            alt="Logo superpuesto"
+            className="overlay-image"
+          />
+        </div>
 
         <div className="login-form">
           <h2>Iniciar sesión</h2>
@@ -91,13 +92,20 @@ const Login = () => {
             />
             {emailError && <p className="field-error">{emailError}</p>}
 
-            <input 
-              type="password" 
-              placeholder="Contraseña" 
-              value={password}
-              onChange={e => setPassword(e.target.value)} 
-              className={passwordError ? 'input-error' : ''}
-            />
+            <div className={`password-container ${passwordError ? 'input-error' : ''}`}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Contraseña"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
+              <span
+                className="material-icons toggle-password"
+                onClick={() => setShowPassword(prev => !prev)}
+              >
+                {showPassword ? 'visibility_off' : 'visibility'}
+              </span>
+            </div>
             {passwordError && <p className="field-error">{passwordError}</p>}
 
             {error && <p className="field-error">{error}</p>}
@@ -112,9 +120,10 @@ const Login = () => {
             <p>¿Olvidaste tu contraseña? <Link to="/recuperar">Recupérala aquí</Link></p>
           </div>
         </div>
+
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Login;   

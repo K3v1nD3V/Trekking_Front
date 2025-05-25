@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import '../../../css/components/admin/ventaForm.css';
 
-const VentaForm = ({ onSubmit, clientes, paquetes }) => {
+const VentaForm = ({ onSubmit, clientes, paquetes, onClose  }) => {
   const [formData, setFormData] = useState({
     cliente: '',
     paquete: '',
     fecha: '',
     valor: '',
     acompañantes: [],
-    estado: true,  // <-- Estado inicial
+    estado: true,
   });
+
+  const [mostrarAcompanantes, setMostrarAcompanantes] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, selectedOptions } = e.target;
@@ -26,8 +28,11 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
     const { name, checked } = e.target;
     setFormData(prev => ({ ...prev, [name]: checked }));
   };
-  
-  //Nueva funcion para manejar el cambio de los acompañantes
+
+  const handleMostrarAcompanantes = () => {
+    setMostrarAcompanantes(prev => !prev);
+  };
+
   const toggleAcompanante = (id) => {
     setFormData((prev) => {
       const isSelected = prev.acompañantes.includes(id);
@@ -41,7 +46,6 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar fecha que sea hoy
     const hoyStr = new Date().toISOString().split('T')[0];
     if (formData.fecha !== hoyStr) {
       alert("Solo puedes registrar ventas con la fecha de hoy.");
@@ -54,7 +58,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
       fecha: new Date(formData.fecha).toISOString(),
       valor: parseFloat(formData.valor),
       acompañantes: formData.acompañantes.filter(id => id !== formData.cliente),
-      estado: formData.estado,  // <-- Enviar estado
+      estado: formData.estado,
     };
 
     try {
@@ -66,7 +70,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
   };
 
   const filteredClientes = clientes.filter(
-    (cliente) => cliente._id !== formData.cliente // Excluir al cliente principal
+    (cliente) => cliente._id !== formData.cliente
   );
 
   return (
@@ -136,47 +140,44 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
         />
       </div>
 
-       {/* Acompañantes */}
+            {/* ¿Lleva acompañantes? */}
       <div className="form-group">
-        <label>Acompañantes</label>
-        <div className="acompañantes-list">
-          {filteredClientes.map(({ _id, nombre, apellido }) => (
-            <div key={_id} className="acompañante-item">
-              <input
-                type="checkbox"
-                id={`acompañante-${_id}`}
-                checked={formData.acompañantes.includes(_id)}
-                onChange={() => toggleAcompanante(_id)}
-              />
-              <label htmlFor={`acompañante-${_id}`}>
-                {nombre} {apellido}
-              </label>
-            </div>
-          ))}
+        <label>¿Lleva acompañantes?</label>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={mostrarAcompanantes}
+            onChange={handleMostrarAcompanantes}
+          />
+          <span className="slider round"></span>
+        </label>
+      </div>
+
+      {/* Lista de Acompañantes */}
+      {mostrarAcompanantes && (
+        <div className="form-group">
+          <label>Acompañantes</label>
+          <div className="acompanantes-grid">
+            {filteredClientes
+              .sort((a, b) => a.nombre.localeCompare(b.nombre))
+              .map(({ _id, nombre, apellido }) => (
+                <div key={_id} className="acompanante-card">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={formData.acompañantes.includes(_id)}
+                      onChange={() => toggleAcompanante(_id)}
+                    />
+                    {nombre} {apellido}
+                  </label>
+                </div>
+              ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Acompañantes */}
-      <div className="form-group">
-        <label htmlFor="acompañantes">Acompañantes</label>
-        <select
-          multiple
-          id="acompañantes"
-          name="acompañantes"
-          value={formData.acompañantes}
-          onChange={handleChange}
-        >
-          {clientes
-            .filter(c => c._id !== formData.cliente)
-            .map(({ _id, nombre, apellido }) => (
-              <option key={_id} value={_id}>
-                {nombre} {apellido}
-              </option>
-            ))}
-        </select>
-      </div>
 
-      {/* Estado como switch slider */}
+      {/* Estado */}
       <div className="form-group">
         <label>Estado</label>
         <label className="switch">
@@ -190,10 +191,16 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
         </label>
       </div>
 
-      {/* Botón */}
       <button type="submit" className="form-submit-button">
-        Guardar Venta
+        Registrar
       </button>
+      <button
+          type="button"
+          className="cancel-btn"
+          onClick={onClose}
+        >
+          Cancelar
+        </button>
     </form>
   );
 };

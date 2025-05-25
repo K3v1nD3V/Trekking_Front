@@ -1,17 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../../../css/components/admin/rolesForm.css';
 import { showSuccess, showError, showConfirm } from '../../../alerts/alerts';
-import {
-  createRol,
-  updateRol,
-  getRoles
-} from '../../../api/roles';
-import {
-  getPermisos
-} from '../../../api/permisos';
-import {
-  getPrivilegios
-} from '../../../api/privilegios';
+import { createRol, updateRol, getRoles } from '../../../api/roles';
+import { getPermisos } from '../../../api/permisos';
+import { getPrivilegios } from '../../../api/privilegios';
 
 const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({
@@ -137,34 +129,25 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     try {
       if (initialData._id) {
         await updateRol(initialData._id, dataToSend);
-        showSuccess('Rol actualizado correctamente');
-      } else {
-        await createRol(dataToSend);
-        showSuccess('Rol creado exitosamente');
-      }
-
-      if (initialData._id) {
-        await updateRol(initialData._id, dataToSend);
         await showSuccess('¡Rol actualizado exitosamente!');
       } else {
-          await createRol(dataToSend);
-          await showSuccess('¡Rol creado exitosamente!');
+        await createRol(dataToSend);
+        await showSuccess('¡Rol creado exitosamente!');
       }
+
       onSubmit(formData);
-      } catch (err) {
-        console.error('Error al guardar el rol:', err);
-        showError('Error al guardar el rol', 'Verifica los datos o intenta más tarde');
-      }
+      onClose(); // cerrar modal al terminar correctamente
+    } catch (err) {
+      console.error('Error al guardar el rol:', err);
+      showError('Error al guardar el rol', 'Verifica los datos o intenta más tarde');
+    }
   };
 
   return (
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
-        {onClose && (
-          <button className="close-btn" onClick={onClose} type="button">×</button>
-        )}
 
-        <h2>{initialData._id ? 'Editar Rol' : 'Nuevo Rol'}</h2>
+        <h2>{initialData._id ? 'Actualizar Rol' : 'Registrar Rol'}</h2>
 
         <label>
           Nombre del rol
@@ -227,7 +210,15 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
         </div>
 
         <button type="submit" className="submit-btn">
-          {initialData._id ? 'Actualizar' : 'Crear'}
+          {initialData._id ? 'Actualizar' : 'Registrar'}
+        </button>
+
+        <button
+          type="button"
+          className="cancel-btn"
+          onClick={onClose}
+        >
+          Cancelar
         </button>
       </form>
     </div>

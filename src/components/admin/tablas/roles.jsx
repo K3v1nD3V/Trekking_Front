@@ -21,6 +21,7 @@ const RolesTable = () => {
   const [selectedRol, setSelectedRol] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalMode, setModalMode] = useState('');
 
   // 📦 Cargar roles y privilegios
   useEffect(() => {
@@ -45,11 +46,19 @@ const RolesTable = () => {
   // 🔁 Funciones de interacción
   const handleCrearRol = () => {
     setSelectedRol(null);
+    setModalMode('crear');
     setIsModalOpen(true);
   };
-
+  
   const handleRolClick = (row) => {
     setSelectedRol(row);
+    setModalMode('editar');
+    setIsModalOpen(true);
+  };
+  
+  const handleVerDetalle = (row) => {
+    setSelectedRol(row);
+    setModalMode('detalle');
     setIsModalOpen(true);
   };
 
@@ -67,11 +76,17 @@ const RolesTable = () => {
     }
   };
 
-  const handleSubmit = () => {
-    window.location.reload();
+  const handleSubmit = async (nuevoRol) => {
+    if (modalMode === 'crear') {
+      setRoles(prev => [...prev, nuevoRol]);
+    } else if (modalMode === 'editar') {
+      setRoles(prev =>
+        prev.map(rol => rol._id === nuevoRol._id ? nuevoRol : rol)
+      );
+    }
     setIsModalOpen(false);
   };
-
+  
   // 🔘 Componente Estado (interruptor)
   const EstadoCell = ({ row }) => {
     const toggleEstado = async () => {
@@ -112,7 +127,7 @@ const RolesTable = () => {
       selector: row => row.nombre,
       sortable: true,
       cell: row => <div style={{ fontWeight: 600 }}>{row.nombre}</div>,
-      width: '250px',
+      width: '300px',
     },
     {
       name: 'Estado',
@@ -124,15 +139,14 @@ const RolesTable = () => {
       cell: row => (
         <div className="action-buttons">
           <span
-          className="action-button detail-button material-symbols-outlined"
-          onClick={(e) => {
-            e.stopPropagation();
-            setSelectedRol(row);
-            setIsModalOpen(true);
-          }}
-        >
-          info
-        </span>
+            className="action-button detail-button material-symbols-outlined"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleVerDetalle(row);
+            }}
+          >
+            info
+          </span>
           <span
             className="action-button edit-button material-symbols-outlined"
             onClick={e => {
@@ -247,10 +261,14 @@ const RolesTable = () => {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        {selectedRol ? (
+        {modalMode === 'detalle' && selectedRol && (
           <DetalleRolModal rol={selectedRol} />
-        ) : (
-          <RolForm onSubmit={handleSubmit} />
+        )}
+        {modalMode === 'editar' && selectedRol && (
+          <RolForm onSubmit={handleSubmit} onClose={() => setIsModalOpen(false)} initialData={selectedRol} />
+        )}
+        {modalMode === 'crear' && (
+          <RolForm onSubmit={handleSubmit} onClose={() => setIsModalOpen(false)} />
         )}
       </Modal>
     </>

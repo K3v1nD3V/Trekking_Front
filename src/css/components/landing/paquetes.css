@@ -85,9 +85,6 @@
     border: none;
 }
 
-.btn-primary:hover {
-    background-color: var(--color-primary-hover);
-}
 
 /* Servicios incluidos */
 /* .paquete-servicios {

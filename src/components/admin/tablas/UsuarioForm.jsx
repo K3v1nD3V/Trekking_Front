@@ -3,7 +3,7 @@ import { createUsuario, updateUsuario } from '../../../api/usuarios';
 import { showSuccess, showError, showConfirm } from '../../../alerts/alerts';
 import '../../../css/components/admin/ClienteForm.css';
 
-const UsuarioForm = ({ onSubmit, initialData = {}, roles = [] }) => {
+const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
   const [formData, setFormData] = useState({
     nombre: initialData.nombre || '',
     correo: initialData.correo || '',
@@ -23,7 +23,7 @@ const UsuarioForm = ({ onSubmit, initialData = {}, roles = [] }) => {
     const confirmText = isEditing
       ? '¿Estás seguro de actualizar este usuario?'
       : '¿Deseas crear este nuevo usuario?';
-    const confirmTitle = isEditing ? 'Actualizar Usuario' : 'Crear Usuario';
+    const confirmTitle = isEditing ? 'Actualizar' : 'Registrar';
 
     const result = await showConfirm(confirmText, confirmTitle);
     if (!result.isConfirmed) return;
@@ -103,8 +103,15 @@ const UsuarioForm = ({ onSubmit, initialData = {}, roles = [] }) => {
       </div>
 
       <button type="submit" className="form-submit-button">
-        {initialData._id ? 'Actualizar' : 'Crear'} Usuario
+        {initialData._id ? 'Actualizar' : 'Registrar'} 
       </button>
+      <button
+          type="button"
+          className="cancel-btn"
+          onClick={onClose}
+        >
+          Cancelar
+        </button>
     </form>
   );
 };

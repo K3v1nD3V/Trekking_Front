@@ -4,7 +4,7 @@ import '../../../css/components/admin/PaqueteFormStyles.css';
 import { updatePaquete, createPaquete } from '../../../api/paquetes';
 import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'
 
-const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
+const NewPaqueteForm = ({ onSubmit, onClose, initialData = {}, servicios }) => {
   const [formData, setFormData] = useState({
     _id: initialData._id || '',
     nombre: initialData.nombre || '',
@@ -275,7 +275,14 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
       {/* Botón de Enviar */}
       <div className="form-actions">
         <button type="submit" className="btn-primary btn-wide">
-          {formData._id ? 'Actualizar Paquete' : 'Crear Paquete'}
+          {formData._id ? 'Actualizar' : 'Registrar'}
+        </button>
+        <button
+          type="button"
+          className="cancel-btn"
+          onClick={onClose}
+        >
+          Cancelar
         </button>
       </div>
     </form>

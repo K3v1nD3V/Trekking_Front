@@ -202,9 +202,10 @@ const EstadoCell = ({ row }) => (
         />
   
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          <h2 className="modal-title">Crear Venta</h2>
+          <h2 className="modal-title">Registrar Venta</h2>
           <VentaForm
-            onSubmit={handleNuevaVenta}
+            onSubmit={handleNuevaVenta} 
+            onClose={() => setIsModalOpen(false)}
             clientes={clientes}
             paquetes={paquetes}
           />

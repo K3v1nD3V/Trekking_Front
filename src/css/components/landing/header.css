@@ -96,8 +96,7 @@
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-hover);
-  transform: scale(1.03);
+  background-color: #B44F33;
   color: white;
 }
 
@@ -111,7 +110,6 @@
 .btn-outline:hover {
   background-color: var(--color-primary);
   color: white;
-  transform: scale(1.03);
 }
 
 /* Logo wrapper */

@@ -337,7 +337,7 @@ const Paquetes = () => {
     
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <h2 className="modal-title">
-                    {selectedPaquete ? 'Editar Paquete' : 'Crear Nuevo Paquete'}
+                    {selectedPaquete ? 'Actualizar Paquete' : 'Registrar Paquete'}
                 </h2>
                 <NewPaqueteForm
                     onSubmit={handleSubmit}

@@ -211,10 +211,11 @@ const ServiciosTable = () => {
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <h2 className="modal-title">
-                    {selectedServicio ? 'Editar Servicio' : 'Crear Nuevo Servicio'}
+                    {selectedServicio ? 'Actualizar Servicio' : 'Registrar Servicio'}
                 </h2>
                 <ServicioForm
                     onSubmit={handleSubmit}
+                    onClose={() => setIsModalOpen(false)}
                     initialData={selectedServicio || {}}
                 />
             </Modal>
