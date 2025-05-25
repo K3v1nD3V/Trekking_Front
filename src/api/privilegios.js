@@ -4,7 +4,6 @@ import api from './base';
 export const getPrivilegios = async () => {
   try {
     const response = await api.get('/privilegios', { requiresAuth: true });
-    console.log('Datos de privilegios:', response); // Opcional para depuración
     return response; // Ya es response.data gracias al interceptor
   } catch (error) {
     console.error('Error al obtener privilegios:', error);

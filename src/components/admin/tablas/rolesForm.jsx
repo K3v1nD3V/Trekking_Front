@@ -70,6 +70,24 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     }));
   };
 
+  const toggleTodosPrivilegios = (permiso) => {
+    setFormData(prev => ({
+      ...prev,
+      permisos: prev.permisos.map(p => {
+        if (p.permiso === permiso) {
+          const privilegiosIds = privilegios.map(pr => pr._id);
+          const todosSeleccionados = privilegiosIds.every(id => p.privilegios.includes(id));
+          return {
+            ...p,
+            privilegios: todosSeleccionados ? [] : privilegiosIds
+          };
+        }
+        return p;
+      })
+    }));
+  };
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -202,8 +220,22 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
                         {pr.descripcion}
                       </label>
                     ))}
+
+                    <label className="privilegio-item select-all">
+                      <input
+                        type="checkbox"
+                        checked={
+                          privilegios.length > 0 &&
+                          privilegios.every(pr => permisoActivo.privilegios.includes(pr._id))
+                        }
+                        onChange={() => toggleTodosPrivilegios(p.nombre)}
+                      />
+                      Seleccionar todos
+                    </label>
                   </div>
                 )}
+
+
               </div>
             );
           })}
