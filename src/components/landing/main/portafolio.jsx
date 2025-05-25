@@ -44,7 +44,7 @@ const Portafolio = () => {
       <div className="portafolio-container">
 
         <div className="portafolio-text-content" data-animate>
-          <h2 className="portafolio-title">Nuestro Portafolio</h2>
+          <h1 className="portafolio-title">Nuestro Portafolio</h1>
           <p className="portafolio-description">
             Cada imagen cuenta una historia, una aventura vivida y un recuerdo que permanece. 
             Explora algunos de nuestros momentos más memorables en la naturaleza.

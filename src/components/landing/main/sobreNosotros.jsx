@@ -27,7 +27,7 @@ const SobreNosotros = () => {
         </div>
 
         <div className="sobre-nosotros-text-content" data-animate>
-          <h2 className="sobre-nosotros-title">Sobre Nosotros</h2>
+          <h1 className="sobre-nosotros-title">Sobre Nosotros</h1>
           <p className="sobre-nosotros-highlight">
             “Cada sendero recorrido es una historia que escribimos juntos en conexión con la tierra y el alma.”
           </p>
