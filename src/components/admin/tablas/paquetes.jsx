@@ -13,6 +13,8 @@ import '../../../css/components/admin/mediaPreviewEnhanced.css';
 // API
 import { getPaquetes, deletePaquete } from '../../../api/paquetes';
 import { getServicios } from '../../../api/servicios';
+// COMPONENTS
+import Load from '../../common/Load';
 
 const Paquetes = () => {
     const [filterText, setFilterText] = useState('');
@@ -58,10 +60,10 @@ const Paquetes = () => {
     };
 
     const handleSubmit = () => {
-        // window.location.reload();
+        window.location.reload();
         console.log('Paquete actualizado o creado exitosamente!');
         
-        // setIsModalOpen(false);
+        setIsModalOpen(false);
     };
 
     const handleDeletePaquete = async (id) => {
@@ -134,10 +136,6 @@ const Paquetes = () => {
         );
     };
     
-      
-
-      
-
     const MultimediaCell = ({ row }) => {
         const exampleUrls = [
             'https://wallpapers.com/images/hd/hd-nature-phone-river-h14wu1u3zdvst0ch.jpg',
@@ -279,7 +277,6 @@ const Paquetes = () => {
         }
     ];
 
-    if (loading) return <div className="loading">Cargando paquetes...</div>;
     if (error) return <div className="error">Error: {error}</div>;
 
     return (
@@ -309,6 +306,8 @@ const Paquetes = () => {
                 pagination
                 paginationPerPage={10}
                 highlightOnHover
+                progressPending={loading} // Muestra el indicador de carga mientras loading es true
+                progressComponent={<Load />} // Componente de carga personalizado
                 customStyles={{
                     headCells: {
                         style: {

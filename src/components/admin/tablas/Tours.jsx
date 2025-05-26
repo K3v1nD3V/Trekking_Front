@@ -5,6 +5,8 @@ import TourForm from './TourForm';
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/Tour.css';
 import { getTours, createTour, updateTour, deleteTour } from '../../../api/tours';
+// COMPONENTS
+import Load from '../../common/Load';
 
 const Tours = () => {
   const [tours, setTours] = useState([]);
@@ -139,7 +141,6 @@ const Tours = () => {
   ];
   
 
-  if (loading) return <div className="loading">Cargando tours...</div>;
   if (error) return <div className="error">Error: {error}</div>;
 
   return (
@@ -166,6 +167,8 @@ const Tours = () => {
         pagination
         paginationPerPage={10}
         highlightOnHover
+        progressPending={loading} // Muestra el indicador de carga mientras loading es true
+        progressComponent={<Load />}
         customStyles={{
           headCells: {
             style: {

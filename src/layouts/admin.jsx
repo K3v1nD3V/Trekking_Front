@@ -1,20 +1,11 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+
 import NavOption from '../components/common/NavOption';
-import logo from '../assets/image/ORIGINAL_PNG.png';
+import logo from '../../public/LogoTrekking.png';
 
-// Estilos
-const logoStyle = {
-  height: '170px',
-  width: 'auto',
-  objectFit: 'contain',
-};
-
-const iconStyle = {
-  fontSize: '50px',
-  color: '#8B2B1B',
-};
+import '../css/layouts/admin.css';
 
 const Admin = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
@@ -36,7 +27,7 @@ const Admin = () => {
 
         {/* Logo centrado */}
         <div className="logo-header-centered">
-          <img src={logo} alt="Logo Trekking San Cristóbal" style={logoStyle} />
+          <img className='logoStyle' src={logo} alt="Logo Trekking San Cristóbal" />
         </div>
 
         {/* Espacio reservado para mantener centrado el logo */}
@@ -54,45 +45,44 @@ const Admin = () => {
           <div className="navcontainer">
             <nav className="nav">
               <div className="nav-upper-options">
-                {/* Dashboard */}
-                {/* <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>dashboard</span>} text="Dashboard" to="/admin" />
+                {/*----------------------- Dashboard -------------------------------*/}
+                {/* <NavOption icon={<span className="material-symbols-outlined" style={icon}>dashboard</span>} text="Dashboard" to="/admin" />
                 <hr className="divider" /> */}
+                {/*----------------------- ********** -------------------------------*/}
 
                 {/* Configuración */}
                 <div className="menu-section">
                   <h3 className="section-title">Configuración</h3>
-                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>manage_accounts</span>} text="Roles" to="/admin/roles" />
+                  <NavOption icon={<span className="icon material-symbols-outlined">manage_accounts</span>} text="Roles" to="/admin/roles" />
                 </div>
                 <hr className="divider" />
 
                 {/* Servicios */}
                 <div className="menu-section">
                   <h3 className="section-title">Servicios</h3>
-                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>package_2</span>} text="Paquetes" to="/admin/paquetes" />
-                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>map</span>} text="Tours" to="/admin/tours" />
-                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>linked_services</span>} text="Servicios" to="/admin/servicios" />
+                  <NavOption icon={<span className="material-symbols-outlined icon">package_2</span>} text="Paquetes" to="/admin/paquetes" />
+                  <NavOption icon={<span className="material-symbols-outlined icon">map</span>} text="Tours" to="/admin/tours" />
+                  <NavOption icon={<span className="material-symbols-outlined icon">linked_services</span>} text="Servicios" to="/admin/servicios" />
                 </div>
                 <hr className="divider" />
 
                 {/* Usuarios */}
                 <div className="menu-section">
                   <h3 className="section-title">Usuarios</h3>
-                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>person</span>} text="Clientes" to="/admin/clientes" />
-                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>groups</span>} text="Usuarios" to="/admin/usuarios" />
+                  <NavOption icon={<span className="material-symbols-outlined icon">person</span>} text="Clientes" to="/admin/clientes" />
+                  <NavOption icon={<span className="material-symbols-outlined icon">groups</span>} text="Usuarios" to="/admin/usuarios" />
                 </div>
                 <hr className="divider" />
 
                 {/* Otras opciones */}
                 <NavOption 
-                  icon={<span className="material-symbols-outlined" 
-                  style={iconStyle}>price_check</span>} 
+                  icon={<span className="material-symbols-outlined icon">price_check</span>} 
                   text="Ventas" 
                   to="/admin/ventas" 
                 />
                 
                 <NavOption 
-                  icon={<span className="material-symbols-outlined" 
-                  style={iconStyle}>logout</span>} 
+                  icon={<span className="material-symbols-outlined icon">logout</span>} 
                   text="Logout" to="/logout" 
                   isLogout={true} 
                 />

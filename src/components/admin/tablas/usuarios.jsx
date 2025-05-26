@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
 import Modal from '../../common/Modal';
 import UsuarioForm from "./UsuarioForm.jsx";
-import { getUsuarios, deleteUsuario, updateUsuario } from '../../../api/usuarios';
+import { getUsuarios, deleteUsuario } from '../../../api/usuarios';
 import { getRoles } from '../../../api/roles'; // Asumiendo que tienes esta función
 
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
+// COMPONENTS
+import Load from '../../common/Load';
 
 const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
@@ -38,10 +40,10 @@ const Usuarios = () => {
         setIsModalOpen(true);
     };
 
-    const handleUsuarioClick = (row) => {
-        setSelectedUsuario(row);
-        setIsModalOpen(true);
-    };
+    // const handleUsuarioClick = (row) => {
+    //     setSelectedUsuario(row);
+    //     setIsModalOpen(true);
+    // };
 
     const handleDeleteUsuario = async (id, nombre) => {
         if (!window.confirm(`¿Estás seguro de eliminar a ${nombre}?`)) return;
@@ -123,7 +125,6 @@ const Usuarios = () => {
         }
     ];
 
-    if (loading) return <div className="loading">Cargando usuarios...</div>;
     if (error) return <div className="error">Error: {error}</div>;
 
     return (
@@ -153,6 +154,8 @@ const Usuarios = () => {
                 pagination
                 paginationPerPage={10}
                 highlightOnHover
+                progressPending={loading} // Muestra el indicador de carga mientras loading es true
+                progressComponent={<Load />}
                 customStyles={{
                     headCells: {
                         style: {

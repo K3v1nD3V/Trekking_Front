@@ -5,11 +5,13 @@ import DataTable from "react-data-table-component"; // Añadido para usar la tab
 import Modal from '../../common/Modal';
 
 import '../../../css/components/tables.css';
-import '../../../css/components/admin/servicios.css';
+// import '../../../css/components/admin/servicios.css';
 
 import { getVentas, createVenta, updateVenta } from '../../../api/ventas';
 import { getClientes } from '../../../api/clientes';
 import { getPaquetes } from '../../../api/paquetes';
+// COMPONENTS
+import Load from '../../common/Load';
 
 const Ventas = () => {
   const [ventas, setVentas] = useState([]);
@@ -152,9 +154,6 @@ const EstadoCell = ({ row }) => (
 
   ];
   
-
-  if (loading) return <div className="loading">Cargando ventas...</div>;
-
   return (
     <div className="table-container">
       <div className="table-header">
@@ -179,6 +178,8 @@ const EstadoCell = ({ row }) => (
         pagination
         paginationPerPage={10}
         highlightOnHover
+        progressPending={loading} // Muestra el indicador de carga mientras loading es true
+        progressComponent={<Load />}
         customStyles={{
           headCells: {
             style: {
@@ -206,7 +207,7 @@ const EstadoCell = ({ row }) => (
         />
       </Modal>
 
-      {ventas.length === 0 && (
+      {ventas.length === 0 && !loading && (
         <p style={{ textAlign: 'center', padding: '1rem' }}>
           No hay ventas registradas.
         </p>

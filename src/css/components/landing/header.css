@@ -188,3 +188,16 @@
     margin: 0;
   }
 }
+
+.language-selector {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.language-selector .btn {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}

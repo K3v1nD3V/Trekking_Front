@@ -124,7 +124,7 @@ const RegisterForm = () => {
         />
         <div className="black-overlay"></div>
         <img
-          src="/src/assets/ORIGINAL_PNG.png"  
+          src="/public/LogoTrekking.png"  
           alt="Logo superpuesto"
           className="overlay-image"
         />

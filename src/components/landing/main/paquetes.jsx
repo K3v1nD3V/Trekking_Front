@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import '../../../css/components/landing/paquetes.css';
+import { useTranslation } from 'react-i18next';
+
 import { getTours } from '../../../api/tours';
 import { getPaquetes } from '../../../api/paquetes';
 import { getServicios } from '../../../api/servicios';
+
 import PaqueteActual from './paqueteActual';
 import PaqueteListItem from './paqueteListItem';
 import PaqueteListItemSkeleton from './paqueteListItemSkeleton';
 import PaqueteActualSkeleton from './PaqueteActualSkeleton';
+
+import '../../../css/components/landing/paquetes.css';
 
 const Paquetes = () => {
     const [actualPaquete, setActualPaquete] = useState(null);
     const [otrosPaquetes, setOtrosPaquetes] = useState([]);
     const [servicios, setServicios] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -69,7 +74,9 @@ const Paquetes = () => {
         return (
             <section className="paquetes">
                 <PaqueteActualSkeleton />
-                <h2 className="paquete-list-title">Otros Paquetes</h2>
+                <h2 className="paquete-list-title">
+                    {t('packages.otherPackages')}
+                </h2>
                 <div className="paquete-list">
                     <div className="paquete-items">
                         {Array.from({ length: 4 }).map((_, index) => (
@@ -86,9 +93,11 @@ const Paquetes = () => {
         // I prefere to show a button to contact us
         return (
             <div className="no-paquete">
-                <h2>No se han podido cargar los paquetes, vuelve a intentarlo o contactanos.</h2>
+                <h2>
+                    {t('packages.noPackages')}
+                </h2>
                 <a href="https://wa.me/573238893608/?texto=Mas%Info%sobre%nueva%Coleccion%porfavor" className="btn btn-primary">
-                    Contactanos Ahora
+                    {t('packages.contactUs')}
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -114,7 +123,9 @@ const Paquetes = () => {
         <section className="paquetes">
             <PaqueteActual paquete={actualPaquete} servicios={servicios} />
             <div className="paquete-list">
-                <h2 className="paquete-list-title">Otros Paquetes</h2>
+                <h2 className="paquete-list-title">
+                    {t('packages.otherPackages')}
+                </h2>
                 <div className="paquete-items">
                     {otrosPaquetes.map((paquete) => {
                         const serviciosPaquete = servicios.filter((servicio) =>

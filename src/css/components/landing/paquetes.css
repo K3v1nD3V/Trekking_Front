@@ -35,6 +35,10 @@
     justify-content: center;
 }
 
+.paquete-info p {
+    display: flex;
+    gap: 5px;
+}
 .paquete-info p span{
     color: var(--color-primary);
     font-weight: bold;
@@ -65,7 +69,7 @@
 .paquete-price {
     font-size: 2.5rem;
     font-weight: bold;
-    color: var(--color-accent);
+    color: var( --color-primary);
 }
 
 /* Botón de contacto */
@@ -90,12 +94,15 @@
 }
 
 /* Servicios incluidos */
-/* .paquete-servicios {
-    margin-top: var(--space-md);
-} */
+.paquete-servicios {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+}
 
-.paquete-servicios h3 {
+.paquete-servicios p {
     font-size: 1.2rem;
+    font-weight: bold;
     color: var(--color-primary);
     margin-bottom: var(--space-sm);
 }
@@ -112,14 +119,13 @@
 
 .servicio-icon {
     font-size: 2rem;
-    color: var(--color-text);
+    color: var(--color-primary);
     cursor: pointer;
-    transition: color 0.3s ease;
-    transform: scale(1.5);
 }
 
 .servicio-icon:hover {
-    color: var(--color-primary);
+    transform: scale(1.5);
+    color: var(--color-primary-hover);
 }
 
 /* Lista de otros paquetes */
@@ -153,10 +159,10 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.paquete-item:hover {
+/* .paquete-item:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-md), 0 4px 15px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .paquete-item img {
     width: 100%;
@@ -188,7 +194,7 @@
 .paquete-item-price {
     font-size: 1.2rem;
     font-weight: bold;
-    color: var(--color-accent);
+    color: var(--color-primary);
 }
 
 /* Skeleton Loader */

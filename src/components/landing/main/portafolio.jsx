@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import '../../../css/components/landing/portafolio.css';
 
 const Portafolio = () => {
+  const { t } = useTranslation();
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -16,10 +19,11 @@ const Portafolio = () => {
       <div className="portafolio-container">
 
         <div className="portafolio-text-content" data-animate>
-          <h2 className="portafolio-title">Nuestro Portafolio</h2>
+          <h2 className="portafolio-title">
+            {t('portfolio.title')}
+          </h2>
           <p className="portafolio-description">
-            Cada imagen cuenta una historia, una aventura vivida y un recuerdo que permanece. 
-            Explora algunos de nuestros momentos más memorables en la naturaleza.
+            {t('portfolio.description')}
           </p>
         </div>
 

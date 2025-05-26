@@ -1,12 +1,17 @@
+// REACT
 import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
+// MODAL
 import Modal from '../../common/Modal';
+// FORM
 import ClienteForm from "./ClienteForm.jsx";
-
+// API
 import { getClientes, deleteCliente, updateCliente } from '../../../api/clientes';
-
+// CSS
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
+// COMPONENTS
+import Load from '../../common/Load';
 
 const Clientes = () => {
     const [clientes, setClientes] = useState([]);
@@ -171,7 +176,6 @@ const Clientes = () => {
         }
     ];
 
-    if (loading) return <div className="loading">Cargando clientes...</div>;
     if (error) return <div className="error">Error: {error}</div>;
 
     return (
@@ -200,6 +204,8 @@ const Clientes = () => {
                 data={filteredData}
                 pagination
                 paginationPerPage={10}
+                progressPending={loading}
+                progressComponent={<Load />}
                 highlightOnHover
                 customStyles={{
                     headCells: {

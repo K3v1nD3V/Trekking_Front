@@ -1,5 +1,4 @@
 import React from 'react';
-import '../../../css/components/landing/paquetes.css';
 
 const PaqueteActualSkeleton = () => {
     return (

@@ -1,6 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 
 const PaqueteActual = ({ paquete, servicios }) => {
+      const { t } = useTranslation();
+    
     return (
         <div className="actual-paquete">
             <img
@@ -9,12 +13,34 @@ const PaqueteActual = ({ paquete, servicios }) => {
             />
             <div className="paquete-info">
                 <h2 className="paquete-title">{paquete.nombre}</h2>
-                <p className="paquete-location"><span>Destino: </span>{paquete.destino}</p>
-                <p className="paquete-date"><span>Fecha: </span>{paquete.fecha}</p>
-                <p className="paquete-hour"><span>Hora: </span>{paquete.hora}</p>
-                <p className="paquete-date"><span>Lugar de Encuentro: </span>{paquete.lugar_encuentro}</p>
+                <p className="paquete-location">
+                    <span> 
+                        {t('packages.destination')}: 
+                    </span>
+                    {paquete.destino}
+                </p>
+                <p className="paquete-date">
+                    <span>
+                        {t('packages.date')}: 
+                    </span>
+                    {paquete.fecha}
+                </p>
+                <p className="paquete-hour">
+                    <span>
+                        {t('packages.hour')}: 
+                    </span>
+                    {paquete.hora}
+                </p>
+                <p className="paquete-date">
+                    <span>
+                        {t('packages.meetingPoint')}: 
+                    </span>
+                    {paquete.lugar_encuentro}
+                </p>
                 <div className="paquete-servicios">
-                    <h3>Servicios Incluidos:</h3>
+                    <p>
+                        {t('packages.includedServices')}:
+                    </p>
                     <div className="servicios-icons">
                         {servicios.map((servicio) => (
                             <span
@@ -30,7 +56,7 @@ const PaqueteActual = ({ paquete, servicios }) => {
                 <p className="paquete-description">{paquete.descripcion}</p>
                 <p className="paquete-price">${paquete.valor.toLocaleString('es-ES')}</p>
                 <a href="https://wa.me/573238893608/?texto=Mas%Info%sobre%nueva%Coleccion%porfavor" className="btn btn-primary">
-                    Contactanos Ahora
+                    {t('packages.contactUs')}
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"

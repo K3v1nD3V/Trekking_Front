@@ -9,6 +9,8 @@ import '../../../css/components/admin/roles.css';
 
 import { getRoles, deleteRol, updateRol } from '../../../api/roles';
 import { getPrivilegios } from '../../../api/privilegios';
+// COMPONENTS
+import Load from '../../common/Load';
 
 // 📌 Componente principal
 const RolesTable = () => {
@@ -202,7 +204,6 @@ const RolesTable = () => {
   ];
 
   // 🧾 Render principal
-  if (loading) return <div className="loading">Cargando roles...</div>;
   if (error) return <div className="error">Error: {error}</div>;
 
   return (
@@ -228,6 +229,8 @@ const RolesTable = () => {
         data={filteredData}
         pagination
         paginationPerPage={10}
+        progressPending={loading} // Muestra el indicador de carga mientras loading es true
+        progressComponent={<Load />}
         highlightOnHover
         onRowClicked={handleRolClick}
         customStyles={{

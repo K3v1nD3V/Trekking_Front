@@ -15,3 +15,14 @@
   padding: var(--space-lg);
   background: #f0f2f5;
 }
+
+.icon {
+  font-size: 30px;
+  color: #8B2B1B;
+}
+
+.logoStyle {
+  height: 60px;
+}
+
+

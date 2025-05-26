@@ -37,9 +37,9 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
   
-  .servicio-icon {
+  .servicio-section-icon {
     font-size: 3rem;
-    color: #C81E17 !important;
+    color: #C81E17;
     margin-bottom: 1rem;
   }
   

@@ -7,6 +7,8 @@ import '../../../css/components/admin/servicios.css';
 
 import { getServicios } from '../../../api/servicios';
 import { deleteServicio, updateServicio } from '../../../api/servicios';
+// COMPONENTS
+import Load from '../../common/Load';
 
 const ServiciosTable = () => {
     const [filterText, setFilterText] = useState('');
@@ -165,7 +167,6 @@ const ServiciosTable = () => {
         },
     ];
 
-    if (loading) return <div className="loading">Cargando servicios...</div>;
     if (error) return <div className="error">Error: {error}</div>;
 
     return (
@@ -195,6 +196,8 @@ const ServiciosTable = () => {
                 pagination
                 paginationPerPage={10}
                 highlightOnHover
+                progressPending={loading} // Muestra el indicador de carga mientras loading es true
+                progressComponent={<Load />}
                 customStyles={{
                     headCells: {
                         style: {

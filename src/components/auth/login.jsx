@@ -44,10 +44,11 @@ const Login = () => {
     try {
       const response = await login(email.toLowerCase(), password);
 
+      const rol = response.usuario?.rol;
 
-      if (response.rol === 'admin') {
+      if (rol === 'admin') {
         navigate('/admin');
-      } else if (response.rol === 'cliente') {
+      } else if (rol === 'cliente') {
         navigate('/cliente');
       } else{
         setError('Rol no reconocido');
@@ -71,7 +72,7 @@ const Login = () => {
         />
         <div className="black-overlay"></div>
         <img
-          src="/src/assets/ORIGINAL_PNG.png"  
+          src="/public/LogoTrekking.png"  
           alt="Logo superpuesto"
           className="overlay-image"
         />

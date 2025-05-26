@@ -20,7 +20,6 @@ import Tours from "./components/admin/tablas/Tours";
 import Landing from './layouts/landing';
 // Cliente Section
 import Cliente from './components/cliente/Cliente';
-import MainCliente from './components/cliente/clienteMain';
 
 const App = () => {
   return (

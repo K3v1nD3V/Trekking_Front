@@ -43,7 +43,7 @@ header {
 }
 
 .logo-img {
-  width: 200px;
+  width: 150px;
 }
 
 .logo-header-centered {
@@ -178,11 +178,6 @@ header {
   border-left: 4px solid var(--color-terciario);
   background-color: var(--color-hover);
   cursor: pointer;
-  color: var(--color-secundario);
-}
-
-.material-symbols-outlined {
-  font-size: 22px !important;
   color: var(--color-secundario);
 }
 

@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { FaWhatsapp } from 'react-icons/fa';
 import '../../../css/components/landing/sobreNosotros.css';
 
 const SobreNosotros = () => {
+  const { t } = useTranslation();
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -27,19 +30,18 @@ const SobreNosotros = () => {
         </div>
 
         <div className="sobre-nosotros-text-content" data-animate>
-          <h2 className="sobre-nosotros-title">Sobre Nosotros</h2>
+          <h2 className="sobre-nosotros-title">
+            {t('about.title')}
+          </h2>
           <p className="sobre-nosotros-highlight">
-            “Cada sendero recorrido es una historia que escribimos juntos en conexión con la tierra y el alma.”
+            {t('about.highlight')}
           </p>
-          <p className="sobre-nosotros-text">
-            En <strong>Trekking San Cristóbal</strong> cada ruta es una invitación a reconectar con lo esencial: 
-            la naturaleza, el silencio interior y el poder de lo simple. Nuestros caminos por las montañas y rincones
-            ocultos de Antioquia despiertan sentidos, liberan el estrés y llenan el alma de vida auténtica.
-          </p>
-          <p className="sobre-nosotros-text">
-          Aquí no solo recorres paisajes <strong> los sientes, los vives, los llevas contigo.</strong> Cada experiencia está diseñada para transformar tu día, tu mente y tu energía. Si buscas más que una caminata, 
-          si deseas un momento real contigo mismo y con quienes comparten la pasión por lo natural, este es tu lugar.
-          </p>
+          <p className="sobre-nosotros-text" 
+            dangerouslySetInnerHTML={{ __html: t('about.text1') }}
+          />
+          <p className="sobre-nosotros-text"
+            dangerouslySetInnerHTML={{ __html: t('about.text2') }}
+          />
           {/* <a
             href="https://wa.me/573001234567?text=Hola%20Trekking%20San%20Cristóbal,%20quiero%20más%20información%20sobre%20las%20rutas%20de%20senderismo."
             target="_blank"
