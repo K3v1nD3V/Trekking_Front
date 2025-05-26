@@ -341,6 +341,7 @@ const Paquetes = () => {
                 </h2>
                 <NewPaqueteForm
                     onSubmit={handleSubmit}
+                    onClose={() => setIsModalOpen(false)}
                     initialData={selectedPaquete || {}}
                     servicios={servicios}
                 />
@@ -374,7 +375,7 @@ const Paquetes = () => {
             {/* Modal para visualización expandida */}
             <NewExpandedModal
                 isOpen={isExpandedModalOpen}
-                onClose={() => setIsExpandedModalOpen(false)}
+                onClose={() => setIsModalOpen(false)}
                 mediaUrl={selectedMedia?.[currentMediaIndex]}
                 mediaType={
                     selectedMedia?.[currentMediaIndex]?.includes('.mp4') ||

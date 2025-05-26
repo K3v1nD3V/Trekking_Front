@@ -51,7 +51,7 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  width: 515px;
+  width: 100%;
 }
 
 .tour-form-submit-button:hover {

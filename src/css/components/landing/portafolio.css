@@ -116,7 +116,7 @@
 
 .carousel-track {
   display: flex;
-  /* sin animación automática */
+  will-change: transform;
 }
 
 .carousel-image {
@@ -125,8 +125,10 @@
   object-fit: cover;
   margin-right: 20px;
   border-radius: 15px;
+  flex-shrink: 0;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 
 /* Botones flechas */
 .carousel-btn {

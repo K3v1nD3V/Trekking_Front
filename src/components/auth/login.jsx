@@ -46,20 +46,22 @@ const Login = () => {
     try {
       const response = await login(email.toLowerCase(), password);
 
-      if (response.rol === 'admin') {
-        navigate('/admin');
-      } else if (response.rol === 'cliente') {
-        navigate('/cliente');
-      } else {
-        setError('Rol no reconocido');
-      }
+      const rol = response.usuario?.rol;
 
+      if (rol === 'admin') {
+        navigate('/admin');
+      } else if (rol === 'cliente') {
+        navigate('/cliente');
+      } else{
+        setError('Rol no reconocido');
+     }
+     
     } catch (err) {
       setError(err.response?.message || 'Credenciales incorrectas');
     } finally {
       setLoading(false);
     }
-  };
+    };
 
   return (
     <div className="login-wrapper">

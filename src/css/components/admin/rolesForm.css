@@ -171,7 +171,6 @@ input[type="checkbox"] {
   border-radius: 0.7rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
 .cancel-btn:hover {

@@ -283,7 +283,7 @@ select {
 
 /* Botones más anchos */
 .btn-wide {
-  width: 103%;
+  width: 100%;
   padding: 12px 0;
   font-size: 0.9rem;
   border-radius: 10px;

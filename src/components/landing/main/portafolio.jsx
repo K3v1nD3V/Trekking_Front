@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../../../css/components/landing/portafolio.css';
 
 const Portafolio = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const trackRef = useRef(null);
 
   const images = [
     "/public/Image/portafolio_1.jpeg",
@@ -16,28 +17,65 @@ const Portafolio = () => {
     "/public/Image/portafolio_9.jpeg"
   ];
 
-  // Para mostrar 3 imágenes visibles a la vez (puedes ajustar)
-  const visibleCount = 3;
+  // Duplicamos las imágenes para el efecto infinito
+  const duplicatedImages = [...images, ...images];
 
-  // Controlar límite para no salir del array
-  const maxIndex = images.length - visibleCount;
+  // Velocidad en px por frame (ajusta para más rápido o lento)
+  const speed = 0.7;
 
+  // Estado para controlar el desplazamiento en px
+  const [offset, setOffset] = useState(0);
+
+  // Ancho total de las imágenes originales (un set)
+  const totalWidth = images.length * 320; // 300px ancho + 20px margin
+
+  // Función de animación que actualiza el offset continuamente
+  useEffect(() => {
+    if (isPaused) return;
+
+    let animationFrameId;
+
+    const animate = () => {
+      setOffset(prev => {
+        let newOffset = prev + speed;
+        if (newOffset >= totalWidth) {
+          // Cuando llegamos al ancho total, reseteamos para que parezca infinito
+          return 0;
+        }
+        return newOffset;
+      });
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isPaused, totalWidth]);
+
+  // Eventos para pausar y reanudar al hover
+  const handleMouseEnter = () => setIsPaused(true);
+  const handleMouseLeave = () => setIsPaused(false);
+
+  // Funciones para controlar con flechas (ajustar offset)
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+    setOffset((prev) => {
+      let newOffset = prev - 320;
+      if (newOffset < 0) {
+        return totalWidth - 320;
+      }
+      return newOffset;
+    });
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-  };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('active');
-      });
+    setOffset((prev) => {
+      let newOffset = prev + 320;
+      if (newOffset >= totalWidth) {
+        return 0;
+      }
+      return newOffset;
     });
-    document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
-  }, []);
+  };
 
   return (
     <section className="portafolio-section" id="portfolio">
@@ -52,18 +90,19 @@ const Portafolio = () => {
         </div>
 
         <div className="portafolio-gallery" data-animate>
-          <div className="carousel-container">
+          <div className="carousel-container" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <button className="carousel-btn prev" onClick={prevSlide} aria-label="Anterior">&#10094;</button>
 
             <div className="carousel-track-wrapper">
               <div
                 className="carousel-track"
+                ref={trackRef}
                 style={{
-                  transform: `translateX(-${currentIndex * (320)}px)`, // 300px image width + 20px margin
-                  transition: 'transform 0.5s ease-in-out'
+                  transform: `translateX(-${offset}px)`,
+                  transition: isPaused ? 'transform 0.3s ease' : 'none'
                 }}
               >
-                {images.map((src, i) => (
+                {duplicatedImages.map((src, i) => (
                   <img
                     key={i}
                     src={src}
