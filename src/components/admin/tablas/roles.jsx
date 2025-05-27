@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import Modal from '../../common/Modal';
 import RolForm from './rolesForm';
-
+import { toast } from 'sonner';
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/roles.css';
 
@@ -68,11 +68,11 @@ const RolesTable = () => {
 
     try {
       await deleteRol(id);
-      showSuccess('¡Rol eliminado exitosamente!');
+      toast.success('¡Rol eliminado exitosamente!');
       setRoles(prev => prev.filter(rol => rol._id !== id));
     } catch (error) {
-      console.error('Error eliminando el rol:', error.message);
-      showError('Error', 'Hubo un error al eliminar el rol.');
+      toast.error('Error eliminando el rol:', error.message);
+      toast.error('Error', 'Hubo un error al eliminar el rol.');
     }
   };
 
@@ -96,10 +96,10 @@ const RolesTable = () => {
         setRoles(prev =>
           prev.map(r => r._id === row._id ? { ...r, estado: !row.estado } : r)
         );
-        showSuccess(`Estado cambiado a ${!row.estado ? 'Inactivo' : 'Activo'}`);
+        toast.success(`Estado cambiado a ${!row.estado ? 'Inactivo' : 'Activo'}`);
       } catch (error) {
         console.error('Error actualizando estado:', error.message);
-        showError('Error', 'Hubo un error al cambiar el estado.');
+        toast.error('Error', 'Hubo un error al cambiar el estado.');
       }
     };
 

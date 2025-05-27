@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import '../../../css/components/admin/rolesForm.css';
-import { showSuccess, showError, showConfirm } from '../../../alerts/alerts';
 import { createRol, updateRol, getRoles } from '../../../api/roles';
 import { getPermisos } from '../../../api/permisos';
 import { getPrivilegios } from '../../../api/privilegios';
@@ -37,7 +37,7 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
         }
       } catch (err) {
         console.error(err);
-        showError('Error', 'No se pudieron cargar los datos iniciales.');
+        toast.error('No se pudieron cargar los datos iniciales.');
       }
     };
 
@@ -86,7 +86,6 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
       })
     }));
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -122,7 +121,7 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
 
     const permisosValidos = formData.permisos.filter(p => p.privilegios.length > 0);
     if (permisosValidos.length === 0) {
-      showError('Error', 'Debe asignar al menos un permiso con al menos un privilegio.');
+      toast.error('Debe asignar al menos un permiso con al menos un privilegio.');
       return;
     }
 
@@ -137,34 +136,65 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
       permisos: permisosFinal
     };
 
-    const confirm = await showConfirm(
-      initialData._id ? '¿Deseas actualizar este rol?' : '¿Deseas crear este rol?',
-      'Confirma tu acción'
-    );
+    const confirmarAccion = () =>
+      new Promise((resolve) => {
+        toast(
+          (t) => (
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span>
+                {initialData._id
+                  ? '¿Deseas actualizar este rol?'
+                  : '¿Deseas crear este rol?'}
+              </span>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px', gap: '10px' }}>
+                <button
+                  onClick={() => {
+                    toast.dismiss(t);
+                    resolve(true);
+                  }}
+                  style={{ backgroundColor: '#4caf50', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '4px' }}
+                >
+                  Sí
+                </button>
+                <button
+                  onClick={() => {
+                    toast.dismiss(t);
+                    resolve(false);
+                  }}
+                  style={{ backgroundColor: '#f44336', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '4px' }}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          ),
+        );
+      });
 
-    if (!confirm.isConfirmed) return;
+const confirmado = await confirmarAccion();
+if (!confirmado) return;
+
 
     try {
       if (initialData._id) {
         await updateRol(initialData._id, dataToSend);
-        await showSuccess('¡Rol actualizado exitosamente!');
+        toast.success('¡Rol actualizado exitosamente!');
       } else {
         await createRol(dataToSend);
-        await showSuccess('¡Rol creado exitosamente!');
+        toast.success('¡Rol creado exitosamente!');
       }
 
       onSubmit(formData);
-      onClose(); // cerrar modal al terminar correctamente
+      onClose();
     } catch (err) {
-      console.error('Error al guardar el rol:', err);
-      showError('Error al guardar el rol', 'Verifica los datos o intenta más tarde');
+      toast.error('Error al guardar el rol:', err);
+      toast.error('Error al guardar el rol. Verifica los datos o intenta más tarde.');
     }
   };
 
   return (
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
-
         <h2>{initialData._id ? 'Actualizar Rol' : 'Registrar Rol'}</h2>
 
         <label>
@@ -234,8 +264,6 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
                     </label>
                   </div>
                 )}
-
-
               </div>
             );
           })}
