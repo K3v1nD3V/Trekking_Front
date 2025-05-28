@@ -137,39 +137,72 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     };
 
     const confirmarAccion = () =>
-      new Promise((resolve) => {
-        toast(
-          (t) => (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span>
-                {initialData._id
-                  ? '¿Deseas actualizar este rol?'
-                  : '¿Deseas crear este rol?'}
-              </span>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px', gap: '10px' }}>
-                <button
-                  onClick={() => {
-                    toast.dismiss(t);
-                    resolve(true);
-                  }}
-                  style={{ backgroundColor: '#4caf50', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '4px' }}
-                >
-                  Sí
-                </button>
-                <button
-                  onClick={() => {
-                    toast.dismiss(t);
-                    resolve(false);
-                  }}
-                  style={{ backgroundColor: '#f44336', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '4px' }}
-                >
-                  No
-                </button>
-              </div>
-            </div>
-          ),
-        );
-      });
+  new Promise((resolve) => {
+    toast(
+      (t) => (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '20px', // separación entre texto y botones
+            maxWidth: '100%', // evita desbordamiento
+          }}
+        >
+          <span style={{ flexShrink: 0 }}>
+            {initialData._id
+              ? '¿Deseas actualizar este rol?'
+              : '¿Deseas crear este rol?'}
+          </span>
+
+          <div
+            style={{
+              display: 'flex',
+              gap: '10px',
+            }}
+          >
+            <button
+              onClick={() => {
+                toast.dismiss(t);
+                resolve(true);
+              }}
+              style={{
+                backgroundColor: '#c81e17',
+                color: 'white',
+                border: 'none',
+                padding: '4px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              Sí
+            </button>
+            <button
+              onClick={() => {
+                toast.dismiss(t);
+                resolve(false);
+              }}
+              style={{
+                backgroundColor: '#c2c2c2',
+                color: 'black',
+                border: 'none',
+                padding: '4px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        duration: Infinity,
+      }
+    );
+  });
+
+
 
 const confirmado = await confirmarAccion();
 if (!confirmado) return;

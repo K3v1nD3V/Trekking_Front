@@ -9,7 +9,7 @@ import '../../../css/components/admin/roles.css';
 
 import { getRoles, deleteRol, updateRol } from '../../../api/roles';
 import { getPrivilegios } from '../../../api/privilegios';
-import { showSuccess, showError, showConfirm } from '../../../alerts/alerts';
+import { showConfirm } from '../../../alerts/alerts';
 
 
 // 📌 Componente principal
@@ -88,18 +88,27 @@ const RolesTable = () => {
   };
   
   // 🔘 Componente Estado (interruptor)
-  const EstadoCell = ({ row }) => {
+  const EstadoCell = ({ row }) => { 
     const toggleEstado = async () => {
       try {
-        const updatedEstado = { estado: !row.estado };
-        await updateRol(row._id, updatedEstado);
+        const updatedRol = {
+          nombre: row.nombre,
+          estado: !row.estado,
+          permisos: row.permisos.map(p => typeof p === 'string' ? p : p._id),
+        };
+  
+        console.log('Rol corregido que se va a enviar:', updatedRol);
+  
+        await updateRol(row._id, updatedRol);
+  
         setRoles(prev =>
           prev.map(r => r._id === row._id ? { ...r, estado: !row.estado } : r)
         );
+  
         toast.success(`Estado cambiado a ${!row.estado ? 'Inactivo' : 'Activo'}`);
       } catch (error) {
         console.error('Error actualizando estado:', error.message);
-        toast.error('Error', 'Hubo un error al cambiar el estado.');
+        toast.error('Hubo un error al cambiar el estado.');
       }
     };
 
@@ -175,14 +184,26 @@ const RolesTable = () => {
 
   const DetalleRolModal = ({ rol }) => {
     const privilegiosData = JSON.parse(localStorage.getItem('privilegios')) || [];
-
+  
     return (
       <div className="detalle-rol-modal">
         <h3>Detalles del Rol</h3>
-        <p><strong>Rol:</strong> {rol.nombre}</p>
-        <p><strong>Estado:</strong> {rol.estado ? 'Activo' : 'Inactivo'}</p>
+  
         <hr />
+        
+        <div className="info-general">
+          <div><span className="label">Rol:</span> {rol.nombre}</div>
+          <div>
+            <span className="label">Estado:</span>
+            <span className={`estado ${rol.estado ? 'activo' : 'inactivo'}`}>
+              {rol.estado ? 'Activo' : 'Inactivo'}
+            </span>
+          </div>
+        </div>
+  
+  
         <h4>Permisos y Privilegios</h4>
+  
         {rol.permisos && rol.permisos.length > 0 ? (
           rol.permisos.map((permiso, idx) => {
             const privilegios = privilegiosData.filter(p =>
@@ -190,7 +211,7 @@ const RolesTable = () => {
             );
             return (
               <div key={idx} className="permiso-detalle">
-                <strong>{permiso.nombre}</strong>
+                <div className="permiso-nombre">{permiso.nombre}</div>
                 <ul className="privilegios-lista">
                   {privilegios.length > 0 ? (
                     privilegios.map((priv, i) => (
@@ -209,6 +230,7 @@ const RolesTable = () => {
       </div>
     );
   };
+  
 
   // 🧾 Render principal
   if (loading) return <div className="loading">Cargando roles...</div>;

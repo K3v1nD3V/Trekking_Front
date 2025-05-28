@@ -85,3 +85,29 @@
 .nav-option[data-logout="true"]:hover {
   background-color: rgba(220, 53, 69, 0.1);
 }
+
+.user-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 20px;
+}
+
+.circle-initial {
+  background-color: #8B2B1B;
+  color: white;
+  font-weight: bold;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.user-role {
+  font-weight: 600;
+  color: #383D41;
+  font-size: 14px;
+}
