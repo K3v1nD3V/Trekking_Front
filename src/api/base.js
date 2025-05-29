@@ -38,13 +38,15 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       removeAuthToken();
       if (window.location.pathname !== '/login') {
-        console.log(error)
+        console.log(error);
         // window.location.href = '/login';
       }
     }
-    const errorMessage =
+
+    // Agrega mensaje custom, pero conserva todo el error
+    error.customMessage =
       error.response?.data?.message || error.message || 'Error de conexión';
-    return Promise.reject(new Error(errorMessage));
+    return Promise.reject(error);
   }
 );
 

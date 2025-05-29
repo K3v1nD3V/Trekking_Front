@@ -45,9 +45,11 @@ const Login = () => {
       const response = await login(email.toLowerCase(), password);
 
 
-      if (response.rol === 'admin') {
+      const rol = response.usuario?.rol;
+
+      if (rol === 'admin') {
         navigate('/admin');
-      } else if (response.rol === 'cliente') {
+      } else if (rol === 'cliente') {
         navigate('/cliente');
       } else{
         setError('Rol no reconocido');

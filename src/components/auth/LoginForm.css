@@ -60,8 +60,8 @@
   padding: 40px 30px;
   text-align: center;
   font-family: var(--font-main);
-  margin-top: 100px;
-  max-width: 400px;
+  margin-top: 30px;
+  max-width: 500px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -89,12 +89,6 @@
 .login-form input:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(200, 30, 23, 0.15);
-}
-
-/* Campo con error */
-.input-error {
-  border: 1px solid #c81e17;
-  background-color: #ffeaea;
 }
 
 
@@ -194,3 +188,77 @@
   text-align: center;
 }
 }
+
+.input-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+
+.password-container {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  padding-right: 35px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.6rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.password-icon {
+  position: absolute;
+  right: 0.6rem;
+  color: green;
+}
+
+.password-container.input-error .password-icon {
+  color: red;
+}
+
+
+.field-error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.input-group input,
+.input-group textarea,
+.password-container input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.toggle-password,
+.password-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #999;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .input-row {
+    flex-direction: column;
+  }
+}
+
