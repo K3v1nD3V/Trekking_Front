@@ -70,7 +70,7 @@ const RegisterForm = () => {
       nombre: formData.nombre,
       correo: formData.correo.toLowerCase(),
       contraseña: formData.contraseña,
-      rol: '67f7313ad08ed50c81ccf91b'
+      rol: '683786ba18ef8808a16d95cc'
     };
 
     const clienteData = {
