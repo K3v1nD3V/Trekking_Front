@@ -4,8 +4,9 @@ import Modal from '../../common/Modal';
 import UsuarioForm from "./UsuarioForm.jsx";
 import { getUsuarios, deleteUsuario } from '../../../api/usuarios';
 import { getRoles } from '../../../api/roles';
-import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'; // importa las alertas
+import { showConfirm } from '../../../alerts/alerts'; // importa las alertas
 
+import { toast } from 'sonner';
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
 
@@ -43,12 +44,12 @@ const Usuarios = () => {
             const result = await showConfirm(`¿Estás seguro de eliminar a ${nombre}?`, 'Confirmar eliminación');
             if (result.isConfirmed) {
                 await deleteUsuario(id);
-                showSuccess('¡Usuario eliminado exitosamente!');
+                toast.success('¡Usuario eliminado exitosamente!');
                 setUsuarios(prev => prev.filter(usuario => usuario._id !== id));
             }
         } catch (err) {
             console.error('Error eliminando usuario:', err.message);
-            showError('Error', 'No se pudo eliminar el usuario.');
+            toast.error('Error', 'No se pudo eliminar el usuario.');
         }
     };
 

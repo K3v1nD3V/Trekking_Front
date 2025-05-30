@@ -4,9 +4,9 @@ import Modal from '../../common/Modal';
 import ServicioForm from './serviciosForm';
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/servicios.css';
-
+import { toast } from 'sonner';
 import { getServicios, deleteServicio, updateServicio } from '../../../api/servicios';
-import { showConfirm, showSuccess, showError } from '../../../alerts/alerts';
+import { showConfirm } from '../../../alerts/alerts';
 
 const ServiciosTable = () => {
     const [filterText, setFilterText] = useState('');
@@ -42,11 +42,11 @@ const ServiciosTable = () => {
 
         try {
             await deleteServicio(id);
-            showSuccess('¡Servicio eliminado exitosamente!');
+            toast.success('¡Servicio eliminado exitosamente!');
             setServicios((prev) => prev.filter((servicio) => servicio._id !== id));
         } catch (error) {
             console.error('Error eliminando el servicio:', error.message);
-            showError('Error', 'Hubo un error al eliminar el servicio.');
+            toast.error('Error', 'Hubo un error al eliminar el servicio.');
         }
     };
 
@@ -58,7 +58,7 @@ const ServiciosTable = () => {
     const handleSubmit = () => {
         window.location.reload(); // Considera mejorar esto por una actualización del estado
         setIsModalOpen(false);
-        showSuccess(selectedServicio ? '¡Servicio actualizado exitosamente!' : '¡Servicio creado exitosamente!');
+        toast.success(selectedServicio ? '¡Servicio actualizado exitosamente!' : '¡Servicio creado exitosamente!');
     };
 
     const filteredData = servicios.filter((item) =>
@@ -69,6 +69,13 @@ const ServiciosTable = () => {
 
     const EstadoCell = ({ row }) => {
         const toggleEstado = async () => {
+            const mensaje = row.estado
+                ? '¿Estás seguro de que deseas desactivar este servicio?'
+                : '¿Estás seguro de que deseas activar este servicio?';
+    
+            const result = await showConfirm(mensaje, 'Confirmar cambio de estado');
+            if (!result.isConfirmed) return;
+    
             try {
                 const updatedServicio = { ...row, estado: !row.estado };
                 await updateServicio(row._id, updatedServicio);
@@ -77,13 +84,13 @@ const ServiciosTable = () => {
                         servicio._id === row._id ? updatedServicio : servicio
                     )
                 );
-                showSuccess('Estado actualizado correctamente');
+                toast.success('Estado actualizado correctamente');
             } catch (error) {
                 console.error('Error actualizando estado:', error.message);
-                showError('Error', 'Hubo un error al cambiar el estado.');
+                toast.error('Hubo un error al cambiar el estado.');
             }
         };
-
+    
         return (
             <div className="estado-switch">
                 <label className="switch">
@@ -97,6 +104,7 @@ const ServiciosTable = () => {
             </div>
         );
     };
+    
 
     const columns = [
         {

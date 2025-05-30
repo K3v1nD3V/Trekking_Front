@@ -44,15 +44,20 @@ export const showError = (title, text) => {
   });
 };
 
-export const showConfirm = (text, title = '') => {
+export const showConfirm = (text) => {
   return Swal.fire({
-    toast: true,
-    position: 'top-end',
-    icon: 'question',
-    title,
-    text,
+    ...baseConfig,
+    html: text,
     showCancelButton: true,
     confirmButtonText: 'Sí',
-    cancelButtonText: 'No'
+    cancelButtonText: 'No',
+    width: '320px',
+    background: '#d0e7ff',
+    customClass: {
+      ...baseConfig.customClass,
+      popup: 'my-swal-popup-small',
+      title: '', // se omite el título
+    },
+    buttonsStyling: false,
   });
 };

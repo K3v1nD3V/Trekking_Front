@@ -7,9 +7,10 @@ import { getClientes, deleteCliente, updateCliente } from '../../../api/clientes
 
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
+import { toast } from 'sonner';
 
 // Importa las alertas
-import { showConfirm, showSuccess, showError } from '../../../alerts/alerts'; // Ajusta la ruta si es necesario
+import { showConfirm } from '../../../alerts/alerts'; // Ajusta la ruta si es necesario
 
 const Clientes = () => {
     const [clientes, setClientes] = useState([]);
@@ -53,10 +54,10 @@ const Clientes = () => {
         try {
             await deleteCliente(id);
             setClientes(prev => prev.filter(cliente => cliente._id !== id));
-            showSuccess('¡Cliente eliminado exitosamente!');
+            toast.success('¡Cliente eliminado exitosamente!');
         } catch (err) {
             console.error('Error eliminando cliente:', err.message);
-            showError('Error', 'No se pudo eliminar el cliente.');
+            toast.error('Error', 'No se pudo eliminar el cliente.');
         }
     };
 
@@ -66,7 +67,14 @@ const Clientes = () => {
     };
 
     const toggleEstado = async (row) => {
-        const updatedCliente = { ...row, estado: !row.estado };
+        const nuevoEstado = !row.estado;
+        const mensaje = `¿Estás seguro de ${nuevoEstado ? 'activar' : 'desactivar'} al cliente ${row.nombre} ${row.apellido}?`;
+    
+        const result = await showConfirm(mensaje, 'Confirmar cambio de estado');
+    
+        if (!result.isConfirmed) return;
+    
+        const updatedCliente = { ...row, estado: nuevoEstado };
     
         try {
             await updateCliente(row._id, updatedCliente);
@@ -75,12 +83,13 @@ const Clientes = () => {
                     cliente._id === row._id ? updatedCliente : cliente
                 )
             );
-            showSuccess('Estado actualizado correctamente');
+            toast.success(`Cliente ${nuevoEstado ? 'activado' : 'desactivado'} correctamente`);
         } catch (error) {
             console.error('Error actualizando estado:', error.message);
-            showError('Error', 'No se pudo cambiar el estado del cliente.');
+            toast.error('Error', 'No se pudo cambiar el estado del cliente.');
         }
     };
+
     
 
     const EstadoCell = ({ row }) => (

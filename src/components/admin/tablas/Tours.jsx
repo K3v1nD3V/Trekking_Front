@@ -5,9 +5,9 @@ import TourForm from './TourForm';
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/Tour.css';
 import { getTours, createTour, updateTour, deleteTour } from '../../../api/tours';
-
+import { toast } from 'sonner';
 // Importa tus alertas personalizadas
-import { showConfirm, showSuccess, showError } from '../../../alerts/alerts';
+import { showConfirm } from '../../../alerts/alerts';
 
 const Tours = () => {
   const [tours, setTours] = useState([]);
@@ -49,13 +49,13 @@ const Tours = () => {
       const result = await showConfirm('¿Estás seguro de que deseas eliminar este tour?', 'Confirmar eliminación');
       if (result.isConfirmed) {
         await deleteTour(id);
-        await showSuccess('Tour eliminado correctamente');
+        await toast.success('Tour eliminado correctamente');
         fetchTours();
       }
       // Si cancela, no hacemos nada
     } catch (err) {
       console.error('Error al eliminar el tour:', err);
-      showError('Error', 'No se pudo eliminar el tour. Intenta nuevamente.');
+      toast.error('Error', 'No se pudo eliminar el tour. Intenta nuevamente.');
     }
   };
 

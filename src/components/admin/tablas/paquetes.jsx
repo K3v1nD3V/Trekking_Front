@@ -13,7 +13,9 @@ import '../../../css/components/admin/mediaPreviewEnhanced.css';
 // API
 import { getPaquetes, deletePaquete } from '../../../api/paquetes';
 import { getServicios } from '../../../api/servicios';
-import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'
+import {showConfirm } from '../../../alerts/alerts'
+import { toast } from 'sonner';
+
 
 const Paquetes = () => {
     const [filterText, setFilterText] = useState('');
@@ -73,12 +75,12 @@ const Paquetes = () => {
         try {
           await deletePaquete(id);
       
-          showSuccess('¡Paquete eliminado exitosamente!');
+          toast.success('¡Paquete eliminado exitosamente!');
       
           setPaquetes(prevPaquetes => prevPaquetes.filter(paquete => paquete._id !== id));
         } catch (error) {
           console.error('Error eliminando el paquete:', error.message);
-          showError('Error al eliminar', 'Hubo un problema al intentar eliminar el paquete.');
+          toast.error('Error al eliminar', 'Hubo un problema al intentar eliminar el paquete.');
         }
       };
       

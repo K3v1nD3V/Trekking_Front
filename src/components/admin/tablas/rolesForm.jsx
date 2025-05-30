@@ -4,6 +4,8 @@ import '../../../css/components/admin/rolesForm.css';
 import { createRol, updateRol, getRoles } from '../../../api/roles';
 import { getPermisos } from '../../../api/permisos';
 import { getPrivilegios } from '../../../api/privilegios';
+import { showConfirm } from '../../../alerts/alerts';
+
 
 const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({
@@ -136,78 +138,13 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
       permisos: permisosFinal
     };
 
-    const confirmarAccion = () =>
-  new Promise((resolve) => {
-    toast(
-      (t) => (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '20px', // separación entre texto y botones
-            maxWidth: '100%', // evita desbordamiento
-          }}
-        >
-          <span style={{ flexShrink: 0 }}>
-            {initialData._id
-              ? '¿Deseas actualizar este rol?'
-              : '¿Deseas crear este rol?'}
-          </span>
-
-          <div
-            style={{
-              display: 'flex',
-              gap: '10px',
-            }}
-          >
-            <button
-              onClick={() => {
-                toast.dismiss(t);
-                resolve(true);
-              }}
-              style={{
-                backgroundColor: '#c81e17',
-                color: 'white',
-                border: 'none',
-                padding: '4px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              Sí
-            </button>
-            <button
-              onClick={() => {
-                toast.dismiss(t);
-                resolve(false);
-              }}
-              style={{
-                backgroundColor: '#c2c2c2',
-                color: 'black',
-                border: 'none',
-                padding: '4px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              No
-            </button>
-          </div>
-        </div>
-      ),
-      {
-        duration: Infinity,
-      }
+    const confirmado = await showConfirm(
+      initialData._id
+        ? '¿Deseas actualizar este rol?'
+        : '¿Deseas crear este rol?'
     );
-  });
-
-
-
-const confirmado = await confirmarAccion();
-if (!confirmado) return;
-
-
+    if (!confirmado) return;
+    
     try {
       if (initialData._id) {
         await updateRol(initialData._id, dataToSend);

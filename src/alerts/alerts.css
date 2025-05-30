@@ -1,23 +1,48 @@
-/* src/utils/alerts.css */
-.custom-alert {
-    border-radius: 1rem;
-    font-family: 'Segoe UI', sans-serif;
-    padding: 1.5rem;
-    box-shadow: 0 0 15px rgba(0,0,0,0.15);
-  }
-  
-  .swal2-title {
-    font-size: 1.5rem !important;
-    color: #C81E17;
-  }
-  
-  .swal2-confirm {
-    background-color: #C81E17 !important;
-    border: none !important;
-  }
-  
-  .swal2-cancel {
-    background-color: #8B2B1B !important;
-    border: none !important;
-  }
-  
+.my-swal-popup-small {
+  background-color: #e7f0fb !important; 
+  border: 2px solid #1a3d7c !important; /* azul más oscuro */
+  width: 320px !important;
+  padding: 1em 1em !important;         
+  border-radius: 8px !important;
+  box-shadow: 0 0 10px rgba(26, 61, 124, 0.5) !important;
+  min-height: 120px !important;       
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Elimina el título */
+.my-swal-title {
+  display: none !important;
+}
+
+/* Botones */
+.my-swal-confirm-btn {
+  background-color: #1a3d7c !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.2em 1.2em !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  margin-right: 0.5em !important;
+  transition: background-color 0.3s ease;
+}
+.my-swal-confirm-btn:hover {
+  background-color: #145191 !important;
+}
+
+.my-swal-cancel-btn {
+  background-color: transparent !important;
+  color: #1a3d7c !important;
+  border: 2px solid #1a3d7c !important;
+  padding: 0.1em 1.2em !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.my-swal-cancel-btn:hover {
+  background-color: #1a3d7c !important;
+  color: white !important;
+}

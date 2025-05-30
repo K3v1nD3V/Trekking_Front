@@ -90,26 +90,32 @@ const RolesTable = () => {
   // 🔘 Componente Estado (interruptor)
   const EstadoCell = ({ row }) => { 
     const toggleEstado = async () => {
+      const accion = row.estado ? 'desactivar' : 'activar';
+      const result = await showConfirm(
+        `¿Estás seguro de que deseas ${accion} este rol?`,
+        'Cambiar Estado'
+      );
+    
+      if (!result.isConfirmed) return;
+    
       try {
         const updatedRol = {
           nombre: row.nombre,
           estado: !row.estado,
           permisos: row.permisos.map(p => typeof p === 'string' ? p : p._id),
         };
-  
-        console.log('Rol corregido que se va a enviar:', updatedRol);
-  
+    
         await updateRol(row._id, updatedRol);
-  
+    
         setRoles(prev =>
           prev.map(r => r._id === row._id ? { ...r, estado: !row.estado } : r)
         );
-  
-        toast.success(`Estado cambiado a ${!row.estado ? 'Inactivo' : 'Activo'}`);
+    
+        toast.success(`Estado cambiado a ${!row.estado ? 'Activo' : 'Inactivo'}`);
       } catch (error) {
         console.error('Error actualizando estado:', error.message);
         toast.error('Hubo un error al cambiar el estado.');
-      }
+      }    
     };
 
     return (
