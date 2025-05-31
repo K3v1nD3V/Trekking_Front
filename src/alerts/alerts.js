@@ -52,7 +52,7 @@ export const showConfirm = (text) => {
     confirmButtonText: 'Sí',
     cancelButtonText: 'No',
     width: '320px',
-    background: '#d0e7ff',
+    background: '#e4e4e4',
     customClass: {
       ...baseConfig.customClass,
       popup: 'my-swal-popup-small',
