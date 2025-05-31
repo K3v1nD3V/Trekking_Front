@@ -161,4 +161,35 @@
   right: 10px;
 }
 
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-image {
+  max-width: 90%;
+  max-height: 70%;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  background: transparent;
+  color: white;
+  font-size: 2rem;
+  border: none;
+  cursor: pointer;
+}
+
   

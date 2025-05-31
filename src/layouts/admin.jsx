@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import NavOption from '../components/common/NavOption';
 import logo from '../assets/image/ORIGINAL_PNG.png';
-
+import { showConfirm } from '../alerts/alerts';
 
 // Estilos
 const logoStyle = {
@@ -18,28 +18,34 @@ const iconStyle = {
 
 const Admin = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
+  };
+
+  const handleLogout = async () => {
+    const confirmed = await showConfirm('¿Estás seguro de que deseas cerrar sesión?');
+    if (confirmed) {
+      localStorage.clear();
+      navigate('/login');
+    }
   };
 
   return (
     <>
       {/* Encabezado */}
       <header className="admin-header">
-        {/* Icono hamburguesa */}
         <div className="menu-icon" onClick={toggleMenu} style={{ cursor: 'pointer' }}>
           <span className="material-symbols-outlined" style={{ fontSize: '40px', color: '#8B2B1B' }}>
             {isMenuVisible ? 'menu_open' : 'menu'}
           </span>
         </div>
 
-        {/* Logo centrado */}
         <div className="logo-header-centered">
           <img src={logo} alt="Logo Trekking San Cristóbal" style={logoStyle} />
         </div>
 
-        {/* Espacio reservado para mantener centrado el logo */}
         <div style={{ width: '40px' }}></div>
       </header>
 
@@ -50,14 +56,9 @@ const Admin = () => {
           <div className="navcontainer">
             <nav className="nav">
               <div className="nav-upper-options">
-                {/* Dashboard */}
-                {/* <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>dashboard</span>} text="Dashboard" to="/admin" />
-                <hr className="divider" /> */}
-
-
                 {/* Servicios */}
                 <div className="menu-section">
-                  <h3 className="section-title">Gestion Servicios</h3>
+                  <h3 className="section-title">Gestión Servicios</h3>
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>package_2</span>} text="Paquetes" to="/admin/paquetes" />
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>map</span>} text="Tours" to="/admin/tours" />
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>linked_services</span>} text="Servicios" to="/admin/servicios" />
@@ -66,26 +67,30 @@ const Admin = () => {
 
                 {/* Usuarios */}
                 <div className="menu-section">
-                  <h3 className="section-title">Gestion Usuarios</h3>
+                  <h3 className="section-title">Gestión Usuarios</h3>
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>person</span>} text="Clientes" to="/admin/clientes" />
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>groups</span>} text="Usuarios" to="/admin/usuarios" />
                 </div>
                 <hr className="divider" />
 
-                {/* Otras opciones */}
+                {/* Ventas */}
                 <div className="menu-section">
-                <h3 className="section-title">Gestion Ventas</h3>
-                <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>price_check</span>} text="Ventas" to="/admin/ventas" />
+                  <h3 className="section-title">Gestión Ventas</h3>
+                  <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>price_check</span>} text="Ventas" to="/admin/ventas" />
                 </div>
                 <hr className="divider" />
-                
+
                 {/* Configuración */}
                 <div className="menu-section">
-                  <h3 className="section-title">Gestion Configuración</h3>
+                  <h3 className="section-title">Gestión Configuración</h3>
                   <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>manage_accounts</span>} text="Roles" to="/admin/roles" />
-                <NavOption icon={<span className="material-symbols-outlined" style={iconStyle}>logout</span>} text="Cerrar Sesión" to="/logout" isLogout={true} />
+                  <NavOption
+                    icon={<span className="material-symbols-outlined" style={iconStyle}>logout</span>}
+                    text="Cerrar Sesión"
+                    onClick={handleLogout}
+                    isLogout={true}
+                  />
                 </div>
-
               </div>
             </nav>
           </div>
@@ -93,38 +98,6 @@ const Admin = () => {
 
         {/* Contenido principal */}
         <div className="main">
-          {/* <div className="box-container">
-            <div className="box box1">
-              <div className="text">
-                <h2 className="topic-heading">60.5k</h2>
-                <h2 className="topic">Article Views</h2>
-              </div>
-              <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#E5C9B3' }}>visibility</span>
-            </div>
-            <div className="box box2">
-              <div className="text">
-                <h2 className="topic-heading">150</h2>
-                <h2 className="topic">Likes</h2>
-              </div>
-              <span className="material-symbols-outlined" style={{ fontSize: '50px', color: '#E5C9B3' }}>thumb_up</span>
-            </div>
-            <div className="box box3">
-              <div className="text">
-                <h2 className="topic-heading">320</h2>
-                <h2 className="topic">Comments</h2>
-              </div>
-              <span className="material-symbols-outlined" style={{ fontSize: '50px', color: '#E5C9B3' }}>forum</span>
-            </div>
-            <div className="box box4">
-              <div className="text">
-                <h2 className="topic-heading">70</h2>
-                <h2 className="topic">Published</h2>
-              </div>
-              <span className="material-symbols-outlined" style={{ fontSize: '50px', color: '#E5C9B3' }}>check_circle</span>
-            </div>
-          </div> */}
-
-          {/* Reportes u otros contenidos dinámicos */}
           <div className="report-container">
             <Outlet />
           </div>

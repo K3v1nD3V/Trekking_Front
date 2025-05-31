@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getPaquetes } from '../../../api/paquetes';
 import { showSuccess, showError, showConfirm } from '../../../alerts/alerts';
 import '../../../css/components/admin/TourForm.css';
+import { toast } from 'sonner';
+
 
 const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({
@@ -75,11 +77,11 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
 
       try {
         await onSubmit(formattedData);
-        showSuccess(initialData._id ? 'Tour actualizado con éxito' : 'Tour creado con éxito');
+        toast.success(initialData._id ? 'Tour actualizado con éxito' : 'Tour creado con éxito');
         onClose?.();
       // eslint-disable-next-line no-unused-vars
       } catch (submitError) {
-        showError('Error', 'Ocurrió un error al guardar el tour.');
+        toast.error('Error', 'Ocurrió un error al guardar el tour.');
       }
     }
   };

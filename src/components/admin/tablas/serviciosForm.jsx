@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import '../../../css/components/admin/ServicioForm.css';
 import { updateServicio, createServicio } from '../../../api/servicios';
 import { showConfirm, showSuccess, showError } from '../../../alerts/alerts';// Ajusta la ruta
+import { toast } from 'sonner';
+
+
 
 const ServicioForm = ({ onSubmit, onClose, initialData = {} }) => {
     const [formData, setFormData] = useState({
@@ -55,15 +58,18 @@ const ServicioForm = ({ onSubmit, onClose, initialData = {} }) => {
         try {
             if (initialData._id) {
                 await updateServicio(initialData._id, formData);
-                await showSuccess('¡Servicio actualizado exitosamente!');
+                await toast.success('¡Servicio actualizado exitosamente!');
             } else {
                 await createServicio(formData);
-                await showSuccess('¡Servicio creado exitosamente!');
+                await toast.success('¡Servicio creado exitosamente!');
             }
-            onSubmit(formData);
+            setTimeout(() => {
+                onSubmit(formData);
+                onClose();
+            }, 900);
         } catch (error) {
             console.error('Error al enviar los datos:', error.message);
-            await showError('Error', 'Hubo un error al procesar la solicitud.');
+            await toast.success('Error', 'Hubo un error al procesar la solicitud.');
         }
     };
 

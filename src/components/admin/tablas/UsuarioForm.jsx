@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { createUsuario, updateUsuario } from '../../../api/usuarios';
-import { showSuccess, showError, showConfirm } from '../../../alerts/alerts';
+import React, { useState, useRef } from 'react'; 
+import { createUsuario, updateUsuario, getUsuarios } from '../../../api/usuarios'; // asumo getUsuarios está disponible
+import { showSuccess, showConfirm } from '../../../alerts/alerts';
 import '../../../css/components/admin/ClienteForm.css';
+import { toast } from 'sonner';
+
 
 const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
   const [formData, setFormData] = useState({
@@ -11,14 +13,39 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
     contraseña: '' // Siempre inicia vacío
   });
 
+  const [correoExisteError, setCorreoExisteError] = useState('');
+  const correoRef = useRef(null);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+
+    if (name === 'correo') {
+      setCorreoExisteError('');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validación correo existe SOLO al crear
+    if (!initialData._id) {
+      try {
+        const usuarios = await getUsuarios();
+
+        const correoExistente = usuarios.find(u => u.correo.toLowerCase() === formData.correo.toLowerCase());
+        if (correoExistente) {
+          setCorreoExisteError('Este correo ya está registrado');
+          correoRef.current?.focus();
+          return; // Sale sin mostrar confirmación ni enviar datos
+        }
+      } catch (error) {
+        console.error('Error validando usuarios:', error);
+        // Opcional: mostrar alerta o continuar con confirmación
+      }
+    }
+
+    // Confirmación
     const isEditing = !!initialData._id;
     const confirmText = isEditing
       ? '¿Estás seguro de actualizar este usuario?'
@@ -32,16 +59,31 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
       const dataToSubmit = { ...formData };
       if (isEditing) {
         delete dataToSubmit.contraseña;
-        await updateUsuario(initialData._id, formData);
-        await showSuccess('¡Usuario actualizado exitosamente!');
+        await updateUsuario(initialData._id, dataToSubmit);
+        await toast.success('¡Usuario actualizado exitosamente!');
       } else {
-          await createUsuario(formData);
-          await showSuccess('¡Usuario creado exitosamente!');
+        await createUsuario(dataToSubmit);
+        await toast.success('¡Usuario creado exitosamente!');
       }
-      onSubmit(formData);
+      setTimeout(() => {
+        onSubmit(dataToSubmit);
+        onClose();
+    }, 900);
     } catch (error) {
-      console.error('Error en UsuarioForm:', error);
-      showError('Error al guardar usuario', error.message || 'Error desconocido');
+      const mensaje = error?.response?.data?.message || error.message || '';
+      console.error('Error en UsuarioForm:', mensaje);
+
+      if (
+        mensaje.includes('E11000') ||
+        mensaje.toLowerCase().includes('duplicate key') ||
+        mensaje.toLowerCase().includes('correo')
+      ) {
+        setCorreoExisteError('Este correo ya está registrado');
+        correoRef.current?.focus();
+      } else {
+        // Manejo genérico u otro error
+        console.error('Error al guardar usuario:', mensaje);
+      }
     }
   };
 
@@ -61,12 +103,15 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
       <div className="form-group">
         <label>Correo</label>
         <input
+          ref={correoRef}
           type="email"
           name="correo"
           value={formData.correo}
           onChange={handleChange}
           required
+          className={correoExisteError ? 'input-error' : ''}
         />
+        {correoExisteError && <p className="field-error">{correoExisteError}</p>}
       </div>
 
       <div className="form-group">
@@ -103,15 +148,15 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
       </div>
 
       <button type="submit" className="form-submit-button">
-        {initialData._id ? 'Actualizar' : 'Registrar'} 
+        {initialData._id ? 'Actualizar' : 'Registrar'}
       </button>
       <button
-          type="button"
-          className="cancel-btn"
-          onClick={onClose}
-        >
-          Cancelar
-        </button>
+        type="button"
+        className="cancel-btn"
+        onClick={onClose}
+      >
+        Cancelar
+      </button>
     </form>
   );
 };

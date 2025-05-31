@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import '../../../css/components/admin/PaqueteFormStyles.css';
 import { updatePaquete, createPaquete } from '../../../api/paquetes';
 import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'
+import { toast } from 'sonner';
+
 
 const NewPaqueteForm = ({ onSubmit, onClose, initialData = {}, servicios }) => {
   const [formData, setFormData] = useState({
@@ -107,15 +109,15 @@ const NewPaqueteForm = ({ onSubmit, onClose, initialData = {}, servicios }) => {
     try {
       if (formData._id) {
         await updatePaquete(formData._id, formDataToSend);
-        await showSuccess('¡Paquete actualizado exitosamente!');
+        await toast.success('¡Paquete actualizado exitosamente!');
       } else {
         await createPaquete(formDataToSend);
-        await showSuccess('¡Paquete creado exitosamente!');
+        await toast.success('¡Paquete creado exitosamente!');
       }
       onSubmit(formData);
     } catch (error) {
       console.error(error.response?.data || error.message);
-      await showError('Error al procesar la solicitud', 'Por favor, intenta nuevamente.');
+      await toast.error('Error al procesar la solicitud', 'Por favor, intenta nuevamente.');
     }
   };
   

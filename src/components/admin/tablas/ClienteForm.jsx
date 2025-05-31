@@ -1,8 +1,9 @@
-import React from 'react';
-import { createCliente, updateCliente } from '../../../api/clientes';
+import React, { useRef } from 'react';
+import { createCliente, updateCliente, getClientes } from '../../../api/clientes';
 import '../../../css/components/admin/ClienteForm.css';
+import { showConfirm, showSuccess, showError } from '../../../alerts/alerts';
+import { toast } from 'sonner';
 
-import { showConfirm, showSuccess, showError } from '../../../alerts/alerts'; // Ajusta la ruta según dónde tengas las alertas
 
 const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = React.useState({
@@ -14,6 +15,12 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     observacion_medica: initialData.observacion_medica || '',
     estado: initialData.estado ?? true,
   });
+
+  const [errores, setErrores] = React.useState({});
+
+  // Refs para inputs
+  const correoRef = useRef(null);
+  const documentoRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,29 +34,56 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrores({});
 
-    // Confirmación antes de enviar
+    const clientes = await getClientes();
+
+    if (!initialData._id) {
+      const correoExistente = clientes.find(c => c.correo === formData.correo);
+      const documentoExistente = clientes.find(c => c.documento === formData.documento);
+
+      const nuevosErrores = {};
+      if (correoExistente) nuevosErrores.correo = 'Este correo ya está registrado';
+      if (documentoExistente) nuevosErrores.documento = 'Este documento ya está registrado';
+
+      if (Object.keys(nuevosErrores).length > 0) {
+        setErrores(nuevosErrores);
+
+        // Foco al primer campo con error
+        if (nuevosErrores.documento) {
+          documentoRef.current?.focus();
+        } else if (nuevosErrores.correo) {
+          correoRef.current?.focus();
+        }
+
+        return;
+      }
+    }
+
     const confirmResult = await showConfirm(
       initialData._id ? '¿Confirmas actualizar este cliente?' : '¿Confirmas crear este cliente?',
       'Confirmación'
     );
-
     if (!confirmResult.isConfirmed) return;
 
     try {
-      if (initialData && initialData._id) {
+      if (initialData._id) {
         await updateCliente(initialData._id, formData);
-        await showSuccess('Cliente actualizado correctamente');
+        toast.success('Cliente actualizado exitosamente!');
       } else {
         await createCliente(formData);
-        await showSuccess('Cliente creado correctamente');
+        toast.success('Cliente creado exitosamente!');
       }
+      setTimeout(() => {
+        onSubmit(formData);
+        onClose();
+      }, 900);
 
-      onSubmit();
-    } catch (error) {
-      console.error('Error en ClienteForm:', error);
-      await showError('Error', 'Error al guardar cliente: ' + error.message);
+    } catch (err) {
+      toast.error('Error al guardar el cliente:', err);
+      toast.error('Error al guardar el cliente. Verifica los datos o intenta más tarde.');
     }
+    
   };
 
   return (
@@ -61,8 +95,10 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
           name="documento"
           value={formData.documento}
           onChange={handleChange}
+          ref={documentoRef}
           required
         />
+        {errores.documento && <p className="error-text">{errores.documento}</p>}
       </div>
 
       <div className="form-group">
@@ -94,8 +130,10 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
           name="correo"
           value={formData.correo}
           onChange={handleChange}
+          ref={correoRef}
           required
         />
+        {errores.correo && <p className="error-text">{errores.correo}</p>}
       </div>
 
       <div className="form-group">
@@ -133,15 +171,11 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
       </div>
 
       <button type="submit" className="form-submit-button">
-        {initialData._id ? 'Actualizar' : 'Registrar'} 
+        {initialData._id ? 'Actualizar' : 'Registrar'}
       </button>
-      <button
-          type="button"
-          className="cancel-btn"
-          onClick={onClose}
-        >
-          Cancelar
-        </button>
+      <button type="button" className="cancel-btn" onClick={onClose}>
+        Cancelar
+      </button>
     </form>
   );
 };
