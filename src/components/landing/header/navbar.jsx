@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -12,10 +12,12 @@ const NavBar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [lenguage, setLenguage] = useState('es');
   const { i18n, t } = useTranslation();
 
-  const changeLanguage = (lng) => {
+  const changeLanguage = () => {
+    const lng = lenguage === 'es' ? 'en' : 'es';
+    setLenguage(lng);
     i18n.changeLanguage(lng);
     localStorage.setItem('language', lng);
   };
@@ -127,12 +129,15 @@ const NavBar = () => {
         {renderAuthButtons()}
       </nav>
       <div className="language-selector">
-        <button onClick={() => changeLanguage('es')} className="btn btn-outline">
+        <button onClick={() => changeLanguage()} className="btn btn-outline">
+          {t('header.languaje')}
+        </button>
+        {/* <button onClick={() => changeLanguage('es')} className="btn btn-outline">
           {t('header.languaje.es')}
         </button>
         <button onClick={() => changeLanguage('en')} className="btn btn-outline">
           {t('header.languaje.en')}
-        </button>
+        </button> */}
       </div>
     </header>
   );

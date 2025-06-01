@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
+// CSS
 import '../../../css/components/admin/ventaForm.css';
+//MODAL
+import Modal from '../../common/Modal';
+// FORMULARIO DE ACOMPAÑANTE
+import AcompananteForm from './acompañanteForm';
 
 const VentaForm = ({ onSubmit, clientes, paquetes }) => {
   const [formData, setFormData] = useState({
@@ -10,6 +15,8 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
     acompañantes: [],
     estado: true,  // <-- Estado inicial
   });
+
+  const [isAcompananteModalOpen, setIsAcompananteModalOpen] = useState(false); // Estado para el modal de acompañantes
 
   const handleChange = (e) => {
     const { name, value, type, selectedOptions } = e.target;
@@ -28,15 +35,15 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
   };
   
   //Nueva funcion para manejar el cambio de los acompañantes
-  const toggleAcompanante = (id) => {
-    setFormData((prev) => {
-      const isSelected = prev.acompañantes.includes(id);
-      const updatedAcompanantes = isSelected
-        ? prev.acompañantes.filter((acompId) => acompId !== id)
-        : [...prev.acompañantes, id];
-      return { ...prev, acompañantes: updatedAcompanantes };
-    });
-  };
+  // const toggleAcompanante = (id) => {
+  //   setFormData((prev) => {
+  //     const isSelected = prev.acompañantes.includes(id);
+  //     const updatedAcompanantes = isSelected
+  //       ? prev.acompañantes.filter((acompId) => acompId !== id)
+  //       : [...prev.acompañantes, id];
+  //     return { ...prev, acompañantes: updatedAcompanantes };
+  //   });
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,9 +72,9 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
     }
   };
 
-  const filteredClientes = clientes.filter(
-    (cliente) => cliente._id !== formData.cliente // Excluir al cliente principal
-  );
+  // const filteredClientes = clientes.filter(
+  //   (cliente) => cliente._id !== formData.cliente // Excluir al cliente principal
+  // );
 
   return (
     <form className="venta-form" onSubmit={handleSubmit}>
@@ -136,7 +143,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
         />
       </div>
 
-       {/* Acompañantes */}
+       {/* Acompañantes
       <div className="form-group">
         <label>Acompañantes</label>
         <div className="acompañantes-list">
@@ -155,8 +162,6 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
           ))}
         </div>
       </div>
-
-      {/* Acompañantes */}
       <div className="form-group">
         <label htmlFor="acompañantes">Acompañantes</label>
         <select
@@ -174,8 +179,44 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
               </option>
             ))}
         </select>
-      </div>
+      </div> */}
 
+      <div className="form-group">
+        <label htmlFor="acompañantes">Acompañantes</label>
+        <select
+          multiple
+          id="acompañantes"
+          name="acompañantes"
+          value={formData.acompañantes}
+          onChange={handleChange}
+        >
+          {clientes
+            .filter(c => c._id !== formData.cliente)
+            .map(({ _id, nombre, apellido }) => (
+              <option key={_id} value={_id}>
+                {nombre} {apellido}
+              </option>
+            ))}
+        </select>
+
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => setIsAcompananteModalOpen(true)}
+        >
+          Agregar Acompañante
+        </button>
+      </div>
+      
+      {/* Modal para acompañantes */}
+      <Modal isOpen={isAcompananteModalOpen} onClose={() => setIsAcompananteModalOpen(false)}>
+        <div className="acompanante-modal-content">
+          <AcompananteForm 
+            // onSubmit={() => setIsAcompananteModalOpen(false)} 
+          />
+        </div>
+      </Modal>
+      
       {/* Estado como switch slider */}
       <div className="form-group">
         <label>Estado</label>

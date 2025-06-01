@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
+// MODAL
 import Modal from '../../common/Modal';
+// FORMULARIO
 import ServicioForm from './serviciosForm';
+// CSS
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/servicios.css';
-
+// ICONOS
+import { IoReloadOutline } from "react-icons/io5";
 import { getServicios } from '../../../api/servicios';
+// API
 import { deleteServicio, updateServicio } from '../../../api/servicios';
 // COMPONENTS
 import Load from '../../common/Load';
@@ -167,8 +172,16 @@ const ServiciosTable = () => {
         },
     ];
 
-    if (error) return <div className="error">Error: {error}</div>;
-
+    if (error) return (
+        <div className="error">
+            <h3>Hubo un error al cargar los datos.</h3>
+            <p>Problamente solo haga falta un poco de paciencia.</p>
+            <button className='btn btn-primary' onClick={() => window.location.reload()}>
+                <IoReloadOutline />
+                Vuelve a intententarlo
+            </button>
+        </div>
+    );
     return (
         <div className="table-container">
             <div className="table-header">

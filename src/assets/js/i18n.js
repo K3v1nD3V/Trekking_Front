@@ -17,10 +17,7 @@ const resources = {
             admin: "Go to Admin",
             client: "Go to Client",
             logout: "Logout",
-            languaje: {
-                en: "English",
-                es: "Spanish"
-            }
+            languaje: "Español",
         },
         hero: {
             title: "Explore the <span>Nature</span> with Trekking <span>San Cristóbal</span>",
@@ -70,10 +67,7 @@ const resources = {
             admin: "Ir a Administración",
             client: "Ir a Cliente",
             logout: "Cerrar Sesión",
-            languaje: {
-                en: "Inglés",
-                es: "Español"
-            }
+            languaje: "English"
         },
         hero: {
             title: "Explora la <span>Naturaleza</span> con Trekking <span>San Cristóbal</span>",

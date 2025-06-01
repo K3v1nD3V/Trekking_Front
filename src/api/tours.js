@@ -24,10 +24,11 @@ export const getTourById = async (id) => {
   }
 };
 
-
 // Crea un nuevo tour
 export const createTour = async (tourData) => {
   try {
+    console.log('Datos del tour a crear:', tourData);
+    
     const response = await api.post('/tours', tourData, { requiresAuth: true });
     console.log('Respuesta del servidor:', response);
     return response; 

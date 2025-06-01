@@ -22,10 +22,12 @@ export const getClienteById = async (id) => {
 
 export const createCliente = async (clienteData) => {
   try {
-    const response = await api.post('/clientes', clienteData, { requiresAuth: true });
+    console.log(clienteData);
+    const response = await api.post('/clientes', clienteData);
     console.log('cliente: ', response);
     return response;
   } catch (error) {
+    
     console.error('Error creating cliente:', error);
     throw error;
   }

@@ -6,6 +6,7 @@ import NavOption from '../components/common/NavOption';
 import logo from '../../public/LogoTrekking.png';
 
 import '../css/layouts/admin.css';
+import '../css/common/Error.css';
 
 const Admin = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(true);
@@ -83,7 +84,8 @@ const Admin = () => {
                 
                 <NavOption 
                   icon={<span className="material-symbols-outlined icon">logout</span>} 
-                  text="Logout" to="/logout" 
+                  text="Logout" 
+                  to="/" 
                   isLogout={true} 
                 />
               </div>

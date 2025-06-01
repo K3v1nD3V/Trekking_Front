@@ -59,7 +59,11 @@ const App = () => {
           path="/cliente/*" 
           element={
             <AuthProvider>
-              <Cliente/>
+              <RoleRoute requiredRole="cliente">
+                <PrivateRoute>
+                  <Cliente />
+                </PrivateRoute>
+                </RoleRoute>
             </AuthProvider>
           }>
         </Route>

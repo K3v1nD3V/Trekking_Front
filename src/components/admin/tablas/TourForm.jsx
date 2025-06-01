@@ -55,7 +55,7 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
       newErrors.fechaHora = 'Debe seleccionar una fecha y hora.';
     } else {
       const fechaHora = new Date(formData.fechaHora);
-      if (fechaHora < today) {
+      if (fechaHora < new Date()) {
         newErrors.fechaHora = 'La fecha y hora del tour no pueden ser menores a la fecha actual.';
       }
     }
@@ -79,7 +79,11 @@ const TourForm = ({ onSubmit, initialData = {} }) => {
       }
   
       if (fechaLimite >= fechaHora) {
-        newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción no puede ser mayor o igual a la fecha y hora del tour.';
+        newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción debe ser menor que la fecha y hora del tour.';
+      }
+  
+      if (fechaLimite < today) {
+        newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción no puede ser menor a la fecha actual.';
       }
     }
   

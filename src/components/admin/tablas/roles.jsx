@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import Modal from '../../common/Modal';
 import RolForm from './rolesForm';
-
+// CSS
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/roles.css';
-
+// ICONOS
+import { IoReloadOutline } from "react-icons/io5";
+// API
 import { getRoles, deleteRol, updateRol } from '../../../api/roles';
 import { getPrivilegios } from '../../../api/privilegios';
 // COMPONENTS
@@ -204,8 +206,16 @@ const RolesTable = () => {
   ];
 
   // 🧾 Render principal
-  if (error) return <div className="error">Error: {error}</div>;
-
+  if (!error) return (
+    <div className="error">
+        <h3>Hubo un error al cargar los datos.</h3>
+        <p>Problamente solo haga falta un poco de paciencia.</p>
+        <button className='btn btn-primary' onClick={() => window.location.reload()}>
+            <IoReloadOutline />
+            Vuelve a intententarlo
+        </button>
+    </div>
+);
   return (
     <div className="table-container">
       <div className="table-header">

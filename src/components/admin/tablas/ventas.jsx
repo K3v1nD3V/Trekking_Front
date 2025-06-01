@@ -20,7 +20,8 @@ const Ventas = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterText, setFilterText] = useState('');
   const [loading, setLoading] = useState(true);
-
+  const [error, setError] = useState(null);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,8 +33,8 @@ const Ventas = () => {
         setVentas(ventasData);
         setClientes(clientesData);
         setPaquetes(paquetesData);
-      } catch (error) {
-        console.error('Error al cargar los datos:', error);
+      } catch (err) {
+        setError(err.message || 'Error al cargar historial de ventas');
       } finally {
         setLoading(false);
       }
@@ -153,7 +154,17 @@ const EstadoCell = ({ row }) => (
 
 
   ];
-  
+
+  if (error) return (
+    <div className="error">
+        <h3>Hubo un error al cargar los datos.</h3>
+        <p>Problamente solo haga falta un poco de paciencia.</p>
+        <button className='btn btn-primary' onClick={() => window.location.reload()}>
+            {/* <IoReloadOutline /> */}
+            Vuelve a intententarlo
+        </button>
+    </div>
+  );
   return (
     <div className="table-container">
       <div className="table-header">

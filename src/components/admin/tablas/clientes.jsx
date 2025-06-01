@@ -10,6 +10,8 @@ import { getClientes, deleteCliente, updateCliente } from '../../../api/clientes
 // CSS
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
+// CSS ICONOS
+import { IoReloadOutline } from "react-icons/io5";
 // COMPONENTS
 import Load from '../../common/Load';
 
@@ -176,7 +178,16 @@ const Clientes = () => {
         }
     ];
 
-    if (error) return <div className="error">Error: {error}</div>;
+    if (error) return (
+        <div className="error">
+            <h3>Hubo un error al cargar los datos.</h3>
+            <p>Problamente solo haga falta un poco de paciencia.</p>
+            <button className='btn btn-primary' onClick={() => window.location.reload()}>
+                <IoReloadOutline />
+                Vuelve a intententarlo
+            </button>
+        </div>
+    );
 
     return (
         <div className="table-container">

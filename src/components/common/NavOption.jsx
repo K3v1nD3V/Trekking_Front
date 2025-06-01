@@ -9,7 +9,7 @@ const NavOption = ({ icon, text, to, isLogout }) => {
   const handleClick = () => {
     if (isLogout) {
       logout();
-      navigate('/login');
+      navigate('/');
     } else {
       navigate(to);
     }
