@@ -332,3 +332,38 @@ video.main-media {
     max-height: 80%;
   }
 }
+/* Detalles del paquete */
+.detalle-paquete-modal {
+  padding: var(--space-md);
+}
+
+.detalle-paquete-modal h3 {
+  font-size: var(--font-size-large);
+  color: var(--color-primary);
+  margin-bottom: var(--space-md);
+}
+
+.detalle-paquete-modal .info-general {
+  margin-bottom: var(--space-md);
+}
+
+.detalle-paquete-modal .label {
+  font-weight: bold;
+  color: var(--color-text-light);
+}
+
+.detalle-paquete-modal h4 {
+  margin-top: var(--space-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+}
+
+.servicios-lista {
+  list-style: none;
+  padding-left: var(--space-md);
+}
+
+.servicios-lista li {
+  margin-bottom: var(--space-sm);
+  color: var(--color-text);
+}

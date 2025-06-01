@@ -20,13 +20,15 @@ import Load from '../../common/Load';
 
 const Paquetes = () => {
     const [filterText, setFilterText] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
     const [selectedPaquete, setSelectedPaquete] = useState(null);
     const [selectedMedia, setSelectedMedia] = useState(null);
     const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+    
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMode, setModalMode] = useState('');
     const [isExpandedModalOpen, setIsExpandedModalOpen] = useState(false);
-
+    const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+    
     const [paquetes, setPaquetes] = useState([]);
     const [servicios, setServicios] = useState([]);
 
@@ -53,20 +55,32 @@ const Paquetes = () => {
 
     const handleCrearPaquete = () => {
         setSelectedPaquete(null);
+        setModalMode('crear');
         setIsModalOpen(true);
     };
 
     const handlePaqueteClick = (row) => {
         setSelectedPaquete(row);
+        setModalMode('detalle');
+        setIsModalOpen(true);
+    };
+
+    const handleVerDetalle = (row) => {
+        setSelectedPaquete(row);
+        setModalMode('detalle');
         setIsModalOpen(true);
     };
 
     const handleSubmit = () => {
         window.location.reload();
-        console.log('Paquete actualizado o creado exitosamente!');
-        
         setIsModalOpen(false);
     };
+
+    // const filteredData = paquetes.filter(item =>
+    //     Object.values(item).some(value =>
+    //         String(value).toLowerCase().includes(filterText.toLowerCase())
+    //     )
+    // );
 
     const handleDeletePaquete = async (id) => {
         if (!window.confirm('¿Estás seguro de que deseas eliminar este paquete?')) return;
@@ -100,43 +114,70 @@ const Paquetes = () => {
         )
     );
 
-    const ServiciosCell = ({ row }) => {
-        const [isExpanded, setIsExpanded] = useState(false);
-        const [isHovered, setIsHovered] = useState(false); // Estado para el hover
-    
-        const toggleExpand = (e) => {
-            e.stopPropagation(); // evita abrir el modal del paquete al hacer clic en expandir
-            setIsExpanded(prev => !prev);
-        };
-    
-        const hoverStyles = isHovered ? { color: '#C81E17' } : {}; // Color de la flecha
-    
-        return (
-            <div className="paquetes-servicios-expandible">
-                <div 
-                    className="ver-servicios-toggle" 
-                    onClick={toggleExpand}
-                    onMouseEnter={() => setIsHovered(true)} // Establecer hover en true
-                    onMouseLeave={() => setIsHovered(false)} // Establecer hover en false
-                    style={hoverStyles} // Aplicar color al texto
-                >
-                    {/* Cambiar el estilo de la flecha y el color */}
-                    <span className="flecha" style={hoverStyles}>{isExpanded ? '▼' : '▶'}</span>
-                    <strong className='ver-servicios'>Ver Servicios</strong>
-                </div>
-                {isExpanded && (
-                    <ul className="lista-servicios">
-                    {row.servicios?.map(servicio => (
-                        <li key={servicio?._id || Math.random()} className="servicio-item">
-                            <span className="checkmark">✔</span>
-                            <span className="servicio-nombre">{servicio?.nombre}</span>
-                        </li>
+      
+    const DetallePaqueteModal = ({ paquete }) => (
+        console.log(paquete),
+        <div className="detalle-paquete-modal">
+            <h3>Detalles del Paquete</h3>
+            <hr />
+            <div className="info-general">
+                <div><span className="label">Nombre:</span> {paquete.nombre}</div>
+                <div><span className="label">Valor:</span> ${paquete.valor.toLocaleString()}</div>
+                <div><span className="label">Destino:</span> {paquete.destino}</div>
+                <div><span className="label">Lugar de Encuentro:</span> {paquete.lugar_encuentro}</div>
+            </div>
+            <h4>Descripción</h4>
+            <p>{paquete.descripcion}</p>
+            <h4>Servicios</h4>
+            {paquete.servicios && paquete.servicios.length > 0 ? (
+                <ul className="servicios-lista">
+                    {paquete.servicios.map((servicio, idx) => (
+                        <li key={idx}>{servicio.nombre}</li>
                     ))}
                 </ul>
-                )}
-            </div>
-        );
-    };
+            ) : (
+                <p className="text-muted">Este paquete no tiene servicios asignados.</p>
+            )}
+        </div>
+    );
+
+    // const ServiciosCell = ({ row }) => {
+    //     const [isExpanded, setIsExpanded] = useState(false);
+    //     const [isHovered, setIsHovered] = useState(false); // Estado para el hover
+    
+    //     const toggleExpand = (e) => {
+    //         e.stopPropagation(); // evita abrir el modal del paquete al hacer clic en expandir
+    //         setIsExpanded(prev => !prev);
+    //     };
+    
+    //     const hoverStyles = isHovered ? { color: '#C81E17' } : {}; // Color de la flecha
+    
+    //     return (
+    //         <div className="paquetes-servicios-expandible">
+    //             <div 
+    //                 className="ver-servicios-toggle" 
+    //                 onClick={toggleExpand}
+    //                 onMouseEnter={() => setIsHovered(true)} // Establecer hover en true
+    //                 onMouseLeave={() => setIsHovered(false)} // Establecer hover en false
+    //                 style={hoverStyles} // Aplicar color al texto
+    //             >
+    //                 {/* Cambiar el estilo de la flecha y el color */}
+    //                 <span className="flecha" style={hoverStyles}>{isExpanded ? '▼' : '▶'}</span>
+    //                 <strong className='ver-servicios'>Ver Servicios</strong>
+    //             </div>
+    //             {isExpanded && (
+    //                 <ul className="lista-servicios">
+    //                 {row.servicios?.map(servicio => (
+    //                     <li key={servicio?._id || Math.random()} className="servicio-item">
+    //                         <span className="checkmark">✔</span>
+    //                         <span className="servicio-nombre">{servicio?.nombre}</span>
+    //                     </li>
+    //                 ))}
+    //             </ul>
+    //             )}
+    //         </div>
+    //     );
+    // };
     
     const MultimediaCell = ({ row }) => {
         const exampleUrls = [
@@ -222,12 +263,12 @@ const Paquetes = () => {
             right: true,
             width: '100px'
         },
-        {
-            name: 'Descripción',
-            selector: row => row.descripcion,
-            wrap: true,
-            width: '250px'
-        },
+        // {
+        //     name: 'Descripción',
+        //     selector: row => row.descripcion,
+        //     wrap: true,
+        //     width: '250px'
+        // },
         {
             name: 'Lugar Encuentro',
             selector: row => row.lugar_encuentro,
@@ -243,22 +284,30 @@ const Paquetes = () => {
             cell: row => <MultimediaCell row={row} />,
             width: '150px'
         },
-        {
-            name: 'Servicios',
-            cell: row => <ServiciosCell row={row} />,
-            ignoreRowClick: true,
-            width: '180px'
-        },
+        // {
+        //     name: 'Servicios',
+        //     cell: row => <ServiciosCell row={row} />,
+        //     ignoreRowClick: true,
+        //     width: '180px'
+        // },
         {
             name: 'Acciones',
             cell: row => (
                 <div className="action-buttons">
+                    <button
+                        className="action-button detail-button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleVerDetalle(row);
+                        }}
+                    >
+                        Ver Detalles
+                    </button>
                     <button 
                         className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedPaquete(row);
-                            setIsModalOpen(true);
+                            handlePaqueteClick(row);
                         }}
                     >
                         Editar
@@ -339,14 +388,22 @@ const Paquetes = () => {
             />
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <h2 className="modal-title">
-                    {selectedPaquete ? 'Editar Paquete' : 'Crear Nuevo Paquete'}
-                </h2>
-                <NewPaqueteForm
-                    onSubmit={handleSubmit} 
-                    initialData={selectedPaquete || {}}
-                    servicios={servicios}
-                />
+                {modalMode === 'detalle' && selectedPaquete && (
+                    <DetallePaqueteModal paquete={selectedPaquete} />
+                )}
+                {modalMode === 'editar' && selectedPaquete && (
+                    <NewPaqueteForm
+                        onSubmit={handleSubmit}
+                        initialData={selectedPaquete}
+                        servicios={servicios}
+                    />
+                )}
+                {modalMode === 'crear' && (
+                    <NewPaqueteForm
+                        onSubmit={handleSubmit}
+                        servicios={servicios}
+                    />
+                )}
             </Modal>
 
             {/* Modal para galería de miniaturas */}
