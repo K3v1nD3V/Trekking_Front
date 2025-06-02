@@ -367,3 +367,8 @@ video.main-media {
   margin-bottom: var(--space-sm);
   color: var(--color-text);
 }
+
+.text-muted {
+  color: var(--color-text-light);
+  font-style: italic;
+}

@@ -116,7 +116,6 @@ const Paquetes = () => {
 
       
     const DetallePaqueteModal = ({ paquete }) => (
-        console.log(paquete),
         <div className="detalle-paquete-modal">
             <h3>Detalles del Paquete</h3>
             <hr />
@@ -140,6 +139,7 @@ const Paquetes = () => {
             )}
         </div>
     );
+
 
     // const ServiciosCell = ({ row }) => {
     //     const [isExpanded, setIsExpanded] = useState(false);
