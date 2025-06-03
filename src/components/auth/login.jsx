@@ -48,7 +48,7 @@ const Login = () => {
 
       if (rol === 'admin') {
         navigate('/admin');
-      } else if (rol === 'cliente') {
+      } else if (rol === 'cliente' || rol === 'usuario') {
         navigate('/cliente');
       } else{
         setError('Rol no reconocido');
