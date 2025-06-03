@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createCliente } from '../../../api/clientes'; 
+import { createCliente, checkClienteExistence } from '../../../api/clientes'; 
 
 const AcompananteForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -12,24 +12,74 @@ const AcompananteForm = ({ onSubmit }) => {
     estado: true, 
   });
 
+  const [errors, setErrors] = useState({}); // Estado para almacenar los errores
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const validate = async () => {
+    const newErrors = {};
+
+    // Validación de documento
+    if (!formData.documento) {
+      newErrors.documento = 'El documento es requerido.';
+    } else if (formData.documento.length < 8 || formData.documento.length > 12) {
+      newErrors.documento = 'El documento debe tener entre 8 y 12 caracteres.';
+    } else if (!/^\d+$/.test(formData.documento)) {
+      newErrors.documento = 'El documento debe contener solo números.';
+    } else {
+      // Verificar existencia del documento
+      const exists = await checkClienteExistence({ documento: formData.documento });
+      if (exists) {
+        newErrors.documento = 'El documento ya está registrado.';
+      }
+    }
+
+    // Validación de nombre
+    if (!formData.nombre) {
+      newErrors.nombre = 'El nombre es requerido.';
+    }
+
+    // Validación de apellido
+    if (!formData.apellido) {
+      newErrors.apellido = 'El apellido es requerido.';
+    }
+
+    // Validación de correo
+    if (formData.correo && !/\S+@\S+\.\S+/.test(formData.correo)) {
+      newErrors.correo = 'El correo debe tener un formato válido.';
+    } else if (formData.correo) {
+      // Verificar existencia del correo
+      const exists = await checkClienteExistence({ correo: formData.correo });
+      if (exists) {
+        newErrors.correo = 'El correo ya está registrado.';
+      }
+    }
+
+    // Validación de teléfono
+    if (!formData.telefono) {
+      newErrors.telefono = 'El teléfono es requerido.';
+    } else if (!/^\d+$/.test(formData.telefono)) {
+      newErrors.telefono = 'El teléfono debe contener solo números.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      // Validación de campos obligatorios
-      if (!formData.documento || !formData.nombre || !formData.apellido || !formData.telefono) {
-        alert('Por favor, completa todos los campos obligatorios.');
-        return;
-      }
+    if (!(await validate())) {
+      return; // Detener el envío si hay errores
+    }
 
+    try {
       await createCliente(formData);
       alert('Acompañante creado correctamente');
-        onSubmit();
+      onSubmit();
     } catch (error) {
       alert('Error al crear acompañante: ' + error.message);
       console.error('Error en AcompananteForm:', error);
@@ -45,8 +95,8 @@ const AcompananteForm = ({ onSubmit }) => {
           name="documento"
           value={formData.documento}
           onChange={handleChange}
-          required
         />
+        {errors.documento && <p className="form-error">{errors.documento}</p>}
       </div>
 
       <div className="form-group">
@@ -56,8 +106,8 @@ const AcompananteForm = ({ onSubmit }) => {
           name="nombre"
           value={formData.nombre}
           onChange={handleChange}
-          required
         />
+        {errors.nombre && <p className="form-error">{errors.nombre}</p>}
       </div>
 
       <div className="form-group">
@@ -67,8 +117,8 @@ const AcompananteForm = ({ onSubmit }) => {
           name="apellido"
           value={formData.apellido}
           onChange={handleChange}
-          required
         />
+        {errors.apellido && <p className="form-error">{errors.apellido}</p>}
       </div>
 
       <div className="form-group">
@@ -79,6 +129,7 @@ const AcompananteForm = ({ onSubmit }) => {
           value={formData.correo}
           onChange={handleChange}
         />
+        {errors.correo && <p className="form-error">{errors.correo}</p>}
       </div>
 
       <div className="form-group">
@@ -88,8 +139,8 @@ const AcompananteForm = ({ onSubmit }) => {
           name="telefono"
           value={formData.telefono}
           onChange={handleChange}
-          required
         />
+        {errors.telefono && <p className="form-error">{errors.telefono}</p>}
       </div>
 
       <div className="form-group">
@@ -102,10 +153,7 @@ const AcompananteForm = ({ onSubmit }) => {
         />
       </div>
 
-      <button 
-        // type="submit" 
-        className="form-submit-button"
-    >
+      <button type="submit" className="form-submit-button">
         Crear Acompañante
       </button>
     </form>

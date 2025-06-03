@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 // CSS
 import '../../../css/components/admin/ventaForm.css';
 //MODAL
@@ -16,7 +17,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
     estado: true,  // <-- Estado inicial
   });
 
-  const [isAcompananteModalOpen, setIsAcompananteModalOpen] = useState(false); // Estado para el modal de acompañantes
+  const [isAcompananteFormVisible, setIsAcompananteFormVisible] = useState(false); // Estado para mostrar el formulario de acompañantes
 
   const handleChange = (e) => {
     const { name, value, type, selectedOptions } = e.target;
@@ -77,6 +78,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
   // );
 
   return (
+    <>
     <form className="venta-form" onSubmit={handleSubmit}>
 
       {/* Cliente */}
@@ -88,7 +90,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
           value={formData.cliente}
           onChange={handleChange}
           required
-        >
+          >
           <option value="">Selecciona un cliente</option>
           {clientes.map(({ _id, nombre, apellido }) => (
             <option key={_id} value={_id}>
@@ -107,7 +109,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
           value={formData.paquete}
           onChange={handleChange}
           required
-        >
+          >
           <option value="">Selecciona un paquete</option>
           {paquetes.map(({ _id, nombre }) => (
             <option key={_id} value={_id}>
@@ -127,7 +129,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
           value={formData.fecha}
           onChange={handleChange}
           required
-        />
+          />
       </div>
 
       {/* Valor */}
@@ -140,46 +142,46 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
           value={formData.valor}
           onChange={handleChange}
           required
-        />
+          />
       </div>
 
        {/* Acompañantes
       <div className="form-group">
-        <label>Acompañantes</label>
+      <label>Acompañantes</label>
         <div className="acompañantes-list">
           {filteredClientes.map(({ _id, nombre, apellido }) => (
             <div key={_id} className="acompañante-item">
-              <input
-                type="checkbox"
-                id={`acompañante-${_id}`}
-                checked={formData.acompañantes.includes(_id)}
-                onChange={() => toggleAcompanante(_id)}
-              />
-              <label htmlFor={`acompañante-${_id}`}>
-                {nombre} {apellido}
-              </label>
+            <input
+            type="checkbox"
+            id={`acompañante-${_id}`}
+            checked={formData.acompañantes.includes(_id)}
+            onChange={() => toggleAcompanante(_id)}
+            />
+            <label htmlFor={`acompañante-${_id}`}>
+            {nombre} {apellido}
+            </label>
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="form-group">
-        <label htmlFor="acompañantes">Acompañantes</label>
-        <select
-          multiple
-          id="acompañantes"
-          name="acompañantes"
-          value={formData.acompañantes}
-          onChange={handleChange}
-        >
-          {clientes
-            .filter(c => c._id !== formData.cliente)
-            .map(({ _id, nombre, apellido }) => (
-              <option key={_id} value={_id}>
-                {nombre} {apellido}
-              </option>
             ))}
-        </select>
-      </div> */}
+            </div>
+            </div>
+            <div className="form-group">
+            <label htmlFor="acompañantes">Acompañantes</label>
+            <select
+            multiple
+            id="acompañantes"
+            name="acompañantes"
+            value={formData.acompañantes}
+          onChange={handleChange}
+          >
+          {clientes
+          .filter(c => c._id !== formData.cliente)
+          .map(({ _id, nombre, apellido }) => (
+            <option key={_id} value={_id}>
+            {nombre} {apellido}
+            </option>
+            ))}
+            </select>
+            </div> */}
 
       <div className="form-group">
         <label htmlFor="acompañantes">Acompañantes</label>
@@ -189,7 +191,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
           name="acompañantes"
           value={formData.acompañantes}
           onChange={handleChange}
-        >
+          >
           {clientes
             .filter(c => c._id !== formData.cliente)
             .map(({ _id, nombre, apellido }) => (
@@ -202,20 +204,11 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
         <button
           type="button"
           className="btn btn-secondary"
-          onClick={() => setIsAcompananteModalOpen(true)}
+          onClick={() => setIsAcompananteFormVisible(true)}
         >
           Agregar Acompañante
         </button>
-      </div>
-      
-      {/* Modal para acompañantes */}
-      <Modal isOpen={isAcompananteModalOpen} onClose={() => setIsAcompananteModalOpen(false)}>
-        <div className="acompanante-modal-content">
-          <AcompananteForm 
-            // onSubmit={() => setIsAcompananteModalOpen(false)} 
-          />
-        </div>
-      </Modal>
+    </div>
       
       {/* Estado como switch slider */}
       <div className="form-group">
@@ -226,7 +219,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
             name="estado"
             checked={formData.estado}
             onChange={handleCheckboxChange}
-          />
+            />
           <span className="slider round"></span>
         </label>
       </div>
@@ -236,6 +229,16 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
         Guardar Venta
       </button>
     </form>
+
+    {/* Formulario de acompañantes como portal */}
+    {isAcompananteFormVisible &&
+        ReactDOM.createPortal(
+          <div className="acompanante-modal-content">
+            <AcompananteForm onSubmit={() => setIsAcompananteFormVisible(false)} />
+          </div>,
+          document.querySelector('.modal-overlay') // Renderiza como hijo del modal-overlay
+        )}
+    </>
   );
 };
 

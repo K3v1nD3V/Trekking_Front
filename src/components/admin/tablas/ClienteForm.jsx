@@ -1,5 +1,5 @@
-import React from 'react';
-import { createCliente, updateCliente } from '../../../api/clientes';
+import React, { useState } from 'react';
+import { createCliente, updateCliente, checkClienteExistence } from '../../../api/clientes';
 import '../../../css/components/admin/ClienteForm.css';
 
 const ClienteForm = ({ onSubmit, initialData = {} }) => {
@@ -13,6 +13,8 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
     estado: initialData.estado ?? true,
   });
 
+  const [errors, setErrors] = useState({}); // Estado para almacenar los errores
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -23,8 +25,64 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
     setFormData(prev => ({ ...prev, [name]: checked }));
   };
 
+  const validate = async () => {
+    const newErrors = {};
+
+    // Validación de documento
+    if (!formData.documento) {
+      newErrors.documento = 'El documento es requerido.';
+    } else if (formData.documento.length < 8 || formData.documento.length > 12) {
+      newErrors.documento = 'El documento debe tener entre 8 y 12 caracteres.';
+    } else if (!/^\d+$/.test(formData.documento)) {
+      newErrors.documento = 'El documento debe contener solo números.';
+    } else {
+      // Verificar existencia del documento
+      const exists = await checkClienteExistence({ documento: formData.documento });
+      if (exists) {
+        newErrors.documento = 'El documento ya está registrado.';
+      }
+    }
+
+    // Validación de nombre
+    if (!formData.nombre) {
+      newErrors.nombre = 'El nombre es requerido.';
+    }
+
+    // Validación de apellido
+    if (!formData.apellido) {
+      newErrors.apellido = 'El apellido es requerido.';
+    }
+
+    // Validación de correo
+    if (!formData.correo) {
+      newErrors.correo = 'El correo es requerido.';
+    } else if (!/\S+@\S+\.\S+/.test(formData.correo)) {
+      newErrors.correo = 'El correo debe tener un formato válido.';
+    } else {
+      // Verificar existencia del correo
+      const exists = await checkClienteExistence({ correo: formData.correo });
+      if (exists) {
+        newErrors.correo = 'El correo ya está registrado.';
+      }
+    }
+
+    // Validación de teléfono
+    if (!formData.telefono) {
+      newErrors.telefono = 'El teléfono es requerido.';
+    } else if (!/^\d+$/.test(formData.telefono)) {
+      newErrors.telefono = 'El teléfono debe contener solo números.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!(await validate())) {
+      return; // Detener el envío si hay errores
+    }
 
     try {
       if (initialData && initialData._id) {
@@ -51,8 +109,8 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
           name="documento"
           value={formData.documento}
           onChange={handleChange}
-          required
         />
+        {errors.documento && <p className="form-error">{errors.documento}</p>}
       </div>
 
       <div className="form-group">
@@ -62,8 +120,8 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
           name="nombre"
           value={formData.nombre}
           onChange={handleChange}
-          required
         />
+        {errors.nombre && <p className="form-error">{errors.nombre}</p>}
       </div>
 
       <div className="form-group">
@@ -73,8 +131,8 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
           name="apellido"
           value={formData.apellido}
           onChange={handleChange}
-          required
         />
+        {errors.apellido && <p className="form-error">{errors.apellido}</p>}
       </div>
 
       <div className="form-group">
@@ -84,8 +142,8 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
           name="correo"
           value={formData.correo}
           onChange={handleChange}
-          required
         />
+        {errors.correo && <p className="form-error">{errors.correo}</p>}
       </div>
 
       <div className="form-group">
@@ -95,8 +153,8 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
           name="telefono"
           value={formData.telefono}
           onChange={handleChange}
-          required
         />
+        {errors.telefono && <p className="form-error">{errors.telefono}</p>}
       </div>
 
       <div className="form-group">
