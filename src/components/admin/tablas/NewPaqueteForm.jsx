@@ -31,10 +31,10 @@ const NewPaqueteForm = ({ onSubmit, initialData = {}, servicios }) => {
     if (!formData.descripcion || formData.descripcion.length < 10) {
       newErrors.descripcion = 'La descripción debe tener al menos 10 caracteres.';
     }
-    if (!formData.lugar_encuentro || formData.lugar_encuentro.length < 10) {
+    if (!formData.lugar_encuentro || formData.lugar_encuentro.length < 1) {
       newErrors.lugar_encuentro = 'El lugar de encuentro debe tener al menos 10 caracteres.';
     }
-    if (!formData.destino || formData.destino.length < 10) {
+    if (!formData.destino || formData.destino.length < 1) {
       newErrors.destino = 'El destino debe tener al menos 10 caracteres.';
     }
     if (formData.servicios.length === 0) {

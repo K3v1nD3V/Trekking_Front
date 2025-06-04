@@ -34,6 +34,8 @@ const RolesTable = () => {
           getRoles(),
           getPrivilegios(),
         ]);
+        console.log("Roles cargados:", rolesData);
+        
         setRoles(rolesData);
         // setPrivilegiosDisponibles(privilegiosData);
         localStorage.setItem('privilegios', JSON.stringify(privilegiosData));
@@ -206,7 +208,7 @@ const RolesTable = () => {
   ];
 
   // 🧾 Render principal
-  if (!error) return (
+  if (error) return (
     <div className="error">
         <h3>Hubo un error al cargar los datos.</h3>
         <p>Problamente solo haga falta un poco de paciencia.</p>

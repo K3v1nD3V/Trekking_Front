@@ -2,7 +2,6 @@ import api from './base';
 import jwtDecode from 'jwt-decode';
 // const AUTH_TOKEN_KEY = import.meta.env.JWT_SECRET;
 const AUTH_TOKEN_KEY = "Trekking";
-import axios from 'axios';
 
 
 // Token management

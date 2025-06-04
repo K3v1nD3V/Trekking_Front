@@ -49,7 +49,17 @@ const Ventas = () => {
       return;
     }
 
-    await createVenta(formData);
+    // Construir el objeto con solo los IDs necesarios
+    const nuevaVenta = {
+      ...formData,
+      id_cliente: formData.id_cliente, // Ya es un ID
+      id_paquete: formData.id_paquete, // Ya es un ID
+      acompañantes: formData.acompañantes.map(acomp => acomp._id), // Solo los IDs de los acompañantes
+    };
+
+    delete nuevaVenta.__v;
+
+    await createVenta(nuevaVenta);
     alert("Venta creada con éxito.");
     setIsModalOpen(false);
     const ventasActualizadas = await getVentas();
@@ -78,12 +88,28 @@ const Ventas = () => {
   });
 
 const toggleEstado = async (row) => {
-  const updatedVenta = {...row, estado: !row.estado};
+  console.log('Toggling estado for row:', row);
+  
+  const updatedVenta = {
+    ...row,
+    estado: !row.estado,
+    id_cliente: row.id_cliente._id,
+    id_paquete: row.id_paquete._id,
+    acompañantes: row.acompañantes.map(acomp => acomp._id),
+  };
+  const tableUpdatedVenta = {
+    ...row,
+    estado: !row.estado
+  }
+  delete updatedVenta.__v;
+
+  console.log('Actualizando estado de venta:', updatedVenta);
+  
   try{
     await updateVenta(row._id, updatedVenta);
     setVentas(prev =>
       prev.map(venta =>
-        venta._id === row._id ? updatedVenta : venta
+        venta._id === row._id ? tableUpdatedVenta : venta
       )
     );
   }catch (error){

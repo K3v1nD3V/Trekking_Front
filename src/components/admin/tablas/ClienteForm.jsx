@@ -81,7 +81,7 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
     e.preventDefault();
 
     if (!(await validate())) {
-      return; // Detener el envío si hay errores
+      return;
     }
 
     try {

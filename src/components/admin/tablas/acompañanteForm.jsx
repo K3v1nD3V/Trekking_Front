@@ -77,9 +77,12 @@ const AcompananteForm = ({ onSubmit }) => {
     }
 
     try {
-      await createCliente(formData);
+      const {cliente} = await createCliente(formData);
       alert('Acompañante creado correctamente');
-      onSubmit();
+      console.log('Nuevo acompañante:', cliente);
+      
+      onSubmit(cliente);
+      
     } catch (error) {
       alert('Error al crear acompañante: ' + error.message);
       console.error('Error en AcompananteForm:', error);

@@ -61,7 +61,7 @@ const Paquetes = () => {
 
     const handlePaqueteClick = (row) => {
         setSelectedPaquete(row);
-        setModalMode('detalle');
+        setModalMode('editar');
         setIsModalOpen(true);
     };
 
@@ -139,45 +139,6 @@ const Paquetes = () => {
             )}
         </div>
     );
-
-
-    // const ServiciosCell = ({ row }) => {
-    //     const [isExpanded, setIsExpanded] = useState(false);
-    //     const [isHovered, setIsHovered] = useState(false); // Estado para el hover
-    
-    //     const toggleExpand = (e) => {
-    //         e.stopPropagation(); // evita abrir el modal del paquete al hacer clic en expandir
-    //         setIsExpanded(prev => !prev);
-    //     };
-    
-    //     const hoverStyles = isHovered ? { color: '#C81E17' } : {}; // Color de la flecha
-    
-    //     return (
-    //         <div className="paquetes-servicios-expandible">
-    //             <div 
-    //                 className="ver-servicios-toggle" 
-    //                 onClick={toggleExpand}
-    //                 onMouseEnter={() => setIsHovered(true)} // Establecer hover en true
-    //                 onMouseLeave={() => setIsHovered(false)} // Establecer hover en false
-    //                 style={hoverStyles} // Aplicar color al texto
-    //             >
-    //                 {/* Cambiar el estilo de la flecha y el color */}
-    //                 <span className="flecha" style={hoverStyles}>{isExpanded ? '▼' : '▶'}</span>
-    //                 <strong className='ver-servicios'>Ver Servicios</strong>
-    //             </div>
-    //             {isExpanded && (
-    //                 <ul className="lista-servicios">
-    //                 {row.servicios?.map(servicio => (
-    //                     <li key={servicio?._id || Math.random()} className="servicio-item">
-    //                         <span className="checkmark">✔</span>
-    //                         <span className="servicio-nombre">{servicio?.nombre}</span>
-    //                     </li>
-    //                 ))}
-    //             </ul>
-    //             )}
-    //         </div>
-    //     );
-    // };
     
     const MultimediaCell = ({ row }) => {
         const exampleUrls = [
@@ -263,12 +224,6 @@ const Paquetes = () => {
             right: true,
             width: '100px'
         },
-        // {
-        //     name: 'Descripción',
-        //     selector: row => row.descripcion,
-        //     wrap: true,
-        //     width: '250px'
-        // },
         {
             name: 'Lugar Encuentro',
             selector: row => row.lugar_encuentro,
@@ -284,12 +239,6 @@ const Paquetes = () => {
             cell: row => <MultimediaCell row={row} />,
             width: '150px'
         },
-        // {
-        //     name: 'Servicios',
-        //     cell: row => <ServiciosCell row={row} />,
-        //     ignoreRowClick: true,
-        //     width: '180px'
-        // },
         {
             name: 'Acciones',
             cell: row => (
@@ -392,17 +341,18 @@ const Paquetes = () => {
                     <DetallePaqueteModal paquete={selectedPaquete} />
                 )}
                 {modalMode === 'editar' && selectedPaquete && (
-                    <NewPaqueteForm
+                    <><h2 className="modal-title">Editar Paquete</h2><NewPaqueteForm
                         onSubmit={handleSubmit}
                         initialData={selectedPaquete}
-                        servicios={servicios}
-                    />
+                        servicios={servicios} /></>
                 )}
                 {modalMode === 'crear' && (
+                    <>
+                    <h2 className="modal-title">Crear Nuevo Paquete</h2>
                     <NewPaqueteForm
                         onSubmit={handleSubmit}
-                        servicios={servicios}
-                    />
+                        servicios={servicios} />
+                    </>
                 )}
             </Modal>
 
