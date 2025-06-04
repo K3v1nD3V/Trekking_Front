@@ -68,7 +68,6 @@ margin-top: 2px;
 
 .table-button:hover {
   background-color: #8B2B1B;
-  transform: translateY(-2px); /* Suave elevación */
 }
 
 /* Grupo de botones de acción */

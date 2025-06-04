@@ -36,7 +36,7 @@
 /* Links centrados */
 .navbar-links {
   display: flex;
-  gap: 2rem;
+  gap: 3rem;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -50,6 +50,7 @@
   align-items: center;
   transition: all 0.3s ease;
   position: relative;
+  font-size: 0.8rem;
 }
 
 .navbar-links .nav-link:hover {
@@ -73,10 +74,12 @@
 .navbar-auth {
   display: flex;
   gap: 1rem;
+  margin-right: -130px;
 }
 
 .navbar-auth a {
   text-decoration: none !important;
+  font-size: 0.9rem;
 }
 
 .btn {
@@ -186,16 +189,28 @@
     margin: 0;
   }
 }
-
-.language-selector {
+.language-toggle {
+  cursor: pointer;
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  font-size: 14px;
+  background-color: #fff;
   display: flex;
-  justify-content: flex-end;
-  padding: 1rem;
-  gap: 1rem;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease-in-out;
+  height: 32px;
+  margin-right: -80px;
 }
 
-.language-selector .btn {
-  font-size: 0.9rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
+.language-toggle:hover {
+  background-color: #f0f0f0;
+  border-color: #aaa;
+}
+
+.lang-text {
+  font-weight: 500;
+  color: #333;
+  line-height: 1;
 }

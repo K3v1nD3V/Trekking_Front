@@ -107,14 +107,14 @@ const Tours = () => {
       selector: (row) => row.cupos,
       sortable: true,
       wrap: true,
-      width: '100px',
+      width: '150px',
     },
     {
       name: 'Fecha Límite de Inscripción',
       selector: (row) => new Date(row.fecha_limite_inscripcion).toLocaleDateString(),
       sortable: true,
       wrap: true,
-      width: '200px',
+      width: '250px',
     },
     {
       name: 'Acciones',

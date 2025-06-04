@@ -153,7 +153,7 @@ const RolesTable = () => {
     {
       name: 'Estado',
       cell: row => <EstadoCell row={row} />,
-      width: '250px',
+      width: '300px',
     },
     {
       name: 'Acciones',

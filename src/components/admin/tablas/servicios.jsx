@@ -143,7 +143,7 @@ const ServiciosTable = () => {
             name: 'Descripción',
             selector: (row) => row.descripcion,
             wrap: true,
-            width: '320px',
+            width: '400px',
         },
         {
             name: 'Estado',
