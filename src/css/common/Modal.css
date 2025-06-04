@@ -15,13 +15,11 @@
 .modal-container {
   background-color: var(--color-white);
   border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
-  width: 80%;
-  max-width: 700px;
+  width: 40%;
   max-height: 80vh;
   overflow-y: auto;
   position: relative;
-  padding: var(--space-lg);
+  margin-top: 50px;
 }
 
 .modal-close-button {
@@ -30,13 +28,14 @@
   right: var(--space-sm);
   background: none;
   border: none;
-  font-size: 1.5rem;
+  width: 50px;
+  font-size: 1.8rem;
   cursor: pointer;
-  color: var(--color-text-light);
+  color: black;
 }
 
 .modal-close-button:hover {
-  color: var(--color-text);
+  color: var(--color-primary);
 }
 
 .modal-content {
@@ -44,7 +43,10 @@
 }
 
 .modal-title {
-  color: var(--color-primary);
-  margin-bottom: var(--space-md);
-  font-size: 1.25rem;
+  color: var(--color-dark);
+  text-align:start;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #ccc;
+  margin: 40px;
+  margin-bottom: 10px;
 }

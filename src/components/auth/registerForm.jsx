@@ -30,6 +30,8 @@ const RegisterForm = () => {
     }));
     setError('');
     setFieldErrors({});
+    setError('');
+    setFieldErrors({});
   };
 
   const handleSubmit = async (e) => {
@@ -67,6 +69,7 @@ const RegisterForm = () => {
       return;
     }
 
+
     const nuevoUsuario = {
       nombre: formData.nombre,
       correo: formData.correo.toLowerCase(),
@@ -93,6 +96,7 @@ const RegisterForm = () => {
       setError('Error al registrar usuario. Intenta de nuevo.');
     }
   };
+
 
   return (
     <div className="login-wrapper">
@@ -160,6 +164,7 @@ const RegisterForm = () => {
             <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
           </div>
         </div>
+
 
         <div className="login-image">
           <img src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg" alt="Login visual" className="main-image" />

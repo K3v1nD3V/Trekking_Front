@@ -5,7 +5,7 @@ import Hero from '../components/landing/header/hero';
 import SobreNosotros from '../components/landing/main/sobreNosotros'; 
 import Servicios from '../components/landing/main/servicios';
 import Portafolio from '../components/landing/main/portafolio';
-// import Footer from '../components/landing/footer/footer'
+import Footer from '../components/landing/footer/footer'
 import { AuthProvider } from '../context/AuthContext';
 
 import Paquetes from '../components/landing/main/paquetes';
@@ -22,7 +22,7 @@ const Landing = () => {
             <Portafolio/>
             <Servicios/>
             <SobreNosotros />
-            {/* <Footer/> */}
+            <Footer/>
         </>
     );
 };

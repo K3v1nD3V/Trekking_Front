@@ -1,18 +1,25 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../api/auth';
+import { showConfirm } from '../../alerts/alerts';
 import './NavOption.css';
 
 const NavOption = ({ icon, text, to, isLogout }) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (isLogout) {
-      logout();
-      navigate('/');
-    } else {
-      navigate(to);
+      const result = await showConfirm('¿Estás seguro de que deseas cerrar sesión?');
+      
+      if (result.isConfirmed) {
+        logout();
+        navigate('/login');
+      }
+
+      return; 
     }
+
+    navigate(to);
   };
 
   return (

@@ -1,48 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { FaHeartbeat, FaPaw, FaBus, FaUtensils, FaCamera, FaUser } from 'react-icons/fa'; 
 import '../../../css/components/landing/servicios.css';
+import { getServicios } from '../../../api/servicios';
 
 const Servicios = () => {
   const { t } = useTranslation();
+  const [servicios, setServicios] = useState([]);
+
+  useEffect(() => {
+    const fetchServicios = async () => {
+      try {
+        const data = await getServicios();
+        const activos = data.filter(s => s.estado === true);
+        setServicios(activos);
+      } catch (error) {
+        console.error('Error al obtener servicios:', error);
+      }
+    };
+
+    fetchServicios();
+  }, []);
+
   return (
     <section className="servicios-section" id="servicios">
       <div className="servicios-container">
-        <h2 className="servicios-title">
+        <h1 className="servicios-title">
           {t('services.title')}
-        </h2>
+        </h1>
+        <i class="fas fa-h1"></i>
         <div className="servicios-grid">
-          <div className="servicio-card">
-            <FaHeartbeat className="servicio-section-icon"/>
-            <h3>Seguro Médico</h3>
-            <p>Contamos con un seguro médico para que disfrutes de tus recorridos con total tranquilidad.</p>
-          </div>
-          <div className="servicio-card">
-            <FaPaw className="servicio-section-icon" />
-            <h3>Pet Friendly</h3>
-            <p>Tu compañero de cuatro patas también es bienvenido en nuestras rutas. ¡Trae a tu mascota!</p>
-          </div>
-          <div className="servicio-card">
-            <FaBus className="servicio-section-icon" />
-            <h3>Transporte</h3>
-            <p>Ofrecemos transporte seguro y cómodo para que llegues a tus destinos sin preocupaciones.</p>
-          </div>
-          <div className="servicio-card">
-            <FaUtensils className="servicio-section-icon" />
-            <h3>Alimentación</h3>
-            <p>Disfruta de alimentos saludables y deliciosos en medio de la naturaleza, pensados para tu energía.</p>
-          </div>
-          <div className="servicio-card">
-            <FaUser className="servicio-section-icon" />
-            <h3>Guianza</h3>
-            <p>Explora con nuestros guías expertos, quienes te brindarán conocimientos y apoyo durante el recorrido.</p>
-          </div>
-          <div className="servicio-card">
-            <FaCamera className="servicio-section-icon" />
-            <h3>Registro Fotográfico</h3>
-            <p>Captura los momentos más especiales de tu aventura con nuestro servicio de fotografía profesional.</p>
-          </div>
+          {servicios.map((servicio) => (
+            <div className="servicio-card" key={servicio._id}>
+              <span className={`material-symbols-outlined servicio-icon`}>
+                {servicio.icono}
+              </span>
+              <h3>{servicio.nombre}</h3>
+              <p>{servicio.descripcion}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -268,4 +268,106 @@
     font-style: italic;
     margin-left: 22px;
   }
+
+/* 📌 Detalles del Modal del Rol */
+.detalle-rol-modal {
+  font-size: 14px;
+  color: #333;
+  padding: 16px;
+  max-height: 70vh;
+  overflow-y: auto;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.detalle-rol-modal h3 {
+  margin-top: 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #383D41;
+  margin-bottom: 10px;
+}
+
+.detalle-rol-modal h4 {
+  font-size: 16px;
+  color: #383D41;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4px;
+}
+
+.info-general {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+
+.label {
+  font-weight: 600;
+  margin-right: 4px;
+  color: #555;
+}
+
+.estado {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.estado.activo {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.estado.inactivo {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.permiso-detalle {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-left: 4px solid #C81E17;
+  background-color: #f6f6f6;
+  border-radius: 6px;
+}
+
+.permiso-nombre {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #B44F33;
+}
+
+.privilegios-lista {
+  list-style-type: disc;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.privilegios-lista li {
+  margin-bottom: 4px;
+  color: #2f3030;
+}
+
+.text-muted {
+  color: #888;
+  font-style: italic;
+}
+
+
+.detail-button {
+  cursor: pointer;
+  color: #C81E17;
+  font-size: 22px;
+  transition: transform 0.2s ease;
+}
+
+.detail-button:hover {
+  transform: scale(1.2);
+}
+
   

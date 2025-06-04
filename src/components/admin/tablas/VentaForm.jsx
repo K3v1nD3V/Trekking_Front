@@ -6,15 +6,17 @@ import '../../../css/components/admin/ventaForm.css';
 import Modal from '../../common/Modal';
 // FORMULARIO DE ACOMPAÑANTE
 import AcompananteForm from './acompañanteForm';
+import { showConfirm } from '../../../alerts/alerts';
+import { toast } from 'sonner';
 
-const VentaForm = ({ onSubmit, clientes, paquetes }) => {
+const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
   const [formData, setFormData] = useState({
     cliente: '',
     paquete: '',
     fecha: '',
     valor: '',
     acompañantes: [],
-    estado: true,  // <-- Estado inicial
+    estado: true,
   });
 
   const [isAcompananteFormVisible, setIsAcompananteFormVisible] = useState(false); // Estado para mostrar el formulario de acompañantes
@@ -49,10 +51,20 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar fecha que sea hoy
     const hoyStr = new Date().toISOString().split('T')[0];
     if (formData.fecha !== hoyStr) {
-      alert("Solo puedes registrar ventas con la fecha de hoy.");
+      toast.error("Solo puedes registrar ventas con la fecha de hoy.");
+      return;
+    }
+
+    // Mostrar confirmación antes de enviar
+    const result = await showConfirm(
+      '¿Quieres crear esta venta?',
+      'Confirma la acción'
+    );
+
+    if (!result.isConfirmed) {
+      // Usuario canceló la acción
       return;
     }
 
@@ -62,15 +74,16 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
       fecha: new Date(formData.fecha).toISOString(),
       valor: parseFloat(formData.valor),
       acompañantes: formData.acompañantes.filter(id => id !== formData.cliente),
-      estado: formData.estado,  // <-- Enviar estado
+      estado: formData.estado,
     };
 
     try {
-      await onSubmit(nuevaVenta);
+      await onSubmit(nuevaVenta);  
+      onClose?.();
     } catch (error) {
       console.error('Error al crear venta:', error);
-      alert('Error al crear la venta.');
-    }
+      toast.error('Error al crear la venta.');
+    }       
   };
 
   // const filteredClientes = clientes.filter(
@@ -224,9 +237,15 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
         </label>
       </div>
 
-      {/* Botón */}
       <button type="submit" className="form-submit-button">
-        Guardar Venta
+        Registrar
+      </button>
+      <button
+        type="button"
+        className="cancel-btn"
+        onClick={onClose}
+      >
+        Cancelar
       </button>
     </form>
 

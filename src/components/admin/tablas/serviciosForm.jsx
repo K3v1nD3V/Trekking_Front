@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import '../../../css/components/admin/ServicioForm.css';
 import { updateServicio, createServicio } from '../../../api/servicios';
+import { showConfirm, showSuccess, showError } from '../../../alerts/alerts';// Ajusta la ruta
+import { toast } from 'sonner';
 
 const ICONS = [
   'restaurant', 'lunch_dining', 'local_cafe', 'table_bar', 'dining',
@@ -10,7 +12,7 @@ const ICONS = [
   'landscape_2', 'location_on', 'directions_bus',
 ];
 
-const ServicioForm = ({ onSubmit, initialData = {} }) => {
+const ServicioForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({
     nombre: initialData.nombre || '',
     descripcion: initialData.descripcion || '',
@@ -76,20 +78,36 @@ const ServicioForm = ({ onSubmit, initialData = {} }) => {
 
     if (!validate()) return;
 
-    try {
-      if (initialData._id) {
-        await updateServicio(initialData._id, formData);
-        alert('¡Servicio actualizado exitosamente!');
-      } else {
-        await createServicio(formData);
-        alert('¡Servicio creado exitosamente!');
-      }
-      onSubmit(formData);
-    } catch (error) {
-      console.error('Error al enviar los datos:', error.message);
-      alert('Hubo un error al procesar la solicitud.');
-    }
-  };
+        // Mostrar confirmación antes de enviar
+        const result = await showConfirm(
+            initialData._id
+                ? '¿Quieres actualizar este servicio?'
+                : '¿Quieres crear este servicio?',
+            'Confirma la acción'
+        );
+
+        if (!result.isConfirmed) {
+            // Usuario canceló la acción
+            return;
+        }
+
+        try {
+            if (initialData._id) {
+                await updateServicio(initialData._id, formData);
+                await toast.success('¡Servicio actualizado exitosamente!');
+            } else {
+                await createServicio(formData);
+                await toast.success('¡Servicio creado exitosamente!');
+            }
+            setTimeout(() => {
+                onSubmit(formData);
+                onClose();
+            }, 900);
+        } catch (error) {
+            console.error('Error al enviar los datos:', error.message);
+            await toast.success('Error', 'Hubo un error al procesar la solicitud.');
+        }
+    };
 
   return (
     <form className="servicio-form" onSubmit={handleSubmit}>
@@ -185,11 +203,18 @@ const ServicioForm = ({ onSubmit, initialData = {} }) => {
         )}
       </div>
 
-      <button type="submit" className="form-submit-button">
-        {initialData._id ? 'Actualizar' : 'Crear'} Servicio
-      </button>
-    </form>
-  );
+            <button type="submit" className="form-submit-button">
+                {initialData._id ? 'Actualizar' : 'Registrar'} 
+            </button>
+            <button
+          type="button"
+          className="cancel-btn"
+          onClick={onClose}
+        >
+          Cancelar
+        </button>
+        </form>
+    );
 };
 
 export default ServicioForm;

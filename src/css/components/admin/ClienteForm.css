@@ -1,12 +1,8 @@
 /* Estilos para ClienteForm */
 .cliente-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
   padding: 2rem;
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   max-width: 600px;
   margin: 0 auto;
 }
@@ -17,7 +13,6 @@
 
 .form-group label {
   display: block;
-  margin-bottom: var(--space-sm);
   font-weight: 600;
   color: var(--color-text);
 }
@@ -25,10 +20,8 @@
 .form-group input {
   width: 100%;
   padding: 0.8rem;
-  margin-top: 1px;
   border-radius: 0.5rem;
   border: 1px solid #ccc !important;
-  background: #f7f7f7;
 }
 
 /* Switch de estado */
@@ -88,12 +81,11 @@ input:checked + .slider:before {
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--border-radius-sm);
   cursor: pointer;
-  font-size: 1rem !important;
-  transition: background 0.3s ease;
+  font-size: 0.9rem !important;
   width: 100%;
   margin-top: var(--space-md);
 }
 
 .form-submit-button:hover {
-  background: var(--color-primary-hover);
+  background-color: #B44F33;
 }
