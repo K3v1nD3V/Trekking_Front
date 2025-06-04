@@ -51,8 +51,18 @@ const Ventas = () => {
       return;
     }
 
-    await createVenta(formData);
-    toast.success("Venta creada con éxito.");
+    // Construir el objeto con solo los IDs necesarios
+    const nuevaVenta = {
+      ...formData,
+      id_cliente: formData.id_cliente, // Ya es un ID
+      id_paquete: formData.id_paquete, // Ya es un ID
+      acompañantes: formData.acompañantes.map(acomp => acomp._id), // Solo los IDs de los acompañantes
+    };
+
+    delete nuevaVenta.__v;
+
+    await createVenta(nuevaVenta);
+    alert("Venta creada con éxito.");
     setIsModalOpen(false);
     const ventasActualizadas = await getVentas();
     setVentas(ventasActualizadas);
@@ -79,24 +89,37 @@ const Ventas = () => {
     );
   });
 
-  const toggleEstado = async (row) => {
-    const result = await showConfirm(
-      `¿Estás seguro de que deseas ${row.estado ? 'desactivar' : 'activar'} esta venta?`,
-      'Confirmar cambio de estado'
+const toggleEstado = async (row) => {
+  const result = await showConfirm(
+    `¿Estás seguro de que deseas ${row.estado ? 'desactivar' : 'activar'} esta venta?`,
+    'Confirmar cambio de estado'
+  );
+  if (!result.isConfirmed) return;
+  const updatedVenta = {
+    ...row,
+    estado: !row.estado,
+    id_cliente: row.id_cliente._id,
+    id_paquete: row.id_paquete._id,
+    acompañantes: row.acompañantes.map(acomp => acomp._id),
+  };
+  const tableUpdatedVenta = {
+    ...row,
+    estado: !row.estado
+  }
+  delete updatedVenta.__v;
+
+  console.log('Actualizando estado de venta:', updatedVenta);
+  try{
+    await updateVenta(row._id, updatedVenta);
+    setVentas(prev =>
+      prev.map(venta =>
+        venta._id === row._id ? tableUpdatedVenta : venta
+      )
     );
-  
-    if (!result.isConfirmed) return; // Si no confirma, no hace nada
-  
-    const updatedVenta = { ...row, estado: !row.estado };
-    try {
-      await updateVenta(row._id, updatedVenta);
-      setVentas((prev) =>
-        prev.map((venta) => (venta._id === row._id ? updatedVenta : venta))
-      );
-      toast.success('Estado actualizado correctamente');
-    } catch (error) {
-      console.error('Error actualizando estado:', error.message);
-      toast.error('Error al cambiar el estado de la venta.');
+    toast.success('Estado actualizado correctamente');
+  }catch (error){
+    console.error('Error actualizando estado:', error.message);
+    toast.error('Error al cambiar el estado de la venta.');
     }
   };
   

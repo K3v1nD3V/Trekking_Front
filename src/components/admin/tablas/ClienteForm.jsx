@@ -84,7 +84,7 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     e.preventDefault();
 
     if (!(await validate())) {
-      return; // Detener el envío si hay errores
+      return;
     }
 
     const confirmResult = await showConfirm(

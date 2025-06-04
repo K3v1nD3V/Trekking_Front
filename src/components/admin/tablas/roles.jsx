@@ -37,6 +37,8 @@ const RolesTable = () => {
           getRoles(),
           getPrivilegios(),
         ]);
+        console.log("Roles cargados:", rolesData);
+        
         setRoles(rolesData);
         localStorage.setItem('privilegios', JSON.stringify(privilegiosData));
       } catch (error) {
