@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { createCliente, updateCliente, checkClienteExistence } from '../../../api/clientes';
 import '../../../css/components/admin/ClienteForm.css';
+import { showConfirm} from '../../../alerts/alerts';
+import { toast } from 'sonner';
 
-const ClienteForm = ({ onSubmit, initialData = {} }) => {
+
+const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = React.useState({
     documento: initialData.documento || '',
     nombre: initialData.nombre || '',
@@ -84,20 +87,30 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
       return;
     }
 
+    const confirmResult = await showConfirm(
+      initialData._id ? '¿Confirmas actualizar este cliente?' : '¿Confirmas crear este cliente?',
+      'Confirmación'
+    );
+    if (!confirmResult.isConfirmed) return;
+
     try {
       if (initialData && initialData._id) {
         await updateCliente(initialData._id, formData);
-        alert('Cliente actualizado correctamente');
+        toast.success('Cliente actualizado exitosamente!');
       } else {
         await createCliente(formData);
-        alert('Cliente creado correctamente');
+        toast.success('Cliente creado exitosamente!');
       }
+      setTimeout(() => {
+        onSubmit();
+        onClose();
+      }, 900);
 
-      onSubmit();
-    } catch (error) {
-      alert('Error al guardar cliente: ' + error.message);
-      console.error('Error en ClienteForm:', error);
+    } catch (err) {
+      toast.error('Error al guardar el cliente:', err);
+      toast.error('Error al guardar el cliente. Verifica los datos o intenta más tarde.');
     }
+    
   };
 
   return (
@@ -181,7 +194,10 @@ const ClienteForm = ({ onSubmit, initialData = {} }) => {
       </div>
 
       <button type="submit" className="form-submit-button">
-        {initialData._id ? 'Actualizar' : 'Crear'} Cliente
+        {initialData._id ? 'Actualizar' : 'Registrar'}
+      </button>
+      <button type="button" className="cancel-btn" onClick={onClose}>
+        Cancelar
       </button>
     </form>
   );

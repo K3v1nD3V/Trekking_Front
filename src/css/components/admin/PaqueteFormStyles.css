@@ -3,7 +3,6 @@
   position: relative;
   height: 24px;
   background: var(--color-secondary);
-  border-radius: var(--border-radius-sm);
   margin-bottom: var(--space-sm);
   overflow: hidden;
 }
@@ -36,9 +35,8 @@
 
 /* Estilos existentes del formulario */
 .paquete-form {
-  max-width: 800px;
+  max-width: 550px;
   margin: 0 auto;
-  padding: var(--space-lg);
 }
 
 .form-group {
@@ -105,7 +103,6 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .remove-media-btn:hover {
@@ -146,8 +143,7 @@
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--border-radius-sm);
   cursor: pointer;
-  font-size: var(--font-size-base);
-  transition: background 0.3s ease;
+  font-size: 0.9rem;
   width: 100%;
   margin-top: var(--space-md);
 }
@@ -184,7 +180,6 @@
   background: #fff;
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .seccion-formulario {
@@ -249,7 +244,6 @@
 }
 
 .btn-outline {
-  border: 2px dashed #8b2b1b;
   color: #8b2b1b;
   background: transparent;
   padding: 8px 12px;
@@ -265,9 +259,9 @@
 }
 
 .btn-wide {
-  width: 600px;
   padding: 12px 20px;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
 }
 
 /* Tamaño uniforme de inputs */
@@ -293,7 +287,7 @@ select {
 .btn-wide {
   width: 100%;
   padding: 12px 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
   border-radius: 10px;
 }
 

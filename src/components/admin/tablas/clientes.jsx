@@ -10,6 +10,9 @@ import { getClientes, deleteCliente, updateCliente } from '../../../api/clientes
 // CSS
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
+import { toast } from 'sonner';
+// Importa las alertas
+import { showConfirm } from '../../../alerts/alerts'; // Ajusta la ruta si es necesario
 // CSS ICONOS
 import { IoReloadOutline } from "react-icons/io5";
 // COMPONENTS
@@ -49,15 +52,18 @@ const Clientes = () => {
     // };
 
     const handleDeleteCliente = async (id, nombreCompleto) => {
-        if (!window.confirm(`¿Estás seguro de eliminar a ${nombreCompleto}?`)) return;
+        // Usar la alerta de confirmación
+        const result = await showConfirm(`¿Estás seguro de eliminar a ${nombreCompleto}?`, 'Confirmar eliminación');
+        
+        if (!result.isConfirmed) return;
 
         try {
             await deleteCliente(id);
-            alert('¡Cliente eliminado exitosamente!');
             setClientes(prev => prev.filter(cliente => cliente._id !== id));
+            toast.success('¡Cliente eliminado exitosamente!');
         } catch (err) {
             console.error('Error eliminando cliente:', err.message);
-            alert('Error al eliminar el cliente.');
+            toast.error('Error', 'No se pudo eliminar el cliente.');
         }
     };
 
@@ -67,7 +73,15 @@ const Clientes = () => {
     };
 
     const toggleEstado = async (row) => {
-        const updatedCliente = { ...row, estado: !row.estado };
+        const nuevoEstado = !row.estado;
+        const mensaje = `¿Estás seguro de ${nuevoEstado ? 'activar' : 'desactivar'} al cliente ${row.nombre} ${row.apellido}?`;
+    
+        const result = await showConfirm(mensaje, 'Confirmar cambio de estado');
+    
+        if (!result.isConfirmed) return;
+    
+        const updatedCliente = { ...row, estado: nuevoEstado };
+    
         try {
             await updateCliente(row._id, updatedCliente);
             setClientes(prev =>
@@ -75,11 +89,14 @@ const Clientes = () => {
                     cliente._id === row._id ? updatedCliente : cliente
                 )
             );
+            toast.success(`Cliente ${nuevoEstado ? 'activado' : 'desactivado'} correctamente`);
         } catch (error) {
             console.error('Error actualizando estado:', error.message);
-            alert('Error al cambiar el estado del cliente.');
+            toast.error('Error', 'No se pudo cambiar el estado del cliente.');
         }
     };
+
+    
 
     const EstadoCell = ({ row }) => (
         <div className="estado-switch">
@@ -108,8 +125,8 @@ const Clientes = () => {
             format: row => 
             row.documento.toLocaleString(),
             right: true,
+            cell: row => <div style={{ fontWeight: 600 }}>{row.documento}</div>,
             width: '150px',
-            cell: row => <div style={{ fontWeight: 600 }}>{row.documento}</div>
         },
         {
             name: 'Nombre',
@@ -152,25 +169,21 @@ const Clientes = () => {
             name: 'Acciones',
             cell: row => (
                 <div className="action-buttons">
-                    <button
-                        className="action-button edit-button"
+    
+                    <span className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             setSelectedCliente(row);
                             setIsModalOpen(true);
-                        }}
-                    >
-                        Editar
-                    </button>
-                    <button
-                        className="action-button delete-button"
+                        }} class="material-symbols-outlined">edit
+                    </span>
+
+                    <span className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteCliente(row._id, `${row.nombre} ${row.apellido}`);
-                        }}
-                    >
-                        Eliminar
-                    </button>
+                        }} class="material-symbols-outlined">delete
+                    </span>
                 </div>
             ),
             ignoreRowClick: true,
@@ -190,63 +203,66 @@ const Clientes = () => {
     );
 
     return (
-        <div className="table-container">
-            <div className="table-header">
-                <h2 className="table-title">Clientes</h2>
-                <div className="table-controls">
-                    <input
-                        type="text"
-                        placeholder="Buscar Clientes..."
-                        value={filterText}
-                        onChange={e => setFilterText(e.target.value)}
-                        className="table-search"
-                    />
-                    <button
-                        onClick={handleCrearCliente}
-                        className="table-button"
-                    >
-                        Crear Cliente
-                    </button>
-                </div>
+        <>
+          {/* Table Header separado */}
+          <div className="table-header">
+            <h2 className="table-title">Gestion de Clientes</h2>
+            <div className="table-controls">
+              <input
+                type="text"
+                placeholder="Buscar Clientes..."
+                value={filterText}
+                onChange={e => setFilterText(e.target.value)}
+                className="table-search"
+              />
+              <button onClick={handleCrearCliente} className="table-button">
+                Registrar Cliente
+                <span class="material-symbols-outlined">add_circle</span>
+              </button>
             </div>
-
+          </div>
+      
+          {/* Contenedor sólo para tabla y modal */}
+          <div className="table-container">
             <DataTable
-                columns={columns}
-                data={filteredData}
-                pagination
-                paginationPerPage={10}
-                progressPending={loading}
-                progressComponent={<Load />}
-                highlightOnHover
-                customStyles={{
-                    headCells: {
-                        style: {
-                            backgroundColor: '#fafafa',
-                            fontWeight: '600',
-                            fontSize: '14px'
-                        },
-                    },
-                    cells: {
-                        style: {
-                            fontSize: '14px',
-                            padding: '16px 12px', // Aumenté el padding de las celdas
-                            verticalAlign: 'top'
-                        },
-                    },
-                }}
+              columns={columns}
+              data={filteredData}
+              pagination
+              paginationPerPage={10}
+              progressPending={loading}
+              progressComponent={<Load />}
+              highlightOnHover
+              customStyles={{
+                headCells: {
+                  style: {
+                    backgroundColor: '#fafafa',
+                    fontWeight: '600',
+                    fontSize: '14px',
+                  },
+                },
+                cells: {
+                  style: {
+                    fontSize: '14px',
+                    padding: '16px 12px', 
+                    verticalAlign: 'top',
+                  },
+                },
+              }}
             />
-
+      
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <h2 className="modal-title">
-                    {selectedCliente ? 'Editar Cliente' : 'Crear Cliente'}
-                </h2>
-                <ClienteForm
-                    onSubmit={handleSubmit}
-                    initialData={selectedCliente || {}}
-                />
+              <h2 className="modal-title">
+                {selectedCliente ? 'Actualizar Cliente' : 'Registrar Cliente'}
+              </h2>
+              <ClienteForm
+                onSubmit={handleSubmit}
+                onClose={() => setIsModalOpen(false)}
+                initialData={selectedCliente || {}}
+              />
             </Modal>
-        </div>
-    );
+          </div>
+        </>
+      );      
 };
 
 export default Clientes;

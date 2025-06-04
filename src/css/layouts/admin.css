@@ -25,4 +25,31 @@
   height: 60px;
 }
 
+.main-container .nav{
+  overflow-y: auto;
+  max-height: 500px;
+}
 
+/* Firefox */
+.main-container .nav {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* WebKit (Chrome, Safari, Edge) */
+.main-container .nav::-webkit-scrollbar {
+  width: 8px; /* Ancho del scroll vertical */
+  height: 8px; /* Alto del scroll horizontal */
+}
+
+.main-container .nav::-webkit-scrollbar-track {
+  background: #f1f1f100; /* Fondo de la pista */
+  border-radius: 10px;
+}
+
+.main-container .nav::-webkit-scrollbar-thumb {
+  background-color: #88888800; /* Color del scroll */
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}

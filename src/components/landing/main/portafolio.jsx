@@ -1,18 +1,63 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import '../../../css/components/landing/portafolio.css';
 
 const Portafolio = () => {
   const { t } = useTranslation();
+  const [isPaused, setIsPaused] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const trackRef = useRef(null);
+
+  const images = [
+    "/public/Image/portafolio_1.jpeg",
+    "/public/Image/portafolio_2.jpeg",
+    "/public/Image/portafolio_3.jpeg",
+    "/public/Image/portafolio_4.jpeg",
+    "/public/Image/portafolio_5.jpeg",
+    "/public/Image/portafolio_6.jpeg",
+    "/public/Image/portafolio_7.jpeg",
+    "/public/Image/portafolio_8.jpeg",
+    "/public/Image/portafolio_9.jpeg"
+  ];
+
+  const duplicatedImages = [...images, ...images];
+  const speed = 0.7;
+  const totalWidth = images.length * 320;
+
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('active');
+    if (isPaused) return;
+    let animationFrameId;
+
+    const animate = () => {
+      setOffset(prev => {
+        let newOffset = prev + speed;
+        return newOffset >= totalWidth ? 0 : newOffset;
       });
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isPaused, totalWidth]);
+
+  const handleMouseEnter = () => setIsPaused(true);
+  const handleMouseLeave = () => setIsPaused(false);
+
+  const prevSlide = () => {
+    setOffset(prev => {
+      let newOffset = prev - 320;
+      return newOffset < 0 ? totalWidth - 320 : newOffset;
     });
-    document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
-  }, []);
+  };
+
+  const nextSlide = () => {
+    setOffset(prev => {
+      let newOffset = prev + 320;
+      return newOffset >= totalWidth ? 0 : newOffset;
+    });
+  };
 
   return (
     <section className="portafolio-section" id="portfolio">
@@ -28,22 +73,46 @@ const Portafolio = () => {
         </div>
 
         <div className="portafolio-gallery" data-animate>
-        <div className="portfolio-container">
-            <div className="portfolio-track">
-                <img src="/public/Image/portafolio_1.jpeg" alt="Proyecto 1" />
-                <img src="/public/Image/portafolio_2.jpeg" alt="Proyecto 1" />
-                <img src="/public/Image/portafolio_3.jpeg" alt="Proyecto 1" />
-                <img src="/public/Image/portafolio_4.jpeg" alt="Proyecto 1" />
-                <img src="/public/Image/portafolio_5.jpeg" alt="Proyecto 1" />
-                <img src="/public/Image/portafolio_6.jpeg" alt="Proyecto 1" />
-                <img src="/public/Image/portafolio_7.jpeg" alt="Proyecto 1" />
-                <img src="/public/Image/portafolio_8.jpeg" alt="Proyecto 1" />
-                <img src="/public/Image/portafolio_9.jpeg" alt="Proyecto 1" />
-            </div>
-        </div>
-        </div>
+          <div 
+            className="carousel-container" 
+            onMouseEnter={handleMouseEnter} 
+            onMouseLeave={handleMouseLeave}
+          >
+            <button className="carousel-btn prev" onClick={prevSlide} aria-label="Anterior">&#10094;</button>
 
+            <div className="carousel-track-wrapper">
+              <div
+                className="carousel-track"
+                ref={trackRef}
+                style={{
+                  transform: `translateX(-${offset}px)`,
+                  transition: isPaused ? 'transform 0.3s ease' : 'none'
+                }}
+              >
+                {duplicatedImages.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`Proyecto ${i + 1}`}
+                    className="carousel-image"
+                    onClick={() => setSelectedImage(src)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <button className="carousel-btn next" onClick={nextSlide} aria-label="Siguiente">&#10095;</button>
+          </div>
+        </div>
       </div>
+
+      {/* Modal para mostrar imagen ampliada */}
+      {selectedImage && (
+        <div className="image-modal" onClick={() => setSelectedImage(null)}>
+          <img src={selectedImage} alt="Imagen ampliada" className="modal-image" />
+          <button className="close-modal" onClick={() => setSelectedImage(null)}>✕</button>
+        </div>
+      )}
     </section>
   );
 };

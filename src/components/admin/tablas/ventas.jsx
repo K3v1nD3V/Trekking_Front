@@ -12,6 +12,8 @@ import { getClientes } from '../../../api/clientes';
 import { getPaquetes } from '../../../api/paquetes';
 // COMPONENTS
 import Load from '../../common/Load';
+import { toast } from 'sonner';
+import { showConfirm } from '../../../alerts/alerts'; 
 
 const Ventas = () => {
   const [ventas, setVentas] = useState([]);
@@ -45,7 +47,7 @@ const Ventas = () => {
   const handleNuevaVenta = async (formData) => {
   try {
     if (formData.acompañantes.includes(formData.id_cliente)) {
-      alert("El cliente principal no puede ser también un acompañante.");
+      toast.error("El cliente principal no puede ser también un acompañante.");
       return;
     }
 
@@ -66,7 +68,7 @@ const Ventas = () => {
     setVentas(ventasActualizadas);
   } catch (error) {
     console.error(error);
-    alert("Error al crear la venta. Asegúrate de haber iniciado sesión.");
+    toast.error("Error al crear la venta. Asegúrate de haber iniciado sesión.");
   }
 };
 
@@ -88,8 +90,11 @@ const Ventas = () => {
   });
 
 const toggleEstado = async (row) => {
-  console.log('Toggling estado for row:', row);
-  
+  const result = await showConfirm(
+    `¿Estás seguro de que deseas ${row.estado ? 'desactivar' : 'activar'} esta venta?`,
+    'Confirmar cambio de estado'
+  );
+  if (!result.isConfirmed) return;
   const updatedVenta = {
     ...row,
     estado: !row.estado,
@@ -104,7 +109,6 @@ const toggleEstado = async (row) => {
   delete updatedVenta.__v;
 
   console.log('Actualizando estado de venta:', updatedVenta);
-  
   try{
     await updateVenta(row._id, updatedVenta);
     setVentas(prev =>
@@ -112,25 +116,26 @@ const toggleEstado = async (row) => {
         venta._id === row._id ? tableUpdatedVenta : venta
       )
     );
+    toast.success('Estado actualizado correctamente');
   }catch (error){
     console.error('Error actualizando estado:', error.message);
-    alert('Error al cambiar el estado de la venta.');
-
+    toast.error('Error al cambiar el estado de la venta.');
     }
   };
-
-const EstadoCell = ({ row }) => (
-  <div className="estado-switch">
-    <label className="switch">
-      <input
-        type="checkbox"
-        checked={row.estado}
-        onChange={() => toggleEstado(row)}
-      />
-      <span className="slider round"></span>
-    </label>
-  </div>
-);
+  
+  const EstadoCell = ({ row }) => (
+    <div className="estado-switch">
+      <label className="switch">
+        <input
+          type="checkbox"
+          checked={row.estado}
+          onChange={() => toggleEstado(row)}
+        />
+        <span className="slider round"></span>
+      </label>
+    </div>
+  );
+  
 
   const columns = [
     {
@@ -192,7 +197,8 @@ const EstadoCell = ({ row }) => (
     </div>
   );
   return (
-    <div className="table-container">
+    <>
+      {/* Encabezado separado */}
       <div className="table-header">
         <h2 className="table-title">Gestión de Ventas</h2>
         <div className="table-controls">
@@ -204,53 +210,58 @@ const EstadoCell = ({ row }) => (
             className="table-search"
           />
           <button onClick={() => setIsModalOpen(true)} className="table-button">
-            Crear Venta
+            Registrar Venta
+            <span class="material-symbols-outlined">add_circle</span>
           </button>
         </div>
       </div>
-
-      <DataTable
-        columns={columns}
-        data={filteredVentas}
-        pagination
-        paginationPerPage={10}
-        highlightOnHover
-        progressPending={loading} // Muestra el indicador de carga mientras loading es true
+  
+      {/* Contenedor solo de la tabla y el modal */}
+      <div className="table-container">
+        <DataTable
+          columns={columns}
+          data={filteredVentas}
+          pagination
+          paginationPerPage={10}
+          highlightOnHover
+          progressPending={loading} // Muestra el indicador de carga mientras loading es true
         progressComponent={<Load />}
         customStyles={{
-          headCells: {
-            style: {
-              backgroundColor: '#fafafa',
-              fontWeight: '600',
-              fontSize: '14px'
+            headCells: {
+              style: {
+                backgroundColor: '#fafafa',
+                fontWeight: '600',
+                fontSize: '14px',
+              },
             },
-          },
-          cells: {
-            style: {
-              fontSize: '14px',
-              padding: '12px 8px',
-              verticalAlign: 'top'
+            cells: {
+              style: {
+                fontSize: '14px',
+                padding: '12px 8px',
+                verticalAlign: 'top',
+              },
             },
-          },
-        }}
-      />
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2 className="modal-title">Crear Venta</h2>
-        <VentaForm
-          onSubmit={handleNuevaVenta}
-          clientes={clientes}
-          paquetes={paquetes}
+          }}
         />
-      </Modal>
-
-      {ventas.length === 0 && !loading && (
-        <p style={{ textAlign: 'center', padding: '1rem' }}>
-          No hay ventas registradas.
-        </p>
-      )}
-    </div>
-  );
+  
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <h2 className="modal-title">Registrar Venta</h2>
+          <VentaForm
+            onSubmit={handleNuevaVenta} 
+            onClose={() => setIsModalOpen(false)}
+            clientes={clientes}
+            paquetes={paquetes}
+          />
+        </Modal>
+  
+        {ventas.length === 0 && !loading && (
+          <p style={{ textAlign: 'center', padding: '1rem' }}>
+            No hay ventas registradas.
+          </p>
+        )}
+      </div>
+    </>
+  );  
 };
 
 export default Ventas;
