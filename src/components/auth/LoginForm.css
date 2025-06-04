@@ -77,9 +77,8 @@
 }
 
 .login-form form input:focus {
-  border-color: #C81E17;
+  border-color: #000000;
   outline: none;
-  border-width: 2px;
 }
 
 .input-error {
@@ -180,10 +179,7 @@ textarea.text-area {
   margin-bottom: 6px;
 }
 
-.login-form form input:focus {
-  border-color: #C81E17;
-  outline: none;
-}
+
 
 button[type="submit"] {
   width: 100%;
