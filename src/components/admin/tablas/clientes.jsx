@@ -1,4 +1,3 @@
-// REACT
 import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
 // MODAL
@@ -10,9 +9,12 @@ import { getClientes, deleteCliente, updateCliente } from '../../../api/clientes
 // CSS
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
-// CSS ICONOS
+import { toast } from 'sonner';
+// ALERTAS
+import { showConfirm } from '../../../alerts/alerts';
+// ICONO
 import { IoReloadOutline } from "react-icons/io5";
-// COMPONENTS
+// COMPONENT
 import Load from '../../common/Load';
 
 const Clientes = () => {
@@ -20,6 +22,7 @@ const Clientes = () => {
     const [filterText, setFilterText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCliente, setSelectedCliente] = useState(null);
+    const [detalleCliente, setDetalleCliente] = useState(null); // Nuevo modal detalle
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -43,21 +46,17 @@ const Clientes = () => {
         setIsModalOpen(true);
     };
 
-    // const handleClienteClick = (row) => {
-    //     setSelectedCliente(row);
-    //     setIsModalOpen(true);
-    // };
-
     const handleDeleteCliente = async (id, nombreCompleto) => {
-        if (!window.confirm(`¿Estás seguro de eliminar a ${nombreCompleto}?`)) return;
+        const result = await showConfirm(`¿Estás seguro de eliminar a ${nombreCompleto}?`, 'Confirmar eliminación');
+        if (!result.isConfirmed) return;
 
         try {
             await deleteCliente(id);
-            alert('¡Cliente eliminado exitosamente!');
             setClientes(prev => prev.filter(cliente => cliente._id !== id));
+            toast.success('¡Cliente eliminado exitosamente!');
         } catch (err) {
             console.error('Error eliminando cliente:', err.message);
-            alert('Error al eliminar el cliente.');
+            toast.error('No se pudo eliminar el cliente.');
         }
     };
 
@@ -67,7 +66,13 @@ const Clientes = () => {
     };
 
     const toggleEstado = async (row) => {
-        const updatedCliente = { ...row, estado: !row.estado };
+        const nuevoEstado = !row.estado;
+        const mensaje = `¿Estás seguro de ${nuevoEstado ? 'activar' : 'desactivar'} al cliente ${row.nombre} ${row.apellido}?`;
+        const result = await showConfirm(mensaje, 'Confirmar cambio de estado');
+        if (!result.isConfirmed) return;
+
+        const updatedCliente = { ...row, estado: nuevoEstado };
+
         try {
             await updateCliente(row._id, updatedCliente);
             setClientes(prev =>
@@ -75,9 +80,10 @@ const Clientes = () => {
                     cliente._id === row._id ? updatedCliente : cliente
                 )
             );
+            toast.success(`Cliente ${nuevoEstado ? 'activado' : 'desactivado'} correctamente`);
         } catch (error) {
             console.error('Error actualizando estado:', error.message);
-            alert('Error al cambiar el estado del cliente.');
+            toast.error('No se pudo cambiar el estado del cliente.');
         }
     };
 
@@ -105,11 +111,9 @@ const Clientes = () => {
             name: 'Documento',
             selector: row => row.documento,
             sortable: true,
-            format: row => 
-            row.documento.toLocaleString(),
-            right: true,
-            width: '150px',
-            cell: row => <div style={{ fontWeight: 600 }}>{row.documento}</div>
+            format: row => row.documento.toLocaleString(),
+            cell: row => <div style={{ fontWeight: 600 }}>{row.documento}</div>,
+            width: '200px',
         },
         {
             name: 'Nombre',
@@ -128,49 +132,45 @@ const Clientes = () => {
             name: 'Correo',
             selector: row => row.correo,
             wrap: true,
-            width: '150px' 
-        },
-        {
-            name: 'Teléfono',
-            selector: row => row.telefono,
-            format: row => row.telefono.toLocaleString(),
-            right: true,
-            width: '150px' 
-        },
-        {
-            name: 'Observación Médica',
-            selector: row => row.observacion_medica,
-            wrap: true,
-            width: '200px'
+            width: '270px' 
         },
         {
             name: 'Estado',
             cell: row => <EstadoCell row={row} />,
-            width: '150px' 
+            width: '170px' 
         },
         {
             name: 'Acciones',
             cell: row => (
                 <div className="action-buttons">
-                    <button
-                        className="action-button edit-button"
+                    <span
+                        className="action-button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setDetalleCliente(row);
+                        }}
+                    >
+                        <span className="material-symbols-outlined">info</span>
+                    </span>
+
+                    <span className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             setSelectedCliente(row);
                             setIsModalOpen(true);
                         }}
                     >
-                        Editar
-                    </button>
-                    <button
-                        className="action-button delete-button"
+                        <span className="material-symbols-outlined">edit</span>
+                    </span>
+
+                    <span className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteCliente(row._id, `${row.nombre} ${row.apellido}`);
                         }}
                     >
-                        Eliminar
-                    </button>
+                        <span className="material-symbols-outlined">delete</span>
+                    </span>
                 </div>
             ),
             ignoreRowClick: true,
@@ -181,71 +181,103 @@ const Clientes = () => {
     if (error) return (
         <div className="error">
             <h3>Hubo un error al cargar los datos.</h3>
-            <p>Problamente solo haga falta un poco de paciencia.</p>
+            <p>Probablemente solo haga falta un poco de paciencia.</p>
             <button className='btn btn-primary' onClick={() => window.location.reload()}>
                 <IoReloadOutline />
-                Vuelve a intententarlo
+                Vuelve a intentarlo
             </button>
         </div>
     );
 
     return (
-        <div className="table-container">
-            <div className="table-header">
-                <h2 className="table-title">Clientes</h2>
-                <div className="table-controls">
-                    <input
-                        type="text"
-                        placeholder="Buscar Clientes..."
-                        value={filterText}
-                        onChange={e => setFilterText(e.target.value)}
-                        className="table-search"
-                    />
-                    <button
-                        onClick={handleCrearCliente}
-                        className="table-button"
-                    >
-                        Crear Cliente
-                    </button>
-                </div>
+        <>
+          <div className="table-header">
+            <h2 className="table-title">Gestión de Clientes</h2>
+            <div className="table-controls">
+              <input
+                type="text"
+                placeholder="Buscar Clientes..."
+                value={filterText}
+                onChange={e => setFilterText(e.target.value)}
+                className="table-search"
+              />
+              <button onClick={handleCrearCliente} className="table-button">
+                Registrar Cliente
+                <span className="material-symbols-outlined">add_circle</span>
+              </button>
             </div>
+          </div>
 
+          <div className="table-container">
             <DataTable
-                columns={columns}
-                data={filteredData}
-                pagination
-                paginationPerPage={10}
-                progressPending={loading}
-                progressComponent={<Load />}
-                highlightOnHover
-                customStyles={{
-                    headCells: {
-                        style: {
-                            backgroundColor: '#fafafa',
-                            fontWeight: '600',
-                            fontSize: '14px'
-                        },
-                    },
-                    cells: {
-                        style: {
-                            fontSize: '14px',
-                            padding: '16px 12px', // Aumenté el padding de las celdas
-                            verticalAlign: 'top'
-                        },
-                    },
-                }}
+              columns={columns}
+              data={filteredData}
+              pagination
+              paginationPerPage={10}
+              progressPending={loading}
+              progressComponent={<Load />}
+              highlightOnHover
+              customStyles={{
+                headCells: {
+                  style: {
+                    backgroundColor: '#fafafa',
+                    fontWeight: '600',
+                    fontSize: '14px',
+                  },
+                },
+                cells: {
+                  style: {
+                    fontSize: '14px',
+                    padding: '16px 12px', 
+                    verticalAlign: 'top',
+                  },
+                },
+              }}
             />
 
+            {/* Modal para Crear/Editar Cliente */}
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <h2 className="modal-title">
-                    {selectedCliente ? 'Editar Cliente' : 'Crear Cliente'}
-                </h2>
-                <ClienteForm
-                    onSubmit={handleSubmit}
-                    initialData={selectedCliente || {}}
-                />
+              <h2 className="modal-title">
+                {selectedCliente ? 'Actualizar Cliente' : 'Registrar Cliente'}
+              </h2>
+              <ClienteForm
+                onSubmit={handleSubmit}
+                onClose={() => setIsModalOpen(false)}
+                initialData={selectedCliente || {}}
+              />
             </Modal>
-        </div>
+
+            {/* Modal de Detalle */}
+            <Modal isOpen={!!detalleCliente} onClose={() => setDetalleCliente(null)}>
+                <div className="detalle-cliente-modal">
+                    <h3>Detalle del Cliente</h3>
+                    <hr />
+
+                    {detalleCliente && (
+                    <div className="info-general-cliente">
+                        <p><span className="label-cliente">Documento:</span> {detalleCliente.documento}</p>
+                        <p><span className="label-cliente">Nombre:</span> {detalleCliente.nombre}</p>
+                        <p><span className="label-cliente">Apellido:</span> {detalleCliente.apellido}</p>
+                        <p><span className="label-cliente">Correo:</span> {detalleCliente.correo}</p>
+                        <p><span className="label-cliente">Teléfono:</span> {detalleCliente.telefono}</p>
+
+                        {detalleCliente.observacion_medica && (
+                        <p><span className="label-cliente">Observación Médica:</span> {detalleCliente.observacion_medica}</p>
+                        )}
+
+                        <p><span className="label-cliente">Estado:</span>
+                        <span className={`estado ${detalleCliente.estado ? 'activo' : 'inactivo'}`}>
+                            {detalleCliente.estado ? 'Activo' : 'Inactivo'}
+                        </span>
+                        </p>
+                    </div>
+                    )}
+                </div>
+            </Modal>
+
+            
+          </div>
+        </>
     );
 };
 

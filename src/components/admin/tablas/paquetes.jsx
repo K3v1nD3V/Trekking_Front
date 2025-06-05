@@ -17,6 +17,9 @@ import { getPaquetes, deletePaquete } from '../../../api/paquetes';
 import { getServicios } from '../../../api/servicios';
 // COMPONENTS
 import Load from '../../common/Load';
+import {showConfirm } from '../../../alerts/alerts'
+import { toast } from 'sonner';
+
 
 const Paquetes = () => {
     const [filterText, setFilterText] = useState('');
@@ -61,7 +64,7 @@ const Paquetes = () => {
 
     const handlePaqueteClick = (row) => {
         setSelectedPaquete(row);
-        setModalMode('detalle');
+        setModalMode('editar');
         setIsModalOpen(true);
     };
 
@@ -83,18 +86,22 @@ const Paquetes = () => {
     // );
 
     const handleDeletePaquete = async (id) => {
-        if (!window.confirm('¿Estás seguro de que deseas eliminar este paquete?')) return;
-
+        const result = await showConfirm('¿Estás seguro de que deseas eliminar este paquete?', 'Eliminar paquete');
+      
+        if (!result.isConfirmed) return;
+      
         try {
-            await deletePaquete(id);
-            alert('¡Paquete eliminado exitosamente!');
-
-            setPaquetes(prevPaquetes => prevPaquetes.filter(paquete => paquete._id !== id));
+          await deletePaquete(id);
+      
+          toast.success('¡Paquete eliminado exitosamente!');
+      
+          setPaquetes(prevPaquetes => prevPaquetes.filter(paquete => paquete._id !== id));
         } catch (error) {
-            console.error('Error eliminando el paquete:', error.message);
-            alert('Hubo un error al eliminar el paquete.');
+          console.error('Error eliminando el paquete:', error.message);
+          toast.error('Error al eliminar', 'Hubo un problema al intentar eliminar el paquete.');
         }
-    };
+      };
+      
 
     const paquetes_servicios = paquetes.map(paquete => ({
         ...paquete,
@@ -139,45 +146,6 @@ const Paquetes = () => {
             )}
         </div>
     );
-
-
-    // const ServiciosCell = ({ row }) => {
-    //     const [isExpanded, setIsExpanded] = useState(false);
-    //     const [isHovered, setIsHovered] = useState(false); // Estado para el hover
-    
-    //     const toggleExpand = (e) => {
-    //         e.stopPropagation(); // evita abrir el modal del paquete al hacer clic en expandir
-    //         setIsExpanded(prev => !prev);
-    //     };
-    
-    //     const hoverStyles = isHovered ? { color: '#C81E17' } : {}; // Color de la flecha
-    
-    //     return (
-    //         <div className="paquetes-servicios-expandible">
-    //             <div 
-    //                 className="ver-servicios-toggle" 
-    //                 onClick={toggleExpand}
-    //                 onMouseEnter={() => setIsHovered(true)} // Establecer hover en true
-    //                 onMouseLeave={() => setIsHovered(false)} // Establecer hover en false
-    //                 style={hoverStyles} // Aplicar color al texto
-    //             >
-    //                 {/* Cambiar el estilo de la flecha y el color */}
-    //                 <span className="flecha" style={hoverStyles}>{isExpanded ? '▼' : '▶'}</span>
-    //                 <strong className='ver-servicios'>Ver Servicios</strong>
-    //             </div>
-    //             {isExpanded && (
-    //                 <ul className="lista-servicios">
-    //                 {row.servicios?.map(servicio => (
-    //                     <li key={servicio?._id || Math.random()} className="servicio-item">
-    //                         <span className="checkmark">✔</span>
-    //                         <span className="servicio-nombre">{servicio?.nombre}</span>
-    //                     </li>
-    //                 ))}
-    //             </ul>
-    //             )}
-    //         </div>
-    //     );
-    // };
     
     const MultimediaCell = ({ row }) => {
         const exampleUrls = [
@@ -253,74 +221,59 @@ const Paquetes = () => {
             >
                 {row.nombre}
             </div>,
-            width: '110px'
+            width: '200px'
         },
         {
             name: 'Valor',
             selector: row => row.valor,
             sortable: true,
             format: row => `$${row.valor.toLocaleString()}`,
-            right: true,
-            width: '100px'
+            width: '150px'
         },
-        // {
-        //     name: 'Descripción',
-        //     selector: row => row.descripcion,
-        //     wrap: true,
-        //     width: '250px'
-        // },
         {
             name: 'Lugar Encuentro',
             selector: row => row.lugar_encuentro,
-            width: '150px'
+            width: '220px'
         },
         {
             name: 'Destino',
             selector: row => row.destino,
-            width: '120px'
+            width: '190px'
         },
         {
             name: 'Multimedia',
             cell: row => <MultimediaCell row={row} />,
-            width: '150px'
+            width: '200px'
         },
-        // {
-        //     name: 'Servicios',
-        //     cell: row => <ServiciosCell row={row} />,
-        //     ignoreRowClick: true,
-        //     width: '180px'
-        // },
         {
             name: 'Acciones',
             cell: row => (
                 <div className="action-buttons">
-                    <button
-                        className="action-button detail-button"
+                    <span
+                        className="action-button detail-button material-symbols-outlined"
                         onClick={(e) => {
-                            e.stopPropagation();
-                            handleVerDetalle(row);
+                        e.stopPropagation();
+                        handleVerDetalle(row);
                         }}
                     >
-                        Ver Detalles
-                    </button>
-                    <button 
-                        className="action-button edit-button"
+                        info
+                    </span>
+
+                    <span className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            handlePaqueteClick(row);
-                        }}
-                    >
-                        Editar
-                    </button>
-                    <button 
-                        className="action-button delete-button"
+                            setSelectedPaquete(row);
+                            setIsModalOpen(true);
+                        }} class="material-symbols-outlined">edit
+                    </span>
+
+
+                    <span className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleDeletePaquete(row._id);
-                        }}
-                    >
-                        Eliminar
-                    </button>
+                        }} class="material-symbols-outlined">delete
+                    </span>
                 </div>
             ),
             ignoreRowClick: true,
@@ -340,9 +293,10 @@ const Paquetes = () => {
     );
 
     return (
-        <div className="table-container">
+        <>
+            {/* Table Header separado fuera del contenedor de la tabla */}
             <div className="table-header">
-                <h2 className="table-title">Paquetes Turísticos</h2>
+                <h2 className="table-title">Gestion de Paquetes</h2>
                 <div className="table-controls">
                     <input
                         type="text"
@@ -355,64 +309,69 @@ const Paquetes = () => {
                         onClick={handleCrearPaquete}
                         className="table-button"
                     >
-                        Crear Paquete
+                        Registrar Paquete
+                        <span class="material-symbols-outlined">add_circle</span>
                     </button>
                 </div>
             </div>
-
-            <DataTable
-                columns={columns}
-                data={filteredData}
-                pagination
-                paginationPerPage={10}
-                highlightOnHover
+    
+            {/* Aquí solo la tabla dentro del contenedor */}
+            <div className="table-container">
+                <DataTable
+                    columns={columns}
+                    data={filteredData}
+                    pagination
+                    paginationPerPage={10}
+                    highlightOnHover
                 progressPending={loading} // Muestra el indicador de carga mientras loading es true
                 progressComponent={<Load />} // Componente de carga personalizado
-                customStyles={{
-                    headCells: {
-                        style: {
-                            backgroundColor: '#fafafa',
-                            fontWeight: '600',
-                            fontSize: '14px'
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                backgroundColor: '#fafafa',
+                                fontWeight: '600',
+                                fontSize: '14px'
+                            },
                         },
-                    },
-                    cells: {
-                        style: {
-                            fontSize: '14px',
-                            padding: '12px 8px',
-                            verticalAlign: 'top'
+                        cells: {
+                            style: {
+                                fontSize: '14px',
+                                padding: '12px 8px',
+                                verticalAlign: 'top'
+                            },
                         },
-                    },
-                }}
-                onRowClicked={handlePaqueteClick}
-            />
-
+                    }}
+                    onRowClicked={handlePaqueteClick}
+                />
+            </div>
+    
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 {modalMode === 'detalle' && selectedPaquete && (
                     <DetallePaqueteModal paquete={selectedPaquete} />
                 )}
                 {modalMode === 'editar' && selectedPaquete && (
-                    <NewPaqueteForm
+                    <><h2 className="modal-title">Editar Paquete</h2><NewPaqueteForm
                         onSubmit={handleSubmit}
                         initialData={selectedPaquete}
-                        servicios={servicios}
-                    />
+                        servicios={servicios} /></>
                 )}
                 {modalMode === 'crear' && (
+                    <>
+                    <h2 className="modal-title">Crear Nuevo Paquete</h2>
                     <NewPaqueteForm
                         onSubmit={handleSubmit}
-                        servicios={servicios}
-                    />
+                        servicios={servicios} />
+                    </>
                 )}
             </Modal>
-
+    
             {/* Modal para galería de miniaturas */}
             <Modal isOpen={isMediaModalOpen} onClose={() => setIsMediaModalOpen(false)}>
                 <div className="media-gallery">
                     <h2 className="modal-title">Multimedia del Paquete</h2>
                     <div className="media-thumbnails">
                         {selectedMedia?.map((media, index) => (
-                            <div 
+                            <div
                                 key={index}
                                 className={`media-thumbnail ${currentMediaIndex === index ? 'active' : ''}`}
                                 onClick={() => {
@@ -430,20 +389,21 @@ const Paquetes = () => {
                     </div>
                 </div>
             </Modal>
-
+    
             {/* Modal para visualización expandida */}
             <NewExpandedModal
                 isOpen={isExpandedModalOpen}
-                onClose={() => setIsExpandedModalOpen(false)}
+                onClose={() => setIsModalOpen(false)}
                 mediaUrl={selectedMedia?.[currentMediaIndex]}
                 mediaType={
-                    selectedMedia?.[currentMediaIndex]?.includes('.mp4') || 
-                    selectedMedia?.[currentMediaIndex]?.includes('.webm') 
-                    ? 'video' : 'image'
+                    selectedMedia?.[currentMediaIndex]?.includes('.mp4') ||
+                    selectedMedia?.[currentMediaIndex]?.includes('.webm')
+                        ? 'video'
+                        : 'image'
                 }
             />
-        </div>
+        </>
     );
-};
+ }
 
 export default Paquetes;

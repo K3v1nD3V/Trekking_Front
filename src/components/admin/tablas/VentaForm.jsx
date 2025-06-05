@@ -6,18 +6,56 @@ import '../../../css/components/admin/ventaForm.css';
 import Modal from '../../common/Modal';
 // FORMULARIO DE ACOMPAÑANTE
 import AcompananteForm from './acompañanteForm';
+import { showConfirm } from '../../../alerts/alerts';
+import { toast } from 'sonner';
 
-const VentaForm = ({ onSubmit, clientes, paquetes }) => {
+const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
   const [formData, setFormData] = useState({
     cliente: '',
     paquete: '',
     fecha: '',
     valor: '',
     acompañantes: [],
-    estado: true,  // <-- Estado inicial
+    estado: true,
   });
 
-  const [isAcompananteFormVisible, setIsAcompananteFormVisible] = useState(false); // Estado para mostrar el formulario de acompañantes
+  const [acompañantesList, setAcompañantesList] = useState([]);
+  const [isAcompananteFormVisible, setIsAcompananteFormVisible] = useState(false);
+  const [clienteSearch, setClienteSearch] = useState(''); 
+  const [paqueteSearch, setPaqueteSearch] = useState(''); 
+  const [errors, setErrors] = useState({}); 
+
+  const validate = () => {
+    const newErrors = {};
+
+    // Validación de cliente
+    if (!formData.cliente) {
+      newErrors.cliente = 'Debe seleccionar un cliente.';
+    }
+
+    // Validación de paquete
+    if (!formData.paquete) {
+      newErrors.paquete = 'Debe seleccionar un paquete.';
+    }
+
+    // Validación de fecha
+    if (!formData.fecha) {
+      newErrors.fecha = 'Debe seleccionar una fecha.';
+    } else {
+      const hoyStr = new Date().toISOString().split('T')[0];
+      if (formData.fecha > hoyStr) {
+        newErrors.fecha = 'La fecha no puede ser futura.';
+      }
+    }
+
+    // Validación de valor
+    if (!formData.valor || formData.valor <= 0) {
+      newErrors.valor = 'El valor debe ser un número positivo.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value, type, selectedOptions } = e.target;
@@ -35,26 +73,26 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
     setFormData(prev => ({ ...prev, [name]: checked }));
   };
   
-  //Nueva funcion para manejar el cambio de los acompañantes
-  // const toggleAcompanante = (id) => {
-  //   setFormData((prev) => {
-  //     const isSelected = prev.acompañantes.includes(id);
-  //     const updatedAcompanantes = isSelected
-  //       ? prev.acompañantes.filter((acompId) => acompId !== id)
-  //       : [...prev.acompañantes, id];
-  //     return { ...prev, acompañantes: updatedAcompanantes };
-  //   });
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar fecha que sea hoy
     const hoyStr = new Date().toISOString().split('T')[0];
     if (formData.fecha !== hoyStr) {
-      alert("Solo puedes registrar ventas con la fecha de hoy.");
+      toast.error("Solo puedes registrar ventas con la fecha de hoy.");
       return;
     }
+
+    // Mostrar confirmación antes de enviar
+    const result = await showConfirm(
+      '¿Quieres crear esta venta?',
+      'Confirma la acción'
+    );
+
+    if (!result.isConfirmed) {
+      // Usuario canceló la acción
+      return;
+    }
+    if (!validate()) return;
 
     const nuevaVenta = {
       id_cliente: formData.cliente,
@@ -62,62 +100,95 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
       fecha: new Date(formData.fecha).toISOString(),
       valor: parseFloat(formData.valor),
       acompañantes: formData.acompañantes.filter(id => id !== formData.cliente),
-      estado: formData.estado,  // <-- Enviar estado
+      estado: formData.estado,
     };
 
     try {
-      await onSubmit(nuevaVenta);
+      await onSubmit(nuevaVenta);  
+      onClose?.();
     } catch (error) {
       console.error('Error al crear venta:', error);
-      alert('Error al crear la venta.');
-    }
+      toast.error('Error al crear la venta.');
+    }       
+  };
+  
+  const handleSubmitAcompañante = (acompañante) => {
+    setFormData(prev => ({
+      ...prev,
+      acompañantes: [...prev.acompañantes, acompañante._id],
+    }));
+
+    setAcompañantesList(prev => [
+      ...prev,
+      { nombre: acompañante.nombre, documento: acompañante.documento },
+    ]);
+
+    setIsAcompananteFormVisible(false);
   };
 
-  // const filteredClientes = clientes.filter(
-  //   (cliente) => cliente._id !== formData.cliente // Excluir al cliente principal
-  // );
+  const filteredClientes = clientes.filter(cliente =>
+    `${cliente.nombre} ${cliente.apellido}`.toLowerCase().includes(clienteSearch.toLowerCase())
+  );
+
+  const filteredPaquetes = paquetes.filter(paquete =>
+    paquete.nombre.toLowerCase().includes(paqueteSearch.toLowerCase())
+  );
 
   return (
     <>
     <form className="venta-form" onSubmit={handleSubmit}>
 
-      {/* Cliente */}
-      <div className="form-group">
-        <label htmlFor="cliente">Cliente</label>
-        <select
-          id="cliente"
-          name="cliente"
-          value={formData.cliente}
-          onChange={handleChange}
-          required
+      {/* Cliente con buscador */}
+        <div className="form-group">
+          <label htmlFor="cliente">Cliente</label>
+          <input
+            type="text"
+            placeholder="Buscar cliente..."
+            value={clienteSearch}
+            onChange={(e) => setClienteSearch(e.target.value)}
+            className="cliente-search"
+          />
+          <select
+            id="cliente"
+            name="cliente"
+            value={formData.cliente}
+            onChange={handleChange}
           >
-          <option value="">Selecciona un cliente</option>
-          {clientes.map(({ _id, nombre, apellido }) => (
-            <option key={_id} value={_id}>
-              {nombre} {apellido}
-            </option>
-          ))}
-        </select>
-      </div>
+            <option value="">Selecciona un cliente</option>
+            {filteredClientes.map(({ _id, nombre, apellido }) => (
+              <option key={_id} value={_id}>
+                {nombre} {apellido}
+              </option>
+            ))}
+          </select>
+          {errors.cliente && <p className="form-error">{errors.cliente}</p>}
+        </div>
 
-      {/* Paquete */}
-      <div className="form-group">
-        <label htmlFor="paquete">Paquete</label>
-        <select
-          id="paquete"
-          name="paquete"
-          value={formData.paquete}
-          onChange={handleChange}
-          required
+      {/* Paquete con buscador */}
+        <div className="form-group">
+          <label htmlFor="paquete">Paquete</label>
+          <input
+            type="text"
+            placeholder="Buscar paquete..."
+            value={paqueteSearch}
+            onChange={(e) => setPaqueteSearch(e.target.value)}
+            className="paquete-search"
+          />
+          <select
+            id="paquete"
+            name="paquete"
+            value={formData.paquete}
+            onChange={handleChange}
           >
-          <option value="">Selecciona un paquete</option>
-          {paquetes.map(({ _id, nombre }) => (
-            <option key={_id} value={_id}>
-              {nombre}
-            </option>
-          ))}
-        </select>
-      </div>
+            <option value="">Selecciona un paquete</option>
+            {filteredPaquetes.map(({ _id, nombre }) => (
+              <option key={_id} value={_id}>
+                {nombre}
+              </option>
+            ))}
+          </select>
+          {errors.paquete && <p className="form-error">{errors.paquete}</p>}
+        </div>
 
       {/* Fecha */}
       <div className="form-group">
@@ -128,8 +199,8 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
           name="fecha"
           value={formData.fecha}
           onChange={handleChange}
-          required
           />
+          {errors.fecha && <p className="form-error">{errors.fecha}</p>}
       </div>
 
       {/* Valor */}
@@ -141,74 +212,28 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
           name="valor"
           value={formData.valor}
           onChange={handleChange}
-          required
           />
+         {errors.valor && <p className="form-error">{errors.valor}</p>}
       </div>
 
-       {/* Acompañantes
+      {/* Lista de Acompañantes */}
       <div className="form-group">
-      <label>Acompañantes</label>
-        <div className="acompañantes-list">
-          {filteredClientes.map(({ _id, nombre, apellido }) => (
-            <div key={_id} className="acompañante-item">
-            <input
-            type="checkbox"
-            id={`acompañante-${_id}`}
-            checked={formData.acompañantes.includes(_id)}
-            onChange={() => toggleAcompanante(_id)}
-            />
-            <label htmlFor={`acompañante-${_id}`}>
-            {nombre} {apellido}
-            </label>
-            </div>
+          <label>Acompañantes</label>
+          <ul className="acompañantes-list">
+            {acompañantesList.map((acompañante, index) => (
+              <li key={index} className="acompañante-item">
+                <span>{acompañante.nombre}</span> - <span>{acompañante.documento}</span>
+              </li>
             ))}
-            </div>
-            </div>
-            <div className="form-group">
-            <label htmlFor="acompañantes">Acompañantes</label>
-            <select
-            multiple
-            id="acompañantes"
-            name="acompañantes"
-            value={formData.acompañantes}
-          onChange={handleChange}
+          </ul>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setIsAcompananteFormVisible(true)}
           >
-          {clientes
-          .filter(c => c._id !== formData.cliente)
-          .map(({ _id, nombre, apellido }) => (
-            <option key={_id} value={_id}>
-            {nombre} {apellido}
-            </option>
-            ))}
-            </select>
-            </div> */}
-
-      <div className="form-group">
-        <label htmlFor="acompañantes">Acompañantes</label>
-        <select
-          multiple
-          id="acompañantes"
-          name="acompañantes"
-          value={formData.acompañantes}
-          onChange={handleChange}
-          >
-          {clientes
-            .filter(c => c._id !== formData.cliente)
-            .map(({ _id, nombre, apellido }) => (
-              <option key={_id} value={_id}>
-                {nombre} {apellido}
-              </option>
-            ))}
-        </select>
-
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() => setIsAcompananteFormVisible(true)}
-        >
-          Agregar Acompañante
-        </button>
-    </div>
+            Agregar Acompañante
+          </button>
+        </div>
       
       {/* Estado como switch slider */}
       <div className="form-group">
@@ -224,9 +249,15 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
         </label>
       </div>
 
-      {/* Botón */}
       <button type="submit" className="form-submit-button">
-        Guardar Venta
+        Registrar
+      </button>
+      <button
+        type="button"
+        className="cancel-btn"
+        onClick={onClose}
+      >
+        Cancelar
       </button>
     </form>
 
@@ -234,7 +265,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes }) => {
     {isAcompananteFormVisible &&
         ReactDOM.createPortal(
           <div className="acompanante-modal-content">
-            <AcompananteForm onSubmit={() => setIsAcompananteFormVisible(false)} />
+            <AcompananteForm onSubmit={handleSubmitAcompañante} />
           </div>,
           document.querySelector('.modal-overlay') // Renderiza como hijo del modal-overlay
         )}

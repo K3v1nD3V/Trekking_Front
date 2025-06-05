@@ -53,20 +53,10 @@ export const getPaquetes = async () => {
   };
 
   export const updateVenta = async (id, data) => {
+    console.log('updateVenta called with id:', id, 'and data:', data);
   try {
-    const response = await fetch(`/api/ventas/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al actualizar la venta');
-    }
-
-    return await response.json();
+    const response = await api.put(`/ventas/${id}`, data, { requiresAuth: true });
+    return response;
   } catch (error) {
     console.error('updateVenta error:', error);
     throw error;

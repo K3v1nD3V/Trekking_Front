@@ -1,0 +1,47 @@
+.my-swal-popup-small {
+  background-color: #e4e4e4 !important; 
+  border: 2px solid #3d3d3d !important; /* azul más oscuro */
+  width: 320px !important;
+  padding: 1em 1em !important;         
+  border-radius: 8px !important;
+  min-height: 120px !important;       
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Elimina el título */
+.my-swal-title {
+  display: none !important;
+}
+
+/* Botones */
+.my-swal-confirm-btn {
+  background-color: #3d3d3d !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.2em 1.2em !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  margin-right: 0.5em !important;
+  transition: background-color 0.3s ease;
+}
+.my-swal-confirm-btn:hover {
+  background-color: #232323 !important;
+}
+
+.my-swal-cancel-btn {
+  background-color: transparent !important;
+  color: #3d3d3d !important;
+  border: 2px solid #3d3d3d !important;
+  padding: 0.1em 1.2em !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.my-swal-cancel-btn:hover {
+  background-color: #3d3d3d !important;
+  color: white !important;
+}

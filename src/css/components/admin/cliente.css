@@ -267,6 +267,101 @@
   .expanded-media-viewer .modal-close::after {
     transform: rotate(-45deg);
   }
+
+  /* 📌 Detalles del Modal del Cliente */
+  .detalle-cliente-modal {
+    font-size: 14px;
+    color: #333;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+
+.detalle-cliente-modal h3 {
+  margin-top: 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #383D41;
+  margin-bottom: 10px;
+}
+
+.detalle-cliente-modal h4 {
+  font-size: 16px;
+  color: #383D41;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  padding-bottom: 4px;
+}
+
+.info-general-cliente {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 15px;         
+  margin-bottom: 16px;
+  align-self: center;    
+}
+
+
+.label-cliente {
+  font-weight: 600;
+  margin-right: 50px;
+  margin-top: 15px;
+  color: #555;
+  min-width: 130px;
+  display: inline-block;
+}
+
+.estado {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  margin-left: 8px;
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.estado.activo {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.estado.inactivo {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.observacion-medica {
+  font-style: italic;
+  color: #666;
+  margin-top: 10px;
+  padding-left: 6px;
+  border-left: 3px solid #C81E17;
+  background-color: #f9f4f2;
+  border-radius: 4px;
+}
+
+/* Scrollbar personalizado para modal */
+.detalle-cliente-modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.detalle-cliente-modal::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+.detalle-cliente-modal::-webkit-scrollbar-thumb {
+  background: #c81e17;
+  border-radius: 8px;
+}
+
+
   
   /* Estilos para pantallas grandes */
   @media (min-width: 1024px) {

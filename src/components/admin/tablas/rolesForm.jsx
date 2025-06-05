@@ -1,15 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import '../../../css/components/admin/rolesForm.css';
-import {
-  createRol,
-  updateRol
-} from '../../../api/roles';
-import {
-  getPermisos
-} from '../../../api/permisos';
-import {
-  getPrivilegios
-} from '../../../api/privilegios';
+import { createRol, updateRol, getRoles } from '../../../api/roles';
+import { getPermisos } from '../../../api/permisos';
+import { getPrivilegios } from '../../../api/privilegios';
+import { showConfirm } from '../../../alerts/alerts';
+
 
 const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({
@@ -21,9 +17,8 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [permisos, setPermisos] = useState([]);
   const [privilegios, setPrivilegios] = useState([]);
   const [errorNombre, setErrorNombre] = useState('');
-  const nombreRolRef = useRef(null); // Referencia para el input del nombre
+  const nombreRolRef = useRef(null);
 
-  // Cargar datos iniciales
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -44,13 +39,13 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
         }
       } catch (err) {
         console.error(err);
+        toast.error('No se pudieron cargar los datos iniciales.');
       }
     };
 
     fetchData();
   }, [initialData]);
 
-  // Alternar permiso (checkbox)
   const togglePermiso = (permiso) => {
     setFormData(prev => {
       const existe = prev.permisos.find(p => p.permiso === permiso);
@@ -61,7 +56,6 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     });
   };
 
-  // Alternar privilegio (checkbox)
   const togglePrivilegio = (permiso, privilegioId) => {
     setFormData(prev => ({
       ...prev,
@@ -78,12 +72,27 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     }));
   };
 
-  // Enviar formulario
+  const toggleTodosPrivilegios = (permiso) => {
+    setFormData(prev => ({
+      ...prev,
+      permisos: prev.permisos.map(p => {
+        if (p.permiso === permiso) {
+          const privilegiosIds = privilegios.map(pr => pr._id);
+          const todosSeleccionados = privilegiosIds.every(id => p.privilegios.includes(id));
+          return {
+            ...p,
+            privilegios: todosSeleccionados ? [] : privilegiosIds
+          };
+        }
+        return p;
+      })
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const nombreTrimmed = formData.nombreRol.trim();
-  
     if (!nombreTrimmed) {
       setErrorNombre('El nombre del rol no puede estar vacío.');
       nombreRolRef.current?.focus();
@@ -92,42 +101,71 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
       setErrorNombre('El nombre del rol debe tener al menos 3 caracteres.');
       nombreRolRef.current?.focus();
       return;
-    } else {
-      setErrorNombre('');
     }
-  
-    const permisosFinal = formData.permisos.map(p => {
+
+    try {
+      const rolesExistentes = await getRoles();
+      const nombreDuplicado = rolesExistentes.some(r =>
+        r.nombre.trim().toLowerCase() === nombreTrimmed.toLowerCase() &&
+        r._id !== initialData._id
+      );
+
+      if (nombreDuplicado) {
+        setErrorNombre('Ya existe un rol con ese nombre.');
+        nombreRolRef.current?.focus();
+        return;
+      }
+    } catch (err) {
+      console.error('Error al validar nombre duplicado:', err);
+    }
+
+    setErrorNombre('');
+
+    const permisosValidos = formData.permisos.filter(p => p.privilegios.length > 0);
+    if (permisosValidos.length === 0) {
+      toast.error('Debe asignar al menos un permiso con al menos un privilegio.');
+      return;
+    }
+
+    const permisosFinal = permisosValidos.map(p => {
       const permisoEncontrado = permisos.find(perm => perm.nombre === p.permiso);
       return permisoEncontrado?._id;
     }).filter(id => id);
-  
+
     const dataToSend = {
-      nombre: formData.nombreRol,
+      nombre: nombreTrimmed,
       estado: formData.estado,
       permisos: permisosFinal
     };
-  
+
+    const confirmado = await showConfirm(
+      initialData._id
+        ? '¿Deseas actualizar este rol?'
+        : '¿Deseas crear este rol?'
+    );
+    if (!confirmado) return;
+    
     try {
       if (initialData._id) {
         await updateRol(initialData._id, dataToSend);
+        toast.success('¡Rol actualizado exitosamente!');
       } else {
         await createRol(dataToSend);
+        toast.success('¡Rol creado exitosamente!');
       }
-      onSubmit && onSubmit(dataToSend);
-      onClose && onClose();
+
+      onSubmit(formData);
+      onClose();
     } catch (err) {
-      console.error('Error al guardar el rol:', err);
+      toast.error('Error al guardar el rol:', err);
+      toast.error('Error al guardar el rol. Verifica los datos o intenta más tarde.');
     }
   };
-  
+
   return (
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
-        {onClose && (
-          <button className="close-btn" onClick={onClose} type="button">×</button>
-        )}
-
-        <h2>{initialData._id ? 'Editar Rol' : 'Nuevo Rol'}</h2>
+        <h2>{initialData._id ? 'Actualizar Rol' : 'Registrar Rol'}</h2>
 
         <label>
           Nombre del rol
@@ -182,6 +220,18 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
                         {pr.descripcion}
                       </label>
                     ))}
+
+                    <label className="privilegio-item select-all">
+                      <input
+                        type="checkbox"
+                        checked={
+                          privilegios.length > 0 &&
+                          privilegios.every(pr => permisoActivo.privilegios.includes(pr._id))
+                        }
+                        onChange={() => toggleTodosPrivilegios(p.nombre)}
+                      />
+                      Seleccionar todos
+                    </label>
                   </div>
                 )}
               </div>
@@ -190,7 +240,15 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
         </div>
 
         <button type="submit" className="submit-btn">
-          {initialData._id ? 'Actualizar' : 'Crear'}
+          {initialData._id ? 'Actualizar' : 'Registrar'}
+        </button>
+
+        <button
+          type="button"
+          className="cancel-btn"
+          onClick={onClose}
+        >
+          Cancelar
         </button>
       </form>
     </div>

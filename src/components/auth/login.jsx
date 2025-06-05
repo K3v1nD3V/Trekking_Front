@@ -3,9 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../../api/auth';
 import './LoginForm.css';
 
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -55,11 +57,16 @@ const Login = () => {
      }
      
     } catch (err) {
-      setError(err.response?.message || 'Credenciales incorrectas');
-    } finally {
-      setLoading(false);
+      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+        setError('Tiempo de espera agotado. Intenta de nuevo más tarde.');
+      } else if (err.response?.status === 401) {
+        setError('Credenciales incorrectas. Verifica tu correo y contraseña.');
+      } else {
+        setError('Ocurrió un error al iniciar sesión. Inténtalo nuevamente.');
+      }
     }
-  };
+    
+    };
 
   return (
     <div className="login-wrapper">
@@ -92,13 +99,20 @@ const Login = () => {
             />
             {emailError && <p className="field-error">{emailError}</p>}
 
-            <input 
-              type="password" 
-              placeholder="Contraseña" 
-              value={password}
-              onChange={e => setPassword(e.target.value)} 
-              className={passwordError ? 'input-error' : ''}
-            />
+            <div className={`password-container ${passwordError ? 'input-error' : ''}`}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Contraseña"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
+              <span
+                className="material-icons toggle-password"
+                onClick={() => setShowPassword(prev => !prev)}
+              >
+                {showPassword ? 'visibility_off' : 'visibility'}
+              </span>
+            </div>
             {passwordError && <p className="field-error">{passwordError}</p>}
 
             {error && <p className="field-error">{error}</p>}
@@ -113,9 +127,10 @@ const Login = () => {
             <p>¿Olvidaste tu contraseña? <Link to="/recuperar">Recupérala aquí</Link></p>
           </div>
         </div>
+
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Login;   

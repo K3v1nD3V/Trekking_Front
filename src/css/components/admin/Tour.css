@@ -5,20 +5,6 @@
     box-shadow: 0 4px 8px rgba(56, 61, 65, 0.1);
 }
 
-.tour-table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.tour-table-title {
-    margin: 0;
-    font-size: 1.25rem;
-    color: #383D41;
-    font-weight: 600;
-}
-
 .tour-table-controls {
     display: flex;
     gap: 0.75rem;
@@ -45,21 +31,6 @@
 
 .tour-table-button:hover {
     background-color: #8B2B1B;
-}
-
-.tour-action-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.tour-action-button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background-color 0.2s;
 }
 
 .tour-edit-button {
