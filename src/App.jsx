@@ -19,7 +19,7 @@ import Tours from "./components/admin/tablas/Tours";
 // Landing Section
 import Landing from './layouts/landing';
 // Cliente Section
-import Cliente from './components/cliente/Cliente';
+import Cliente from './components/cliente/cliente';
 
 const App = () => {
   return (
@@ -59,7 +59,7 @@ const App = () => {
           path="/cliente/*" 
           element={
             <AuthProvider>
-              <RoleRoute requiredRole="cliente">
+              <RoleRoute requiredRole="usuario">
                 <PrivateRoute>
                   <Cliente />
                 </PrivateRoute>
