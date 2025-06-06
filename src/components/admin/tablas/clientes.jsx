@@ -1,4 +1,3 @@
-// REACT
 import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
 // MODAL
@@ -11,11 +10,11 @@ import { getClientes, deleteCliente, updateCliente } from '../../../api/clientes
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
 import { toast } from 'sonner';
-// Importa las alertas
-import { showConfirm } from '../../../alerts/alerts'; // Ajusta la ruta si es necesario
-// CSS ICONOS
+// ALERTAS
+import { showConfirm } from '../../../alerts/alerts';
+// ICONO
 import { IoReloadOutline } from "react-icons/io5";
-// COMPONENTS
+// COMPONENT
 import Load from '../../common/Load';
 
 const Clientes = () => {
@@ -23,6 +22,7 @@ const Clientes = () => {
     const [filterText, setFilterText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCliente, setSelectedCliente] = useState(null);
+    const [detalleCliente, setDetalleCliente] = useState(null); // Nuevo modal detalle
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -46,15 +46,8 @@ const Clientes = () => {
         setIsModalOpen(true);
     };
 
-    // const handleClienteClick = (row) => {
-    //     setSelectedCliente(row);
-    //     setIsModalOpen(true);
-    // };
-
     const handleDeleteCliente = async (id, nombreCompleto) => {
-        // Usar la alerta de confirmación
         const result = await showConfirm(`¿Estás seguro de eliminar a ${nombreCompleto}?`, 'Confirmar eliminación');
-        
         if (!result.isConfirmed) return;
 
         try {
@@ -63,7 +56,7 @@ const Clientes = () => {
             toast.success('¡Cliente eliminado exitosamente!');
         } catch (err) {
             console.error('Error eliminando cliente:', err.message);
-            toast.error('Error', 'No se pudo eliminar el cliente.');
+            toast.error('No se pudo eliminar el cliente.');
         }
     };
 
@@ -75,13 +68,11 @@ const Clientes = () => {
     const toggleEstado = async (row) => {
         const nuevoEstado = !row.estado;
         const mensaje = `¿Estás seguro de ${nuevoEstado ? 'activar' : 'desactivar'} al cliente ${row.nombre} ${row.apellido}?`;
-    
         const result = await showConfirm(mensaje, 'Confirmar cambio de estado');
-    
         if (!result.isConfirmed) return;
-    
+
         const updatedCliente = { ...row, estado: nuevoEstado };
-    
+
         try {
             await updateCliente(row._id, updatedCliente);
             setClientes(prev =>
@@ -92,11 +83,9 @@ const Clientes = () => {
             toast.success(`Cliente ${nuevoEstado ? 'activado' : 'desactivado'} correctamente`);
         } catch (error) {
             console.error('Error actualizando estado:', error.message);
-            toast.error('Error', 'No se pudo cambiar el estado del cliente.');
+            toast.error('No se pudo cambiar el estado del cliente.');
         }
     };
-
-    
 
     const EstadoCell = ({ row }) => (
         <div className="estado-switch">
@@ -122,11 +111,9 @@ const Clientes = () => {
             name: 'Documento',
             selector: row => row.documento,
             sortable: true,
-            format: row => 
-            row.documento.toLocaleString(),
-            right: true,
+            format: row => row.documento.toLocaleString(),
             cell: row => <div style={{ fontWeight: 600 }}>{row.documento}</div>,
-            width: '150px',
+            width: '200px',
         },
         {
             name: 'Nombre',
@@ -145,44 +132,44 @@ const Clientes = () => {
             name: 'Correo',
             selector: row => row.correo,
             wrap: true,
-            width: '150px' 
-        },
-        {
-            name: 'Teléfono',
-            selector: row => row.telefono,
-            format: row => row.telefono.toLocaleString(),
-            right: true,
-            width: '150px' 
-        },
-        {
-            name: 'Observación Médica',
-            selector: row => row.observacion_medica,
-            wrap: true,
-            width: '200px'
+            width: '270px' 
         },
         {
             name: 'Estado',
             cell: row => <EstadoCell row={row} />,
-            width: '150px' 
+            width: '170px' 
         },
         {
             name: 'Acciones',
             cell: row => (
                 <div className="action-buttons">
-    
+                    <span
+                        className="action-button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setDetalleCliente(row);
+                        }}
+                    >
+                        <span className="material-symbols-outlined">info</span>
+                    </span>
+
                     <span className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             setSelectedCliente(row);
                             setIsModalOpen(true);
-                        }} class="material-symbols-outlined">edit
+                        }}
+                    >
+                        <span className="material-symbols-outlined">edit</span>
                     </span>
 
                     <span className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteCliente(row._id, `${row.nombre} ${row.apellido}`);
-                        }} class="material-symbols-outlined">delete
+                        }}
+                    >
+                        <span className="material-symbols-outlined">delete</span>
                     </span>
                 </div>
             ),
@@ -194,19 +181,18 @@ const Clientes = () => {
     if (error) return (
         <div className="error">
             <h3>Hubo un error al cargar los datos.</h3>
-            <p>Problamente solo haga falta un poco de paciencia.</p>
+            <p>Probablemente solo haga falta un poco de paciencia.</p>
             <button className='btn btn-primary' onClick={() => window.location.reload()}>
                 <IoReloadOutline />
-                Vuelve a intententarlo
+                Vuelve a intentarlo
             </button>
         </div>
     );
 
     return (
         <>
-          {/* Table Header separado */}
           <div className="table-header">
-            <h2 className="table-title">Gestion de Clientes</h2>
+            <h2 className="table-title">Gestión de Clientes</h2>
             <div className="table-controls">
               <input
                 type="text"
@@ -217,12 +203,11 @@ const Clientes = () => {
               />
               <button onClick={handleCrearCliente} className="table-button">
                 Registrar Cliente
-                <span class="material-symbols-outlined">add_circle</span>
+                <span className="material-symbols-outlined">add_circle</span>
               </button>
             </div>
           </div>
-      
-          {/* Contenedor sólo para tabla y modal */}
+
           <div className="table-container">
             <DataTable
               columns={columns}
@@ -249,7 +234,8 @@ const Clientes = () => {
                 },
               }}
             />
-      
+
+            {/* Modal para Crear/Editar Cliente */}
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
               <h2 className="modal-title">
                 {selectedCliente ? 'Actualizar Cliente' : 'Registrar Cliente'}
@@ -260,9 +246,39 @@ const Clientes = () => {
                 initialData={selectedCliente || {}}
               />
             </Modal>
+
+            {/* Modal de Detalle */}
+            <Modal isOpen={!!detalleCliente} onClose={() => setDetalleCliente(null)}>
+                <div className="detalle-cliente-modal">
+                    <h3>Detalle del Cliente</h3>
+                    <hr />
+
+                    {detalleCliente && (
+                    <div className="info-general-cliente">
+                        <p><span className="label-cliente">Documento:</span> {detalleCliente.documento}</p>
+                        <p><span className="label-cliente">Nombre:</span> {detalleCliente.nombre}</p>
+                        <p><span className="label-cliente">Apellido:</span> {detalleCliente.apellido}</p>
+                        <p><span className="label-cliente">Correo:</span> {detalleCliente.correo}</p>
+                        <p><span className="label-cliente">Teléfono:</span> {detalleCliente.telefono}</p>
+
+                        {detalleCliente.observacion_medica && (
+                        <p><span className="label-cliente">Observación Médica:</span> {detalleCliente.observacion_medica}</p>
+                        )}
+
+                        <p><span className="label-cliente">Estado:</span>
+                        <span className={`estado ${detalleCliente.estado ? 'activo' : 'inactivo'}`}>
+                            {detalleCliente.estado ? 'Activo' : 'Inactivo'}
+                        </span>
+                        </p>
+                    </div>
+                    )}
+                </div>
+            </Modal>
+
+            
           </div>
         </>
-      );      
+    );
 };
 
 export default Clientes;

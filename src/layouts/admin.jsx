@@ -38,13 +38,14 @@ const Admin = () => {
           <img className='logoStyle' src={logo} alt="Logo Trekking San Cristóbal" />
         </div>
 
-        {/* Espacio reservado para mantener centrado el logo */}
-        <div>
-          <button className="btn btn-primary" onClick={() => navigate('/')}>
-            Home
-          </button>
+        {/* Ícono de inicio (Home) sin botón visible */}
+        <div onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+          <span className="material-symbols-outlined">
+            home
+          </span>
         </div>
       </header>
+
 
       {/* Contenedor principal */}
       <div className="main-container">

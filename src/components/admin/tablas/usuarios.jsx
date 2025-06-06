@@ -88,7 +88,7 @@ const Usuarios = () => {
             name: 'Correo',
             selector: row => row.correo,
             wrap: true,
-            width: '300px'
+            width: '320px'
         },
         {
             name: 'Rol',

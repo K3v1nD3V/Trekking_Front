@@ -7,7 +7,7 @@ const Footer = () => {
         <footer className="footer">
            <div className="footer-container">
             <div className="footer-logo">
-                <img src="/src/assets/ORIGINAL_PNG.png" alt="Logo Trekking San Cristóbal" />
+                <img src="/public/LogoTrekking.png" alt="Logo Trekking San Cristóbal" />
             </div>
             <div className="footer-social">
                 <a href="https://api.whatsapp.com/send?phone=%2B573053512023" target="_blank" rel="noopener noreferrer" className="social-icon whatsapp">
