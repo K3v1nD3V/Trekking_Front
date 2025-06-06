@@ -8,7 +8,7 @@ import { getServicios } from '../../../api/servicios';
 import PaqueteActual from './paqueteActual';
 import PaqueteListItem from './paqueteListItem';
 import PaqueteListItemSkeleton from './paqueteListItemSkeleton';
-import PaqueteActualSkeleton from './PaqueteActualSkeleton';
+import PaqueteActualSkeleton from './paqueteActualSkeleton';
 
 import '../../../css/components/landing/paquetes.css';
 
