@@ -22,20 +22,11 @@ import RolesTable from './components/admin/tablas/roles';
 import Usuarios from './components/admin/tablas/usuarios';
 import Clientes from './components/admin/tablas/clientes';
 import Ventas from './components/admin/tablas/ventas';
-<<<<<<< HEAD
-import RegisterForm from './components/auth/registerForm'; 
-import Tours from "./components/admin/tablas/Tours";
-// Landing Section
-import Landing from './layouts/landing';
-// Cliente Section
-import Cliente from './components/cliente/cliente';
-=======
 import Tours from './components/admin/tablas/Tours';
 
 // 👤 Cliente
 import Cliente from './components/cliente/Cliente';
 import MainCliente from './components/cliente/clienteMain'; // No usado aún, pero importado
->>>>>>> c498f8b8eb13e4d7109335025b95cd11fe5ba49c
 
 const App = () => {
   return (
