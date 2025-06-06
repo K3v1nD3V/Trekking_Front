@@ -22,6 +22,7 @@ export const getUsuarioById = async (id) => {
 
 export const createUsuario = async (usuarioData) => {
   try {
+    console.log(usuarioData);
     const response = await api.post('/usuarios', usuarioData, { requiresAuth: true });
     console.log('usuario: ', response);
     return response;

@@ -1,7 +1,9 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/base';
+import { createCliente } from "../../api/clientes.js"; // Asegúrate de que esta ruta sea correcta
+import { createUsuario } from "../../api/usuarios.js"; // Asegúrate de que esta ruta sea correcta
+import { checkClienteExistence } from "../../api/clientes.js";
+
 import './LoginForm.css';
 
 const RegisterForm = () => {
@@ -28,8 +30,6 @@ const RegisterForm = () => {
       ...prevData,
       [name]: value
     }));
-    setError('');
-    setFieldErrors({});
     setError('');
     setFieldErrors({});
   };
@@ -64,17 +64,30 @@ const RegisterForm = () => {
       newFieldErrors.telefono = 'Debe tener entre 7 y 15 dígitos numéricos';
     }
 
+    if (!newFieldErrors.documento) {
+      const docExists = await checkClienteExistence({ documento: formData.documento });
+      if (docExists) {
+        newFieldErrors.documento = 'El documento ya está registrado';
+      }
+    }
+
+    if (!newFieldErrors.correo) {
+      const correoExists = await checkClienteExistence({ correo: formData.correo });
+      if (correoExists) {
+        newFieldErrors.correo = 'El correo ya está registrado';
+      }
+    }
+
     if (Object.keys(newFieldErrors).length > 0) {
       setFieldErrors(newFieldErrors);
       return;
     }
 
-
     const nuevoUsuario = {
       nombre: formData.nombre,
       correo: formData.correo.toLowerCase(),
       contraseña: formData.contraseña,
-      rol: '683786ba18ef8808a16d95cc'
+      rol: '68350ff72c7fc19be2ddaab3'
     };
 
     const clienteData = {
@@ -88,8 +101,8 @@ const RegisterForm = () => {
     };
 
     try {
-      await api.post('/usuarios', nuevoUsuario);
-      await api.post('/clientes', clienteData);
+      await createUsuario(nuevoUsuario);
+      await createCliente(clienteData);
       navigate('/login');
     } catch (err) {
       console.error('Error al registrar:', err);
