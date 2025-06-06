@@ -25,8 +25,8 @@ import Ventas from './components/admin/tablas/ventas';
 import Tours from './components/admin/tablas/Tours';
 
 // 👤 Cliente
-import Cliente from './components/cliente/Cliente';
-import MainCliente from './components/cliente/clienteMain'; // No usado aún, pero importado
+import Cliente from './components/cliente/cliente';
+// import MainCliente from './components/cliente/clienteMain'; // No usado aún, pero importado
 
 const App = () => {
   return (
