@@ -35,12 +35,6 @@
   cursor: pointer;;
 }
 
-
-.material-symbols-outlined {
-  font-size: 25px !important;
-  color: var(--color-secundario);
-}
-
 /* Divisores */
 .divider {
   border: none;

@@ -88,13 +88,10 @@
     color: var(--color-white);
     border: none;
 }
-
-
 /* Servicios incluidos */
 .paquete-servicios {
     display: flex;
     gap: var(--space-md);
-    justify-content: center;
 }
 
 .paquete-servicios p {
@@ -106,11 +103,9 @@
 
 .servicios-icons {
     display: flex;
-    gap: var(--space-md);
     flex-wrap: wrap;
 }
 .otros-servicios-icons {
-    justify-content: center;
     margin: 10px 0;
 }
 
@@ -120,7 +115,7 @@
     cursor: pointer;
 }
 
-.servicio-icon:hover {
+.paquetes .servicio-icon:hover {
     transform: scale(1.5);
     color: var(--color-primary-hover);
 }
@@ -130,7 +125,9 @@
     width: 100%;
     max-width: 1200px;
 }
-
+.paquete-list .paquete-servicios{
+    justify-content: center;
+}
 .paquete-list-title {
     font-size: 2.5rem;
     font-weight: bold;
@@ -155,11 +152,6 @@
     width: 285px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-/* .paquete-item:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md), 0 4px 15px rgba(0, 0, 0, 0.1);
-} */
 
 .paquete-item img {
     width: 100%;
