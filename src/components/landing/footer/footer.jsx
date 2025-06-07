@@ -1,13 +1,14 @@
 import React from 'react';
 import { FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import '../../../css/components/landing/footer.css';
+import LogoTrekking from '../../../../public/LogoTrekking.png';
 
 const Footer = () => {
     return (
         <footer className="footer">
            <div className="footer-container">
             <div className="footer-logo">
-                <img src="/public/LogoTrekking.png" alt="Logo Trekking San Cristóbal" />
+                <img src={LogoTrekking} alt="Logo Trekking San Cristobal" className="logo-img" />
             </div>
             <div className="footer-social">
                 <a href="https://api.whatsapp.com/send?phone=%2B573053512023" target="_blank" rel="noopener noreferrer" className="social-icon whatsapp">

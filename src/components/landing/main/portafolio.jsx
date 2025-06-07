@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-
+import { getPaquetes } from '../../../api/paquetes'; // Asegúrate de importar esto
 import '../../../css/components/landing/portafolio.css';
 
 const Portafolio = () => {
@@ -8,19 +8,26 @@ const Portafolio = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [offset, setOffset] = useState(0);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [images, setImages] = useState([]); // Ahora las imágenes vienen de la API
   const trackRef = useRef(null);
 
-  const images = [
-    "/public/Image/portafolio_1.jpeg",
-    "/public/Image/portafolio_2.jpeg",
-    "/public/Image/portafolio_3.jpeg",
-    "/public/Image/portafolio_4.jpeg",
-    "/public/Image/portafolio_5.jpeg",
-    "/public/Image/portafolio_6.jpeg",
-    "/public/Image/portafolio_7.jpeg",
-    "/public/Image/portafolio_8.jpeg",
-    "/public/Image/portafolio_9.jpeg"
-  ];
+  // Cargar imágenes desde la base de datos
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const paquetes = await getPaquetes();
+        // Extraer todas las imágenes de todos los paquetes
+        const allImages = paquetes
+          .flatMap(paquete => paquete.multimedia || [])
+          .filter(url => !!url); // Filtra nulos/vacíos
+        setImages(allImages);
+      } catch (error) {
+        console.error('Error al cargar las imágenes:', error);
+        setImages([]);
+      }
+    };
+    fetchImages();
+  }, []);
 
   const duplicatedImages = [...images, ...images];
   const speed = 0.7;

@@ -1,5 +1,5 @@
 import LoadIcon from '../../../public/loadicon.png';
-import '../../css/common/load.css';
+import '../../css/common/Load.css';
 
 const Load = () => {
   return (
