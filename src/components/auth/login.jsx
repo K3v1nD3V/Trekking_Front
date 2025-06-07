@@ -28,7 +28,10 @@ const Login = () => {
         const data = jwtDecode(token);
         // Validar que tenga los campos requeridos
         if (data && data.id && data.correo && data.contraseña) {
-          validateUsuario(token);
+          const res = validateUsuario(token);
+          if (res) {
+            alert('Usuario validado correctamente');
+          }
         } else {
           console.warn('Token inválido: faltan campos requeridos');
         }
