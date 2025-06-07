@@ -27,22 +27,11 @@
 .portafolio-title {
   font-size: 2.5rem;
   color: var(--primary-color);
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
   position: relative;
   text-align: center;
 }
 
-.portafolio-title::after {
-  content: '';
-  width: 60px;
-  height: 4px;
-  background-color: var(--primary-color);
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 2px;
-}
 
 .portafolio-description {
   font-size: 1.1rem;

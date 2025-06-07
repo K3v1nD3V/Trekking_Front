@@ -200,10 +200,6 @@ input:-webkit-autofill {
   -webkit-text-fill-color: #000 !important;
 }
 
-
-
-}
-
 .password-container {
   position: relative;
   display: flex;
@@ -222,4 +218,22 @@ input:-webkit-autofill {
   font-size: 20px;
   color: #3a3939;
   user-select: none;
+}
+
+@media (max-width: 768px) {
+  .login-box {
+    flex-direction: column;
+    max-width: 400px; 
+    margin: 0 10px;
+  }
+
+  .login-image {
+    display: none;
+  }
+
+  .login-form {
+    flex: none;
+    width: 100%;
+    padding: 20px;
+  }
 }

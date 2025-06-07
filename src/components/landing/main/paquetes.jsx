@@ -123,9 +123,9 @@ const Paquetes = () => {
         <section className="paquetes">
             <PaqueteActual paquete={actualPaquete} servicios={servicios} />
             <div className="paquete-list">
-                <h2 className="paquete-list-title">
+                <h1 className="paquete-list-title">
                     {t('packages.otherPackages')}
-                </h2>
+                </h1>
                 <div className="paquete-items">
                     {otrosPaquetes.map((paquete) => {
                         const serviciosPaquete = servicios.filter((servicio) =>

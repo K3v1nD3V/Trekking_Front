@@ -1,7 +1,7 @@
 /* Sección principal de paquetes */
 .paquetes {
     padding: var(--space-xl) var(--space-lg);
-    background-color: #fff;
+    background-color: #f9f9f9;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,31 +9,45 @@
     gap: var(--space-xl); /* Espaciado entre secciones */
 }
 
-/* Paquete Actual */
 .actual-paquete {
     display: flex;
     flex-direction: row;
-    gap: var(--space-lg);
+    gap: 40px;
     background-color: var(--color-white);
     border-radius: var(--border-radius-md);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    max-width: 1200px;
     width: 100%;
+    padding: var(--space-md);
+    align-items: center;
+    border: 23px solid var(--color-border-light);
+    margin-top: 80px;
 }
 
+/* Imagen en la tarjeta */
 .actual-paquete img {
-    width: 50%;
-    object-fit: cover;
+    width: 45%;
+    max-width: 500px; /* Evita que crezca demasiado */
+    height: auto; 
+    max-height: 450px; 
+    object-fit: cover; 
+    aspect-ratio: 16 / 9; 
+    flex-shrink: 0;
+    border-top-left-radius: var(--border-radius-md);
+    border-bottom-left-radius: var(--border-radius-md);
 }
 
+
+/* Contenido dentro de la tarjeta */
 .paquete-info {
-    padding: var(--space-xl);
+    flex: 1;
+    padding: var(--space-md);
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-sm);
     justify-content: center;
 }
+
 
 .paquete-info p {
     display: flex;
@@ -45,7 +59,7 @@
 }
 
 .paquete-title {
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     font-weight: bold;
     text-transform: capitalize;
     color: var(--color-primary);
@@ -120,10 +134,37 @@
     color: var(--color-primary-hover);
 }
 
+@media (max-width: 600px) {
+    .actual-paquete {
+        flex-direction: column; /* Cambia a vertical en móviles */
+        max-width: 90%;
+        padding: var(--space-xs);
+    }
+
+    .actual-paquete img {
+        width: 100%;
+        max-height: 250px;
+        border-radius: var(--border-radius-sm);
+    }
+
+    .paquete-title {
+        font-size: 1.5rem;
+    }
+
+    .paquete-description {
+        font-size: 0.85rem;
+    }
+    .btn {
+        font-size: 0.5rem;
+        width: 100%;
+    }
+}
+
 /* Lista de otros paquetes */
 .paquete-list {
     width: 100%;
     max-width: 1200px;
+    margin-top: 80px;
 }
 .paquete-list .paquete-servicios{
     justify-content: center;
@@ -133,7 +174,7 @@
     font-weight: bold;
     color: var(--color-primary);
     text-align: center;
-    margin-bottom: var(--space-lg);
+    margin-bottom: 70px;
 }
 
 .paquete-items {
@@ -185,6 +226,34 @@
     font-weight: bold;
     color: var(--color-primary);
 }
+
+@media (max-width: 768px) {
+    .paquete-items {
+      justify-content: space-between;
+      gap: 1rem;
+    }
+  
+    .paquete-item {
+      width: 48%;
+    }
+  
+    .paquete-item img {
+      height: 150px;
+    }
+  
+    .paquete-item-info {
+      padding: var(--space-sm);
+    }
+  
+    .paquete-item-title {
+      font-size: 1.4rem;
+    }
+  
+    .paquete-item-price {
+      font-size: 1rem;
+    }
+  }
+  
 
 /* Skeleton Loader */
 .skeleton-image {

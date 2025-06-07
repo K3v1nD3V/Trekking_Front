@@ -7,19 +7,21 @@
   .servicios-title {
     font-size: 2.2rem;
     color: #C81E17;
-    margin-bottom: 1rem;
+    margin-bottom: 4rem;
   }
   
   
   .servicios-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     justify-items: center;
     grid-template-rows: auto auto;
-    width: 1000px;
+    width: 100%;                /* Se adapta en responsive */
+    max-width: 1000px;          /* Limita el ancho en pantallas grandes */
     margin: 0 auto;
-  }
+    padding: 0 1rem;            /* Añade algo de margen lateral en móviles */
+}
   
   .servicio-card {
     background-color: white;
@@ -54,4 +56,23 @@
   display: flex;
   align-items: center;
   gap: var(--space-md);
+}
+
+@media (max-width: 1000px) {
+  .servicios-grid {
+      grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .servicios-grid {
+      grid-template-columns: repeat(2, 1fr); /* ⚠ Forzamos 2 columnas */
+      gap: 1rem;
+  }
+
+  .servicio-card {
+      width: 100%;        /* Asegura que la tarjeta use el 100% del grid */
+      max-width: none;    /* Evita que se limite a 300px */
+      padding: 1rem;
+  }
 }

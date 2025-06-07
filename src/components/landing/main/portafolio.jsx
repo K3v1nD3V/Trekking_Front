@@ -64,9 +64,9 @@ const Portafolio = () => {
       <div className="portafolio-container">
 
         <div className="portafolio-text-content" data-animate>
-          <h2 className="portafolio-title">
+          <h1 className="portafolio-title">
             {t('portfolio.title')}
-          </h2>
+          </h1>
           <p className="portafolio-description">
             {t('portfolio.description')}
           </p>

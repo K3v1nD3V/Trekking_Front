@@ -169,6 +169,7 @@ h1, h2, h3, .cliente-main-content .titulo {
 }
 .btn-primary:hover {
     background: #8B2B1B;
+    text-decoration: none;
 }
 .btn-secondary {
     background: #E5C9B3;
