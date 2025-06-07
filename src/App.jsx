@@ -9,7 +9,6 @@ import { Toaster } from 'sonner';
 import Login from './components/auth/login';
 import RegisterForm from './components/auth/registerForm';
 import RecuperarForm from './components/auth/RecuperarForm';
-import CambiarContrasenaForm from './components/auth/CambiarContrasenaForm';
 
 // 🏠 Landing
 import Landing from './layouts/landing';
@@ -41,7 +40,6 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/recuperar" element={<RecuperarForm />} />
-        <Route path="/cambiar-contrasena/:token" element={<CambiarContrasenaForm />} />
 
         {/* Rutas protegidas - Admin */}
         <Route

@@ -159,6 +159,12 @@ textarea.text-area {
   position: relative;
   display: flex;
   align-items: center;
+}
+
+.password-container-register{
+  position: relative;
+  display: flex;
+  align-items: center;
   width: 200px;;
 }
 
@@ -231,8 +237,9 @@ input:-webkit-autofill {
 .toggle-password {
   position: absolute;
   right: 10px;
+  top: 13px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   color: #3a3939;
   user-select: none;
 }
