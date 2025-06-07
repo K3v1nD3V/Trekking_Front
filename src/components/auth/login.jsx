@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../../api/auth';
 import './LoginForm.css';
-
+import logoImagen from '../../../public/LogoTrekking.png'; // Asegúrate de que la ruta sea correcta
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -79,7 +79,7 @@ const Login = () => {
         />
         <div className="black-overlay"></div>
         <img
-          src="/public/LogoTrekking.png"  
+          src={logoImagen} 
           alt="Logo superpuesto"
           className="overlay-image"
         />

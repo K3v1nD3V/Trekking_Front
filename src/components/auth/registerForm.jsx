@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { createCliente } from "../../api/clientes.js"; // Asegúrate de que esta ruta sea correcta
 import { createUsuario } from "../../api/usuarios.js"; // Asegúrate de que esta ruta sea correcta
 import { checkClienteExistence } from "../../api/clientes.js";
+import logoImagen from '../../../public/LogoTrekking.png'; // Asegúrate de que la ruta sea correcta
 
 import './LoginForm.css';
 
@@ -180,9 +181,13 @@ const RegisterForm = () => {
 
 
         <div className="login-image">
-          <img src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg" alt="Login visual" className="main-image" />
+          <img 
+            src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg" 
+            alt="Login visual" 
+            className="main-image" 
+          />
           <div className="black-overlay"></div>
-          <img src="/public/LogoTrekking.png" alt="Logo superpuesto" className="overlay-image" />
+          <img src={logoImagen} alt="Logo superpuesto" className="overlay-image" />
         </div>
       </div>
     </div>
