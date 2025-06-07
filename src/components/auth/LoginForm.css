@@ -157,8 +157,25 @@ textarea.text-area {
 
 .password-container {
   position: relative;
-  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 200px;;
 }
+
+.password-check-icon {
+  margin-bottom: 33px;
+  margin-left: 10px;
+  font-size: 17px;
+}
+
+.password-check-icon.valid {
+  color: green;
+}
+
+.password-check-icon.invalid {
+  color: red;
+}
+
 
 .password-container .toggle-password,
 .password-container .password-icon {
@@ -236,4 +253,19 @@ input:-webkit-autofill {
     width: 100%;
     padding: 20px;
   }
+}
+
+
+/* Elimina los ojitos nativos del input tipo password */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-clear-button,
+input[type="password"]::-webkit-inner-spin-button,
+input[type="password"]::-webkit-outer-spin-button {
+  display: none;
+  appearance: none;
 }

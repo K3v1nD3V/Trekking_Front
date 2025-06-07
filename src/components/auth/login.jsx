@@ -24,9 +24,9 @@ const Login = () => {
     setError('');
     setEmailError('');
     setPasswordError('');
-
+  
     let isValid = true;
-
+  
     if (!email.trim()) {
       setEmailError('El correo es obligatorio');
       isValid = false;
@@ -34,28 +34,29 @@ const Login = () => {
       setEmailError('El formato del correo no es válido');
       isValid = false;
     }
-
+  
     if (!password.trim()) {
       setPasswordError('La contraseña es obligatoria');
       isValid = false;
     }
-
+  
     if (!isValid) return;
-
+  
     setLoading(true);
+  
     try {
       const response = await login(email.toLowerCase(), password);
-
+  
       const rol = response.usuario?.rol;
-
+  
       if (rol === 'admin') {
         navigate('/admin');
       } else if (rol === 'cliente' || rol === 'usuario') {
         navigate('/cliente');
-      } else{
+      } else {
         setError('Rol no reconocido');
-     }
-     
+      }
+  
     } catch (err) {
       if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
         setError('Tiempo de espera agotado. Intenta de nuevo más tarde.');
@@ -64,9 +65,11 @@ const Login = () => {
       } else {
         setError('Ocurrió un error al iniciar sesión. Inténtalo nuevamente.');
       }
+  
+    } finally {
+      setLoading(false); 
     }
-    
-    };
+  };
 
   return (
     <div className="login-wrapper">

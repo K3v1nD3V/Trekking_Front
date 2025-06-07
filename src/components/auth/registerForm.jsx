@@ -151,17 +151,21 @@ const RegisterForm = () => {
                 </span>
               </div>
               <div className="password-container">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="confirmarContraseña"
-                  placeholder="Confirmar contraseña"
-                  value={formData.confirmarContraseña}
-                  onChange={handleChange}
-                />
-                {formData.confirmarContraseña && (
-                  <span className="material-icons password-icon">
-                    {formData.confirmarContraseña === formData.contraseña ? 'check_circle' : 'cancel'}
-                  </span>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="confirmarContraseña"
+                placeholder="Confirmar contraseña"
+                value={formData.confirmarContraseña}
+                onChange={handleChange}
+              />
+              {formData.confirmarContraseña && (
+                <span
+                  className={`material-icons password-check-icon ${
+                    formData.confirmarContraseña === formData.contraseña ? 'valid' : 'invalid'
+                  }`}
+                >
+                  {formData.confirmarContraseña === formData.contraseña ? 'check_circle' : 'cancel'}
+                </span>
                 )}
               </div>
 
