@@ -51,3 +51,15 @@ export const deleteUsuario = async (id) => {
     throw error;
   }
 };
+
+export const validateUsuario = async (token) => {
+  console.log('Validando usuario:', token);
+  try {
+    const response = await api.post('/usuarios/validate', token);
+    console.log('Respuesta de validación:', response);
+    return response.data;
+  } catch (error) {
+    console.error('Error validando usuario:', error);
+    throw error;
+  }
+}

@@ -1,6 +1,10 @@
-import React, { useState } from 'react'; 
+import { useState, useEffect } from 'react'; 
 import { useNavigate, Link } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
+
 import { login } from '../../api/auth';
+import { validateUsuario } from '../../api/usuarios';
+
 import './LoginForm.css';
 import logoImagen from '../../../public/LogoTrekking.png'; // Asegúrate de que la ruta sea correcta
 
@@ -13,6 +17,26 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  
+  // Validación de usuario
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('t');
+    if (token) {
+      try {
+        const data = jwtDecode(token);
+        // Validar que tenga los campos requeridos
+        if (data && data.id && data.correo && data.contraseña) {
+          validateUsuario(token);
+        } else {
+          console.warn('Token inválido: faltan campos requeridos');
+        }
+      } catch (err) {
+        console.error('Token inválido:', err);
+      }
+    }
+  }, []);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,9 +48,9 @@ const Login = () => {
     setError('');
     setEmailError('');
     setPasswordError('');
-  
+
     let isValid = true;
-  
+
     if (!email.trim()) {
       setEmailError('El correo es obligatorio');
       isValid = false;
@@ -34,29 +58,28 @@ const Login = () => {
       setEmailError('El formato del correo no es válido');
       isValid = false;
     }
-  
+
     if (!password.trim()) {
       setPasswordError('La contraseña es obligatoria');
       isValid = false;
     }
-  
+
     if (!isValid) return;
-  
+
     setLoading(true);
-  
     try {
       const response = await login(email.toLowerCase(), password);
-  
+
       const rol = response.usuario?.rol;
-  
+
       if (rol === 'admin') {
         navigate('/admin');
       } else if (rol === 'cliente' || rol === 'usuario') {
         navigate('/cliente');
-      } else {
+      } else{
         setError('Rol no reconocido');
-      }
-  
+     }
+     
     } catch (err) {
       if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
         setError('Tiempo de espera agotado. Intenta de nuevo más tarde.');
@@ -65,11 +88,9 @@ const Login = () => {
       } else {
         setError('Ocurrió un error al iniciar sesión. Inténtalo nuevamente.');
       }
-  
-    } finally {
-      setLoading(false); 
     }
-  };
+    
+    };
 
   return (
     <div className="login-wrapper">
