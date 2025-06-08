@@ -144,13 +144,13 @@ const RegisterForm = () => {
             <textarea name="observacion_medica" placeholder="Observación médica (opcional)" value={formData.observacion_medica} onChange={handleChange} rows={2} className="text-area" />
 
             <div className="input-row">
-              <div className="password-container">
+              <div className="password-container-register">
                 <input type={showPassword ? 'text' : 'password'} name="contraseña" placeholder="Contraseña" value={formData.contraseña} onChange={handleChange} />
                 <span className="material-icons toggle-password" onClick={() => setShowPassword(prev => !prev)}>
                   {showPassword ? 'visibility_off' : 'visibility'}
                 </span>
               </div>
-              <div className="password-container">
+              <div className="password-container-register">
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="confirmarContraseña"
