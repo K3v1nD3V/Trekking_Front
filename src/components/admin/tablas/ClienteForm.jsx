@@ -41,7 +41,8 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     } else {
       // Verificar existencia del documento
       const exists = await checkClienteExistence({ documento: formData.documento });
-      if (exists) {
+      // Si existe y NO es el mismo cliente que estamos editando
+      if (exists && (!initialData._id || formData.documento !== initialData.documento)) {
         newErrors.documento = 'El documento ya está registrado.';
       }
     }
@@ -64,7 +65,7 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     } else {
       // Verificar existencia del correo
       const exists = await checkClienteExistence({ correo: formData.correo });
-      if (exists) {
+      if (exists && (!initialData._id || formData.correo !== initialData.correo)) {
         newErrors.correo = 'El correo ya está registrado.';
       }
     }

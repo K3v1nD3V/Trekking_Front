@@ -56,7 +56,7 @@ const Ventas = () => {
       ...formData,
       id_cliente: formData.id_cliente, // Ya es un ID
       id_paquete: formData.id_paquete, // Ya es un ID
-      acompañantes: formData.acompañantes.map(acomp => acomp._id), // Solo los IDs de los acompañantes
+      acompañantes: formData.acompañantes, // Solo los IDs de los acompañantes
     };
 
     delete nuevaVenta.__v;

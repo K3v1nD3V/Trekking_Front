@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { createCliente, checkClienteExistence } from '../../../api/clientes'; 
+import React, { useState, useEffect } from 'react';
+import { createCliente, checkClienteExistence, getClientes } from '../../../api/clientes'; 
 
 const AcompananteForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -13,6 +13,22 @@ const AcompananteForm = ({ onSubmit }) => {
   });
 
   const [errors, setErrors] = useState({}); // Estado para almacenar los errores
+
+  const [clientes, setClientes] = useState([]);
+  const [search, setSearch] = useState('');
+  const [selectedClienteId, setSelectedClienteId] = useState('');
+
+  useEffect(() => {
+    const fetchClientes = async () => {
+      const data = await getClientes();
+      setClientes(data);
+    };
+    fetchClientes();
+  }, []);
+
+  const filteredClientes = clientes.filter(c =>
+    `${c.nombre} ${c.apellido} ${c.documento}`.toLowerCase().includes(search.toLowerCase())
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,77 +105,113 @@ const AcompananteForm = ({ onSubmit }) => {
     }
   };
 
+  const handleSelectSubmit = (e) => {
+    e.preventDefault();
+    if (selectedClienteId) {
+      const cliente = clientes.find(c => c._id === selectedClienteId);
+      if (cliente) {
+        onSubmit(cliente); // Esto enviará el cliente seleccionado como acompañante
+      }
+    }
+    // Si quieres permitir crear acompañantes manualmente, aquí iría esa lógica
+  };
+
   return (
-    <form className="acompanante-form" onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label>Documento</label>
-        <input
-          type="number"
-          name="documento"
-          value={formData.documento}
-          onChange={handleChange}
-        />
-        {errors.documento && <p className="form-error">{errors.documento}</p>}
-      </div>
-
-      <div className="form-group">
-        <label>Nombre</label>
+    <div>
+      <form onSubmit={handleSelectSubmit}>
+        <label>Buscar cliente existente:</label>
         <input
           type="text"
-          name="nombre"
-          value={formData.nombre}
-          onChange={handleChange}
+          placeholder="Nombre, apellido o documento"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
         />
-        {errors.nombre && <p className="form-error">{errors.nombre}</p>}
-      </div>
+        <select
+          value={selectedClienteId}
+          onChange={e => setSelectedClienteId(e.target.value)}
+        >
+          <option value="">Selecciona un cliente</option>
+          {filteredClientes.map(cliente => (
+            <option key={cliente._id} value={cliente._id}>
+              {cliente.nombre} {cliente.apellido} - {cliente.documento}
+            </option>
+          ))}
+        </select>
+        <button type="submit" disabled={!selectedClienteId}>
+          Agregar como acompañante
+        </button>
+      </form>
+      <form className="acompanante-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Documento</label>
+          <input
+            type="number"
+            name="documento"
+            value={formData.documento}
+            onChange={handleChange}
+          />
+          {errors.documento && <p className="form-error">{errors.documento}</p>}
+        </div>
 
-      <div className="form-group">
-        <label>Apellido</label>
-        <input
-          type="text"
-          name="apellido"
-          value={formData.apellido}
-          onChange={handleChange}
-        />
-        {errors.apellido && <p className="form-error">{errors.apellido}</p>}
-      </div>
+        <div className="form-group">
+          <label>Nombre</label>
+          <input
+            type="text"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+          />
+          {errors.nombre && <p className="form-error">{errors.nombre}</p>}
+        </div>
 
-      <div className="form-group">
-        <label>Correo</label>
-        <input
-          type="email"
-          name="correo"
-          value={formData.correo}
-          onChange={handleChange}
-        />
-        {errors.correo && <p className="form-error">{errors.correo}</p>}
-      </div>
+        <div className="form-group">
+          <label>Apellido</label>
+          <input
+            type="text"
+            name="apellido"
+            value={formData.apellido}
+            onChange={handleChange}
+          />
+          {errors.apellido && <p className="form-error">{errors.apellido}</p>}
+        </div>
 
-      <div className="form-group">
-        <label>Teléfono</label>
-        <input
-          type="number"
-          name="telefono"
-          value={formData.telefono}
-          onChange={handleChange}
-        />
-        {errors.telefono && <p className="form-error">{errors.telefono}</p>}
-      </div>
+        <div className="form-group">
+          <label>Correo</label>
+          <input
+            type="email"
+            name="correo"
+            value={formData.correo}
+            onChange={handleChange}
+          />
+          {errors.correo && <p className="form-error">{errors.correo}</p>}
+        </div>
 
-      <div className="form-group">
-        <label>Observación Médica</label>
-        <textarea
-          name="observacion_medica"
-          value={formData.observacion_medica}
-          onChange={handleChange}
-          rows="3"
-        />
-      </div>
+        <div className="form-group">
+          <label>Teléfono</label>
+          <input
+            type="number"
+            name="telefono"
+            value={formData.telefono}
+            onChange={handleChange}
+          />
+          {errors.telefono && <p className="form-error">{errors.telefono}</p>}
+        </div>
 
-      <button type="submit" className="form-submit-button">
-        Crear Acompañante
-      </button>
-    </form>
+        <div className="form-group">
+          <label>Observación Médica</label>
+          <textarea
+            name="observacion_medica"
+            value={formData.observacion_medica}
+            onChange={handleChange}
+            rows="3"
+          />
+        </div>
+
+        <button type="submit" className="form-submit-button">
+          Crear Acompañante
+        </button>
+      </form>
+    </div>
   );
 };
 

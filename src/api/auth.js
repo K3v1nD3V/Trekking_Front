@@ -35,8 +35,6 @@ export const isAuthenticated = () => {
 
 // Authentication operations
 export const login = async (email, password) => {
-  console.log("Login con:", email, password);
-
   const response = await api.post('/usuarios/login', {
     correo: email,
     contraseña: password

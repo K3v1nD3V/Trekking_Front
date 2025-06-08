@@ -72,12 +72,15 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await login(email.toLowerCase(), password);
+      const decodedToken = jwtDecode(response.token);
 
       const rol = response.usuario?.rol;
 
       if (rol === 'admin') {
         navigate('/admin');
       } else if (rol === 'cliente' || rol === 'usuario') {
+        // console.log('Usuario autenticado:', JSON.stringify(decodedToken.id));
+        localStorage.setItem('usuario', decodedToken.id);
         navigate('/cliente');
       } else{
         setError('Rol no reconocido');

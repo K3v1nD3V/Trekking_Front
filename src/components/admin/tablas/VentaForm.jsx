@@ -76,11 +76,11 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const hoyStr = new Date().toISOString().split('T')[0];
-    if (formData.fecha !== hoyStr) {
-      toast.error("Solo puedes registrar ventas con la fecha de hoy.");
-      return;
-    }
+    // const hoyStr = new Date().toISOString().split('T')[0];
+    // if (formData.fecha !== hoyStr) {
+    //   toast.error("Solo puedes registrar ventas con la fecha de hoy.");
+    //   return;
+    // }
 
     // Mostrar confirmación antes de enviar
     const result = await showConfirm(
@@ -104,6 +104,8 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
     };
 
     try {
+      console.log('Nueva venta:', nuevaVenta);
+      
       await onSubmit(nuevaVenta);  
       onClose?.();
     } catch (error) {
@@ -199,8 +201,9 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
           name="fecha"
           value={formData.fecha}
           onChange={handleChange}
-          />
-          {errors.fecha && <p className="form-error">{errors.fecha}</p>}
+          max={new Date().toISOString().split('T')[0]} // <-- Limita a hoy
+        />
+        {errors.fecha && <p className="form-error">{errors.fecha}</p>}
       </div>
 
       {/* Valor */}
@@ -218,22 +221,22 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
 
       {/* Lista de Acompañantes */}
       <div className="form-group">
-          <label>Acompañantes</label>
-          <ul className="acompañantes-list">
-            {acompañantesList.map((acompañante, index) => (
-              <li key={index} className="acompañante-item">
-                <span>{acompañante.nombre}</span> - <span>{acompañante.documento}</span>
-              </li>
-            ))}
-          </ul>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => setIsAcompananteFormVisible(true)}
-          >
-            Agregar Acompañante
-          </button>
-        </div>
+        <label>Acompañantes</label>
+        <ul className="acompañantes-list">
+          {acompañantesList.map((acompañante, index) => (
+            <li key={index} className="acompañante-item">
+              <span>{acompañante.nombre}</span> - <span>{acompañante.documento}</span>
+            </li>
+          ))}
+        </ul>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => setIsAcompananteFormVisible(v => !v)}
+        >
+          {isAcompananteFormVisible ? 'Cancelar' : 'Agregar Acompañante'}
+        </button>
+      </div>
       
       {/* Estado como switch slider */}
       <div className="form-group">
