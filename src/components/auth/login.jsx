@@ -72,7 +72,7 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await login(email.toLowerCase(), password);
-      const decodedToken = jwtDecode(response.token);
+      // const decodedToken = jwtDecode(response.token);
 
       const rol = response.usuario?.rol;
 
@@ -80,8 +80,8 @@ const Login = () => {
         navigate('/admin');
       } else if (rol === 'cliente' || rol === 'usuario') {
         // console.log('Usuario autenticado:', JSON.stringify(decodedToken.id));
-        console.log('Usuario autenticado:', decodedToken);
-        localStorage.setItem('usuario', decodedToken.id);
+        // console.log('Usuario autenticado:', response);
+        localStorage.setItem('usuario', response.usuario.correo);
         navigate('/cliente');
       } else{
         setError('Rol no reconocido');

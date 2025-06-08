@@ -280,3 +280,82 @@ input[type="text"]:focus, .search-input:focus {
     padding: 2rem;
     margin: 0;
 }
+/* Card resumen de compra */
+.compra-resumen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  cursor: pointer;
+}
+
+.compra-img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  background: #fafafa;
+}
+
+.compra-main-info {
+  flex: 1;
+}
+
+.compra-estado {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95em;
+  margin-top: 4px;
+}
+.compra-estado.activa {
+  background: #e0ffe0;
+  color: #2e7d32;
+}
+.compra-estado.inactiva {
+  background: #ffe0e0;
+  color: #c81e17;
+}
+
+.compra-expand-icon {
+  font-size: 28px;
+  color: #C81E17;
+  margin-left: 12px;
+  user-select: none;
+}
+/* clientePaquetes */
+.paquete-resumen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  cursor: pointer;
+}
+
+.paquete-img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  background: #fafafa;
+}
+
+.paquete-main-info {
+  flex: 1;
+}
+
+.paquete-expand-icon {
+  font-size: 28px;
+  color: #C81E17;
+  margin-left: 12px;
+  user-select: none;
+}
+
+.detalle-paquete {
+  margin-top: 1.2rem;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+}

@@ -87,9 +87,11 @@ const NavBar = () => {
           </a>
         </div>
         {location.pathname === '/' && renderLandingLinks()}
-        {renderAuthButtons()}
-        <div className="language-toggle" onClick={toggleLanguage} title={t('header.languaje')}>
-          🌐 <span className="lang-text">{language.toUpperCase()}</span>
+        <div className="navbar-actions">
+          {renderAuthButtons()}
+          <div className="language-toggle" onClick={toggleLanguage} title={t('header.languaje')}>
+            🌐 <span className="lang-text">{language.toUpperCase()}</span>
+          </div>
         </div>
       </nav>
     </header>
