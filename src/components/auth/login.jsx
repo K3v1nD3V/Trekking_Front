@@ -80,6 +80,7 @@ const Login = () => {
         navigate('/admin');
       } else if (rol === 'cliente' || rol === 'usuario') {
         // console.log('Usuario autenticado:', JSON.stringify(decodedToken.id));
+        console.log('Usuario autenticado:', decodedToken);
         localStorage.setItem('usuario', decodedToken.id);
         navigate('/cliente');
       } else{

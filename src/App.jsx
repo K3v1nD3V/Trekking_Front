@@ -25,7 +25,9 @@ import Ventas from './components/admin/tablas/ventas';
 import Tours from './components/admin/tablas/Tours';
 
 // 👤 Cliente
-import Cliente from './components/cliente/cliente';
+import Cliente from './layouts/cliente';
+import ClienteCompras from './components/cliente/ClienteCompras';
+import ClientePaquetes from './components/cliente/ClientePaquetes'; 
 // import MainCliente from './components/cliente/clienteMain'; // No usado aún, pero importado
 
 const App = () => {
@@ -78,7 +80,12 @@ const App = () => {
                 </RoleRoute>
             </AuthProvider>
           }
-        />
+        >
+          <Route index element={<ClienteCompras />} />
+          <Route  path="compras" element={<ClienteCompras />} />
+          <Route path="paquetes" element={<ClientePaquetes />} />
+          {/* Aquí puedes agregar más rutas para el cliente */}
+        </Route>
 
         {/* Ruta por defecto */}
         <Route path="*" element={<Landing />} />

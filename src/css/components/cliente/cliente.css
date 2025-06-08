@@ -15,24 +15,10 @@
     --shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* Fondo general con degradado suave */
-body, .cliente-layout {
-    background: linear-gradient(120deg, #f5ebe2 0%, #fff 100%);
-}
-
 /* Layout principal */
 .cliente-layout {
     display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: white;
-}
-
-/* Contenedor principal */
-.cliente-main-flex {
-    display: flex;
-    height: calc(100vh - 70px); /* Ajusta según la altura de tu navbar */
-    min-height: 0;
+    height: calc(100vh - 70px);
 }
 
 /* Sidebar igual que admin */
@@ -40,7 +26,6 @@ body, .cliente-layout {
     width: 260px;
     background: #fff;
     border-right: 1px solid #eee;
-    border-radius: 18px 0 0 18px;
     box-shadow: 0 4px 24px 0 rgba(200,30,23,0.07);
     padding: 2.5rem 1.5rem 2.5rem 2.5rem;
     display: flex;
@@ -93,13 +78,6 @@ body, .cliente-layout {
     align-items: center;
 }
 
-/* Títulos y tipografía */
-h1, h2, h3, .cliente-main-content .titulo {
-    color: #383D41;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-}
-
 /* Contenido principal */
 .cliente-main-content {
     flex: 1;
@@ -113,12 +91,6 @@ h1, h2, h3, .cliente-main-content .titulo {
     min-width: 0;
 }
 
-/* Placeholder */
-.placeholder {
-    color: #bbb;
-    font-size: 1.1rem;
-    margin-top: var(--space-lg);
-}
 
 /* Tabs */
 .cliente-tabs {
