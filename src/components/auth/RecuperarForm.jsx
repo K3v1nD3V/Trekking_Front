@@ -1,13 +1,14 @@
-// src/components/auth/RecuperarForm.jsx
 import React, { useState } from 'react';
 import { recuperarContrasena } from '../../api/auth';
-import './LoginForm.css'; // reutiliza estilos del login
+import './LoginForm.css';
+import { toast } from 'sonner';
 
 const RecuperarForm = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [mensaje, setMensaje] = useState('');
-  const [loading, setLoading] = useState(false);
+const [mensaje, setMensaje] = useState('');
+const [loading, setLoading] = useState(false);
+
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -39,14 +40,11 @@ const RecuperarForm = () => {
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="login-box">
-        <div className="login-image">
-          <img src="/src/assets/image/image_login_transparent.png" alt="Recuperar visual" />
-        </div>
-
-        <div className="login-form">
+    <div className="auth-wrapper">
+      <div className="auth-box">
+        <div className="auth-form">
           <h2>Recuperar Contraseña</h2>
+          <p className="input-description">Digita el correo registrado para recibir un enlace de recuperación.</p>
 
           <form onSubmit={handleSubmit} noValidate>
             <input
@@ -60,7 +58,7 @@ const RecuperarForm = () => {
             {mensaje && <p className="success-message">{mensaje}</p>}
 
             <button type="submit" disabled={loading}>
-              {loading ? 'Enviando...' : 'Enviar correo de recuperación'}
+              {loading ? 'Enviando...' : 'Enviar'}
             </button>
           </form>
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaHome, FaInfoCircle, FaSuitcase, FaEnvelope, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
+import {FaMapMarkedAlt, FaImages, FaHiking, FaUsers, FaSignInAlt, FaUserPlus} from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 
 import LogoTrekking from '../../../../public/LogoTrekking.png';
@@ -34,11 +34,10 @@ const NavBar = () => {
 
   const renderLandingLinks = () => (
     <ul className="navbar-links">
-      <li><a href="#paquetes" className="nav-link"><FaHome /> {t('header.packages')}</a></li>
-      <li><a href="#portfolio" className="nav-link"><FaSuitcase /> {t('header.portfolio')}</a></li>
-      <li><a href="#servicios" className="nav-link"><FaSuitcase /> {t('header.services')}</a></li>
-      <li><a href="#about" className="nav-link"><FaInfoCircle /> {t('header.about')}</a></li>
-      <li><a href="#contact" className="nav-link"><FaEnvelope /> {t('header.contact')}</a></li>
+      <li><a href="#paquetes" className="nav-link"><FaMapMarkedAlt /> {t('header.packages')}</a></li>
+      <li><a href="#portfolio" className="nav-link"><FaImages /> {t('header.portfolio')}</a></li>
+      <li><a href="#servicios" className="nav-link"><FaHiking /> {t('header.services')}</a></li>
+      <li><a href="#about" className="nav-link"><FaUsers /> {t('header.about')}</a></li>
     </ul>
   );
 
@@ -65,9 +64,6 @@ const NavBar = () => {
     if (user.rol === 'cliente') {
       return (
         <div className="navbar-auth">
-          <button className="btn btn-secondary" onClick={handleLogout}>
-            {t('header.logout')}
-          </button>
           <button className="btn btn-primary" onClick={() => navigate(location.pathname === '/' ? '/cliente' : '/')}>
             {location.pathname === '/' ? t('header.client') : t('header.home')}
           </button>

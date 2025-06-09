@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getVentas } from '../../api/ventas';
 
+
 const ClienteCompras = () => {
   const [ventasCliente, setVentasCliente] = useState([]);
   const [expanded, setExpanded] = useState(null);
@@ -11,13 +12,11 @@ const ClienteCompras = () => {
         const correoCliente = localStorage.getItem('usuario');
         const response = await getVentas();
         const ventas = response?.data || response || [];
-        console.log('Ventas del cliente:', ventas);
-        
-        // Filtra ventas por el id del cliente (id_cliente es objeto)
+
         const filtradas = ventas.filter(v => {
           if (!v.id_cliente) return false;
           if (typeof v.id_cliente === 'object') return v.id_cliente.correo === correoCliente;
-          return v.id_cliente.correo  === correoCliente;
+          return v.id_cliente.correo === correoCliente;
         });
         setVentasCliente(filtradas);
       } catch (error) {
@@ -29,46 +28,44 @@ const ClienteCompras = () => {
 
   if (!ventasCliente.length) {
     return (
-      <section>
-        <h2 className="detalle-title">Mis Compras</h2>
-        <div className="placeholder">No tienes compras registradas.</div>
+      <section className="cliente-compras">
+        <h2 className="cliente-compras__titulo">Mis Compras</h2>
+        <div className="cliente-compras__mensaje">No tienes compras registradas.</div>
       </section>
     );
   }
 
   return (
-    <section>
-      <h2 className="detalle-title">Mis Compras</h2>
-      <div className="paquete-items">
+    <section className="cliente-compras">
+      <h2 className="cliente-compras__titulo">Mis Compras</h2>
+      <div className="cliente-compras__lista">
         {ventasCliente.map((venta, idx) => (
           <div
             key={venta._id || idx}
-            className="compra-card paquete-item"
+            className={`cliente-compras__card ${expanded === idx ? 'cliente-compras__card--expandida' : ''}`}
             onClick={() => setExpanded(expanded === idx ? null : idx)}
           >
-            {/* Resumen de la compra */}
-            <div className="paquete-item-info compra-resumen">
+            <div className="cliente-compras__resumen">
               <img
                 src={venta.id_paquete?.multimedia?.[0] || 'https://via.placeholder.com/120x80?text=Paquete'}
                 alt={venta.id_paquete?.nombre || 'Paquete'}
-                className="compra-img"
+                className="cliente-compras__imagen"
               />
-              <div className="compra-main-info">
-                <h3 className="paquete-item-title">{venta.id_paquete?.nombre || 'Paquete'}</h3>
-                <p className="paquete-item-location"><b>Destino:</b> {venta.id_paquete?.destino || '---'}</p>
-                <p className="paquete-item-price"><b>Valor:</b> ${venta.valor?.toLocaleString('es-CO')}</p>
+              <div className="cliente-compras__info">
+                <h3 className="cliente-compras__paquete">{venta.id_paquete?.nombre || 'Paquete'}</h3>
+                <p><b>Destino:</b> {venta.id_paquete?.destino || '---'}</p>
+                <p><b>Valor:</b> ${venta.valor?.toLocaleString('es-CO')}</p>
                 <p><b>Fecha:</b> {venta.fecha ? new Date(venta.fecha).toLocaleDateString() : '---'}</p>
-                <span className={`compra-estado ${venta.estado ? 'activa' : 'inactiva'}`}>
+                <span className={`cliente-compras__estado ${venta.estado ? 'estado--activa' : 'estado--inactiva'}`}>
                   {venta.estado ? 'Activa' : 'Inactiva'}
                 </span>
               </div>
-              <span className="compra-expand-icon">
+              <span className="cliente-compras__icono">
                 {expanded === idx ? '▲' : '▼'}
               </span>
             </div>
-            {/* Detalle expandido */}
             {expanded === idx && (
-              <div className="detalle-compra">
+              <div className="cliente-compras__detalle">
                 <p><b>Cliente:</b> {venta.id_cliente?.nombre} {venta.id_cliente?.apellido}</p>
                 <p><b>Documento:</b> {venta.id_cliente?.documento}</p>
                 <p><b>Correo:</b> {venta.id_cliente?.correo}</p>

@@ -88,15 +88,16 @@ const Login = () => {
      }
      
     } catch (err) {
-      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
-        setError('Tiempo de espera agotado. Intenta de nuevo más tarde.');
-      } else if (err.response?.status === 401) {
-        setError('Credenciales incorrectas. Verifica tu correo y contraseña.');
-      } else {
-        setError('Ocurrió un error al iniciar sesión. Inténtalo nuevamente.');
+      setLoading(false); 
+      
+        if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+          setError('Tiempo de espera agotado. Intenta de nuevo más tarde.');
+        } else if (err.response?.status === 401) {
+          setError('Credenciales incorrectas. Verifica tu correo y contraseña.');
+        } else {
+          setError('Ocurrió un error al iniciar sesión. Inténtalo nuevamente.');
+        }
       }
-    }
-    
     };
 
   return (

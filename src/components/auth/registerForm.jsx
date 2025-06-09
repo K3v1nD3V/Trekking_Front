@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createCliente } from "../../api/clientes.js"; // Asegúrate de que esta ruta sea correcta
-import { createUsuario } from "../../api/usuarios.js"; // Asegúrate de que esta ruta sea correcta
+import { createCliente } from "../../api/clientes.js"; 
+import { createUsuario } from "../../api/usuarios.js"; 
 import { checkClienteExistence } from "../../api/clientes.js";
-import logoImagen from '../../../public/LogoTrekking.png'; // Asegúrate de que la ruta sea correcta
+import logoImagen from '../../../public/LogoTrekking.png'; 
+import { toast } from 'sonner';
+
 
 import './LoginForm.css';
 
@@ -107,7 +109,7 @@ const RegisterForm = () => {
       navigate('/login');
     } catch (err) {
       console.error('Error al registrar:', err);
-      setError('Error al registrar usuario. Intenta de nuevo.');
+      toast.error('Error al registrar usuario. Intenta de nuevo.');
     }
   };
 

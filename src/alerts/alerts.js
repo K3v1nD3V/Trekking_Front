@@ -56,7 +56,7 @@ export const showConfirm = (text) => {
     customClass: {
       ...baseConfig.customClass,
       popup: 'my-swal-popup-small',
-      title: '', // se omite el título
+      title: '',
     },
     buttonsStyling: false,
   });

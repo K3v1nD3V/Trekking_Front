@@ -4,15 +4,13 @@ import { AuthProvider } from './context/AuthContext';
 import RoleRoute from './components/RoleRoute';
 import PrivateRoute from './layouts/PrivateRoute';
 import { Toaster } from 'sonner';
-
 // 🔑 Auth
 import Login from './components/auth/login';
 import RegisterForm from './components/auth/registerForm';
 import RecuperarForm from './components/auth/RecuperarForm';
-
+import RestablecerContrasena from './components/auth/reestablecerContrasena';
 // 🏠 Landing
 import Landing from './layouts/landing';
-
 // 🛠️ Admin Panel
 import Admin from './layouts/admin';
 import Paquetes from './components/admin/tablas/paquetes';
@@ -22,7 +20,6 @@ import Usuarios from './components/admin/tablas/usuarios';
 import Clientes from './components/admin/tablas/clientes';
 import Ventas from './components/admin/tablas/ventas';
 import Tours from './components/admin/tablas/Tours';
-
 // 👤 Cliente
 import Cliente from './layouts/cliente';
 import ClienteCompras from './components/cliente/ClienteCompras';
@@ -42,6 +39,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/recuperar" element={<RecuperarForm />} />
+        <Route path="/recuperar/:token" element={<RestablecerContrasena />} />
+        
 
         {/* Rutas protegidas - Admin */}
         <Route
