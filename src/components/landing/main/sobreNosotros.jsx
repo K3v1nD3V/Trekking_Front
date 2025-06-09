@@ -4,6 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { FaWhatsapp } from 'react-icons/fa';
 import '../../../css/components/landing/sobreNosotros.css';
 
+// Importa las imágenes
+import img1 from '../../../assets/image/sobre_nosotros_2.jpg';
+import img2 from '../../../assets/image/sobre_nosotros_4.jpg';
+import img3 from '../../../assets/image/sobre_nosotros_5.jpg';
+import img4 from '../../../assets/image/sobre_nosotros_6.jpg';
+import img5 from '../../../assets/image/sobre_nosotros_3.jpg';
+
 const SobreNosotros = () => {
   const { t } = useTranslation();
   useEffect(() => {
@@ -15,17 +22,22 @@ const SobreNosotros = () => {
     document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
   }, []);
 
+  const images = [img1, img2, img3, img4, img5];
+
   return (
     <section className="sobre-nosotros-section" id="about">
       <div className="sobre-nosotros-container">
 
         <div className="sobre-nosotros-gallery" data-animate>
           <div className="gallery-grid">
-            <img src="/src/assets/image/sobre_nosotros_2.jpg" alt="Senderismo en bosque" className="gallery-img tall" />
-            <img src="/src/assets/image/sobre_nosotros_4.jpg" alt="Guía explicando" className="gallery-img" />
-            <img src="/src/assets/image/sobre_nosotros_5.jpg" alt="Caminantes felices" className="gallery-img" />
-            <img src="/src/assets/image/sobre_nosotros_6.jpg" alt="Naturaleza vibrante" className="gallery-img" />
-            <img src="/src/assets/image/sobre_nosotros_3.jpg" alt="Naturaleza vibrante" className="gallery-img" />
+            {images.map((src, idx) => (
+              <img
+                key={idx}
+                src={src}
+                alt={`sobre-nosotros-img-${idx}`}
+                className={`gallery-img${idx === 0 ? ' tall' : ''}`}
+              />
+            ))}
           </div>
         </div>
 
@@ -53,7 +65,6 @@ const SobreNosotros = () => {
         </div>
 
       </div>
-
     </section>
   );
 };
