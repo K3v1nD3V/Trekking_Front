@@ -19,9 +19,10 @@ const RestablecerContrasena = () => {
     const verificarToken = async () => {
       try {
         // No es necesario enviar nada, solo comprobar si el token decodifica
-        await axios.post(`${import.meta.env.VITE_API_URL}/auth/cambiar-contrasena`, {
+
+        axios.post(`${import.meta.env.VITE_API_URL}/usuarios/cambiar-contrasena`, {
           token,
-          nuevaContraseña: 'temporal' // solo para validación, no se guardará
+          nuevaContraseña: nuevaContrasena,
         });
 
         // Si no lanza error, asumimos que es válido (aunque no cambia la contraseña aún)
@@ -57,7 +58,7 @@ const RestablecerContrasena = () => {
 
     setCargando(true);
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/cambiar-contrasena`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/usuarios/cambiar-contrasena`, {
         token,
         nuevaContraseña: nuevaContrasena,
       });

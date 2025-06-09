@@ -57,7 +57,9 @@ export const showConfirm = (text) => {
       ...baseConfig.customClass,
       popup: 'my-swal-popup-small',
       title: '',
+      actions: 'my-swal-actions', 
     },
     buttonsStyling: false,
   });
 };
+

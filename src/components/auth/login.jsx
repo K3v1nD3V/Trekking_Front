@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
+import { toast } from 'sonner'; 
 
 import { login } from '../../api/auth';
 import { validateUsuario } from '../../api/usuarios';
 
 import './LoginForm.css';
-import logoImagen from '../../../public/LogoTrekking.png'; // Asegúrate de que la ruta sea correcta
+import logoImagen from '../../../public/LogoTrekking.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,29 +17,31 @@ const Login = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  
-  // Validación de usuario
 
+  const navigate = useNavigate();
+
+  // Validar token en URL (validación de usuario)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('t');
-    if (token) {
-      try {
-        const data = jwtDecode(token);
-        // Validar que tenga los campos requeridos
-        if (data && data.id && data.correo && data.contraseña) {
-          const res = validateUsuario(token);
-          if (res) {
-            alert('Usuario validado correctamente');
+    const validate = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('t');
+
+      if (token) {
+        try {
+          const data = jwtDecode(token);
+          if (data?.id && data?.correo && data?.contraseña) {
+            toast.success('Usuario validado correctamente');
+          } else {
+            console.warn('Token inválido: faltan campos requeridos');
           }
-        } else {
-          console.warn('Token inválido: faltan campos requeridos');
+        } catch (err) {
+          toast.error('Token inválido o expirado');
+          console.error('Error al validar token:', err);
         }
-      } catch (err) {
-        console.error('Token inválido:', err);
       }
-    }
+    };
+    
+    validate();
   }, []);
 
   const validateEmail = (email) => {
@@ -72,61 +75,55 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await login(email.toLowerCase(), password);
-      // const decodedToken = jwtDecode(response.token);
-
       const rol = response.usuario?.rol;
 
       if (rol === 'admin') {
         navigate('/admin');
       } else if (rol === 'cliente' || rol === 'usuario') {
-        // console.log('Usuario autenticado:', JSON.stringify(decodedToken.id));
-        // console.log('Usuario autenticado:', response);
         localStorage.setItem('usuario', response.usuario.correo);
         navigate('/cliente');
-      } else{
+      } else {
         setError('Rol no reconocido');
-     }
-     
-    } catch (err) {
-      setLoading(false); 
-      
-        if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
-          setError('Tiempo de espera agotado. Intenta de nuevo más tarde.');
-        } else if (err.response?.status === 401) {
-          setError('Credenciales incorrectas. Verifica tu correo y contraseña.');
-        } else {
-          setError('Ocurrió un error al iniciar sesión. Inténtalo nuevamente.');
-        }
       }
-    };
+    } catch (err) {
+      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+        setError('Tiempo de espera agotado. Intenta de nuevo más tarde.');
+      } else if (err.response?.status === 401) {
+        setError('Credenciales incorrectas. Verifica tu correo y contraseña.');
+      } else {
+        setError('Ocurrió un error al iniciar sesión. Inténtalo nuevamente.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="login-wrapper">
       <div className="login-box">
-      <div className="login-image">
-        <img
-          src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg"
-          alt="Login visual"
-          className="main-image"
-        />
-        <div className="black-overlay"></div>
-        <img
-          src={logoImagen} 
-          alt="Logo superpuesto"
-          className="overlay-image"
-        />
-      </div>
-
+        <div className="login-image">
+          <img
+            src="https://i.pinimg.com/736x/1a/07/57/1a0757283b67edc17f77b83fa62ca8fe.jpg"
+            alt="Login visual"
+            className="main-image"
+          />
+          <div className="black-overlay"></div>
+          <img
+            src={logoImagen}
+            alt="Logo superpuesto"
+            className="overlay-image"
+          />
+        </div>
 
         <div className="login-form">
           <h2>Iniciar sesión</h2>
 
           <form onSubmit={handleSubmit} noValidate>
-            <input 
-              type="text" 
-              placeholder="Correo electrónico" 
+            <input
+              type="text"
+              placeholder="Correo electrónico"
               value={email}
-              onChange={e => setEmail(e.target.value)} 
+              onChange={(e) => setEmail(e.target.value)}
               className={emailError ? 'input-error' : ''}
             />
             {emailError && <p className="field-error">{emailError}</p>}
@@ -136,11 +133,11 @@ const Login = () => {
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Contraseña"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <span
                 className="material-icons toggle-password"
-                onClick={() => setShowPassword(prev => !prev)}
+                onClick={() => setShowPassword((prev) => !prev)}
               >
                 {showPassword ? 'visibility_off' : 'visibility'}
               </span>
@@ -159,10 +156,9 @@ const Login = () => {
             <p>¿Olvidaste tu contraseña? <Link to="/recuperar">Recupérala aquí</Link></p>
           </div>
         </div>
-
       </div>
     </div>
   );
 };
 
-export default Login;   
+export default Login;

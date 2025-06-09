@@ -137,7 +137,7 @@ const AcompananteForm = ({ onSubmit }) => {
             </option>
           ))}
         </select>
-        <button type="submit" disabled={!selectedClienteId}>
+        <button className='button-acompanante' type="submit" disabled={!selectedClienteId}>
           Agregar como acompañante
         </button>
       </form>

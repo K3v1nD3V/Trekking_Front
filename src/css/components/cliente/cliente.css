@@ -119,6 +119,10 @@
     color: #444;
   }
 
+  .cliente-compras__detalle p{
+    margin-bottom: 10px;
+  }
+
 
   /* Cliente paquetes */
   /* Contenedor principal */
@@ -227,6 +231,10 @@
     color: #333;
   }
   
+  .package-details p{
+    margin-bottom: 10px;
+  }
+
   /* Lista de servicios */
   .services-list {
     margin-top: 0.5rem;

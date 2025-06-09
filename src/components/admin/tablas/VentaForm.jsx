@@ -219,24 +219,33 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
          {errors.valor && <p className="form-error">{errors.valor}</p>}
       </div>
 
-      {/* Lista de Acompañantes */}
+      {/* Switch para agregar acompañante */}
       <div className="form-group">
-        <label>Acompañantes</label>
-        <ul className="acompañantes-list">
-          {acompañantesList.map((acompañante, index) => (
-            <li key={index} className="acompañante-item">
-              <span>{acompañante.nombre}</span> - <span>{acompañante.documento}</span>
-            </li>
-          ))}
-        </ul>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() => setIsAcompananteFormVisible(v => !v)}
-        >
-          {isAcompananteFormVisible ? 'Cancelar' : 'Agregar Acompañante'}
-        </button>
+        <label>Agregar acompañante</label>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={isAcompananteFormVisible}
+            onChange={(e) => setIsAcompananteFormVisible(e.target.checked)}
+          />
+          <span className="slider round"></span>
+        </label>
       </div>
+
+      {/* Lista de Acompañantes */}
+      {acompañantesList.length > 0 && (
+        <div className="form-group">
+          <label>Acompañantes</label>
+          <ul className="acompañantes-list">
+            {acompañantesList.map((acompañante, index) => (
+              <li key={index} className="acompañante-item">
+                <span>{acompañante.nombre}</span> - <span>{acompañante.documento}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       
       {/* Estado como switch slider */}
       <div className="form-group">
