@@ -3,16 +3,17 @@ import { useTranslation } from 'react-i18next';
 import '../../../css/components/landing/hero.css';
 import { FaWhatsapp } from 'react-icons/fa';
 
+// Importa las imágenes
+import img1 from '../../../assets/image/sobre_nosotros_2.jpg';
+import img2 from '../../../assets/image/sobre_nosotros_4.jpg';
+import img3 from '../../../assets/image/sobre_nosotros_5.jpg';
+import img4 from '../../../assets/image/sobre_nosotros_6.jpg';
+import img5 from '../../../assets/image/sobre_nosotros_3.jpg';
+
 const Hero = () => {
     const { t } = useTranslation();
     
-    const images = [
-        '/src/assets/image/sobre_nosotros_2.jpg',
-        '/src/assets/image/sobre_nosotros_4.jpg',
-        '/src/assets/image/sobre_nosotros_5.jpg',
-        '/src/assets/image/sobre_nosotros_6.jpg',
-        '/src/assets/image/sobre_nosotros_3.jpg',
-    ];
+    const images = [img1, img2, img3, img4, img5];
 
     return (
         <section className="hero">
