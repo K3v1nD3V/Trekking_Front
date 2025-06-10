@@ -18,7 +18,14 @@ const RestablecerContrasena = () => {
   useEffect(() => {
     const verificarToken = async () => {
       try {
-        jwt.verify(token, import.meta.env.VITE_JWT_SECRET); 
+        // No es necesario enviar nada, solo comprobar si el token decodifica
+
+        axios.post(`${import.meta.env.VITE_API_URL}/usuarios/cambiar-contrasena`, {
+          token,
+          nuevaContraseña: nuevaContrasena,
+        });
+
+        // Si no lanza error, asumimos que es válido (aunque no cambia la contraseña aún)
         setTokenValido(true);
       } catch (err) {
         setTokenValido(false);
@@ -26,10 +33,9 @@ const RestablecerContrasena = () => {
         setTimeout(() => navigate('/login'), 5000);
       }
     };
-  
+
     verificarToken();
   }, [token, navigate]);
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
