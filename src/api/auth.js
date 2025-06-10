@@ -7,7 +7,6 @@ const AUTH_TOKEN_KEY = "Trekking";
 // Token management
 export const setAuthToken = (token) => {
   localStorage.setItem(AUTH_TOKEN_KEY, token);
-  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
 
 export const getAuthToken = () => {
@@ -28,24 +27,24 @@ export const getAuthToken = () => {
 
 export const removeAuthToken = () => {
   localStorage.removeItem(AUTH_TOKEN_KEY);
-  delete api.defaults.headers.common['Authorization'];
 };
 
 export const isAuthenticated = () => {
   return !!getAuthToken();
 };
 
+// Authentication operations
 export const login = async (email, password) => {
   const response = await api.post('/usuarios/login', {
     correo: email,
     contraseña: password
   });
-
-  const token = response.data.token;
-  setAuthToken(token);
-
-  return response.data;
+  console.log("Login response:", response);
+  
+  setAuthToken(response.token); 
+  return response;
 };
+
 
 export const recuperarContrasena = (correo) => {
   return api.post('/usuarios/recuperar', { correo });
