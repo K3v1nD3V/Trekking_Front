@@ -42,7 +42,13 @@ const RegisterForm = () => {
     const newFieldErrors = {};
     const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const telefonoRegex = /^\d{7,15}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
 
+    if (!formData.contraseña) {
+      newFieldErrors.contraseña = 'La contraseña es requerida';
+    } else if (!passwordRegex.test(formData.contraseña)) {
+      newFieldErrors.contraseña = 'Debe tener al menos 6 caracteres, una letra mayúscula y una letra minúscula';
+    }
     if (!formData.nombre) newFieldErrors.nombre = 'El nombre es requerido';
     if (!formData.apellido) newFieldErrors.apellido = 'El apellido es requerido';
     if (!formData.documento) newFieldErrors.documento = 'El documento es requerido';

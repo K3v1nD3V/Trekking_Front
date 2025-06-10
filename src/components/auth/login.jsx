@@ -90,7 +90,12 @@ const Login = () => {
       if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
         setError('Tiempo de espera agotado. Intenta de nuevo más tarde.');
       } else if (err.response?.status === 401) {
-        setError('Credenciales incorrectas. Verifica tu correo y contraseña.');
+        const msg = err.response?.data?.msg?.toLowerCase();
+        if (msg?.includes('no verificada') || msg?.includes('no verificado')) {
+          setError('Tu correo no ha sido verificado. Revisa tu bandeja de entrada.');
+        } else {
+          setError('Credenciales incorrectas. Verifica tu correo y contraseña.');
+        }
       } else {
         setError('Ocurrió un error al iniciar sesión. Inténtalo nuevamente.');
       }
