@@ -25,24 +25,25 @@ const Login = () => {
     const validate = async () => {
       const params = new URLSearchParams(window.location.search);
       const token = params.get('t');
-
+  
       if (token) {
         try {
-          const data = jwtDecode(token);
-          if (data?.id && data?.correo && data?.contraseña) {
-            toast.success('Usuario validado correctamente');
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/verificar/${token}`);
+          const data = await res.json();
+  
+          if (res.ok) {
+            toast.success(data.msg || 'Usuario verificado correctamente');
           } else {
-            console.warn('Token inválido: faltan campos requeridos');
+            toast.error(data.msg || 'Error al verificar cuenta');
           }
         } catch (err) {
-          toast.error('Token inválido o expirado');
-          console.error('Error al validar token:', err);
+          toast.error('Error al verificar cuenta');
         }
       }
     };
-    
     validate();
   }, []);
+  
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

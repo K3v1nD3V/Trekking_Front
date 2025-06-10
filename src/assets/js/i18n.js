@@ -65,7 +65,7 @@ const resources = {
             login: "Ingresar",
             register: "Registrarse",
             admin: "Ir a Administración",
-            client: "Ir a Cliente",
+            client: "Mi sección",
             logout: "Cerrar Sesión",
             languaje: "English"
         },

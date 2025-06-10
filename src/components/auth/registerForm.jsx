@@ -106,6 +106,9 @@ const RegisterForm = () => {
     try {
       await createUsuario(nuevoUsuario);
       await createCliente(clienteData);
+      toast.success('Se envió correo de verificación para acceder', {
+        duration: 8000, 
+      });
       navigate('/login');
     } catch (err) {
       console.error('Error al registrar:', err);
