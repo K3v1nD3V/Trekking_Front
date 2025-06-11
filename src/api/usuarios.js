@@ -2,7 +2,7 @@ import api from './base';
 
 export const getUsuarios = async () => {
   try {
-    const response = await api.get('/usuarios', { requiresAuth: true });
+    const response = await api.get('/usuarios');
     return response;
   } catch (error) {
     console.error('Error fetching usuarios:', error);
@@ -22,8 +22,8 @@ export const getUsuarioById = async (id) => {
 
 export const createUsuario = async (usuarioData) => {
   try {
-    console.log(usuarioData);
-    const response = await api.post('/usuarios', usuarioData, { requiresAuth: true });
+  console.log('Creando usuario con datos:', usuarioData);
+    const response = await api.post('/usuarios', usuarioData);
     console.log('usuario: ', response);
     return response;
   } catch (error) {

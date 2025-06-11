@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createCliente } from "../../api/clientes.js"; 
-import { createUsuario } from "../../api/usuarios.js"; 
-import { checkClienteExistence } from "../../api/clientes.js";
+import { createCliente, checkClienteExistence } from "../../api/clientes.js"; 
+import { createUsuario, getUsuarios } from "../../api/usuarios.js"; 
 import logoImagen from '../../../public/LogoTrekking.png'; 
 import { toast } from 'sonner';
-
 
 import './LoginForm.css';
 
@@ -41,7 +39,6 @@ const RegisterForm = () => {
     e.preventDefault();
     const newFieldErrors = {};
     const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const telefonoRegex = /^\d{7,15}$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
 
     if (!formData.contraseña) {
@@ -49,18 +46,31 @@ const RegisterForm = () => {
     } else if (!passwordRegex.test(formData.contraseña)) {
       newFieldErrors.contraseña = 'Debe tener al menos 6 caracteres, una letra mayúscula y una letra minúscula';
     }
-    if (!formData.nombre) newFieldErrors.nombre = 'El nombre es requerido';
-    if (!formData.apellido) newFieldErrors.apellido = 'El apellido es requerido';
-    if (!formData.documento) newFieldErrors.documento = 'El documento es requerido';
+
+    if (!formData.nombre) {
+      newFieldErrors.nombre = 'El nombre es requerido';
+    } else if (formData.nombre.length < 3) {
+      newFieldErrors.nombre = 'El nombre debe tener al menos 3 caracteres';
+    }
+
+    if (!formData.apellido) {
+      newFieldErrors.apellido = 'El apellido es requerido';
+    } else if (formData.apellido.length < 2) {
+      newFieldErrors.apellido = 'El apellido debe tener al menos 2 caracteres';
+    }
+
+    if (!formData.documento) {
+      newFieldErrors.documento = 'El documento es requerido';
+    } else if (formData.documento.length < 8 || formData.documento.length > 12) {
+      newFieldErrors.documento = 'El documento debe tener entre 8 y 12 caracteres';
+    } else if (!/^\d+$/.test(formData.documento)) {
+      newFieldErrors.documento = 'El documento debe contener solo números';
+    }
 
     if (!formData.correo) {
       newFieldErrors.correo = 'El correo es requerido';
     } else if (!correoRegex.test(formData.correo)) {
       newFieldErrors.correo = 'El correo no tiene un formato válido';
-    }
-
-    if (!formData.contraseña) {
-      newFieldErrors.contraseña = 'La contraseña es requerida';
     }
 
     if (formData.contraseña !== formData.confirmarContraseña) {
@@ -69,10 +79,11 @@ const RegisterForm = () => {
 
     if (!formData.telefono) {
       newFieldErrors.telefono = 'El teléfono es requerido';
-    } else if (!telefonoRegex.test(formData.telefono)) {
-      newFieldErrors.telefono = 'Debe tener entre 7 y 15 dígitos numéricos';
+    } else if (!/^\d+$/.test(formData.telefono)) {
+      newFieldErrors.telefono = 'El teléfono debe contener solo números';
     }
 
+    // Validación de documento único
     if (!newFieldErrors.documento) {
       const docExists = await checkClienteExistence({ documento: formData.documento });
       if (docExists) {
@@ -80,8 +91,13 @@ const RegisterForm = () => {
       }
     }
 
+    // Validación de correo único en usuarios
     if (!newFieldErrors.correo) {
-      const correoExists = await checkClienteExistence({ correo: formData.correo });
+      const usuariosRes = await getUsuarios();
+      console.log('Usuarios obtenidos:', usuariosRes);
+      
+      const usuarios = usuariosRes?.data || usuariosRes || [];
+      const correoExists = usuarios.some(u => u.correo.toLowerCase() === formData.correo.toLowerCase());
       if (correoExists) {
         newFieldErrors.correo = 'El correo ya está registrado';
       }
@@ -92,36 +108,36 @@ const RegisterForm = () => {
       return;
     }
 
+    // 1. Crear usuario
     const nuevoUsuario = {
-      nombre: formData.nombre,
-      correo: formData.correo.toLowerCase(),
-      contraseña: formData.contraseña,
-      rol: '68350ff72c7fc19be2ddaab3'
-    };
-
-    const clienteData = {
-      documento: formData.documento,
       nombre: formData.nombre,
       apellido: formData.apellido,
       correo: formData.correo.toLowerCase(),
-      telefono: formData.telefono,
-      observacion_medica: formData.observacion_medica || '',
-      estado: true
+      contraseña: formData.contraseña,
+      rol: '68350ff72c7fc19be2ddaab3' // ID del rol cliente
     };
 
     try {
-      await createUsuario(nuevoUsuario);
+      const usuarioRes = await createUsuario(nuevoUsuario);
+    
+      const usuarioId = usuarioRes?.data?._id || usuarioRes?._id || usuarioRes?.usuario?._id;
+
+      const clienteData = {
+        documento: formData.documento,
+        telefono: formData.telefono,
+        observacion_medica: formData.observacion_medica || '',
+        estado: true,
+        id_usuario: usuarioId
+      };
+
       await createCliente(clienteData);
-      toast.success('Se envió correo de verificación para acceder', {
-        duration: 8000, 
-      });
+      toast.success('Se envió correo de verificación para acceder', { duration: 8000 });
       navigate('/login');
     } catch (err) {
       console.error('Error al registrar:', err);
       toast.error('Error al registrar usuario. Intenta de nuevo.');
     }
   };
-
 
   return (
     <div className="login-wrapper">
@@ -162,24 +178,23 @@ const RegisterForm = () => {
                 </span>
               </div>
               <div className="password-container-register">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="confirmarContraseña"
-                placeholder="Confirmar contraseña"
-                value={formData.confirmarContraseña}
-                onChange={handleChange}
-              />
-              {formData.confirmarContraseña && (
-                <span
-                  className={`material-icons password-check-icon ${
-                    formData.confirmarContraseña === formData.contraseña ? 'valid' : 'invalid'
-                  }`}
-                >
-                  {formData.confirmarContraseña === formData.contraseña ? 'check_circle' : 'cancel'}
-                </span>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="confirmarContraseña"
+                  placeholder="Confirmar contraseña"
+                  value={formData.confirmarContraseña}
+                  onChange={handleChange}
+                />
+                {formData.confirmarContraseña && (
+                  <span
+                    className={`material-icons password-check-icon ${
+                      formData.confirmarContraseña === formData.contraseña ? 'valid' : 'invalid'
+                    }`}
+                  >
+                    {formData.confirmarContraseña === formData.contraseña ? 'check_circle' : 'cancel'}
+                  </span>
                 )}
               </div>
-
             </div>
             <div className="field-error-row">
               <span>{fieldErrors.contraseña}</span>
@@ -193,7 +208,6 @@ const RegisterForm = () => {
             <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
           </div>
         </div>
-
 
         <div className="login-image">
           <img 
