@@ -1,37 +1,71 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createCliente, updateCliente, checkClienteExistence } from '../../../api/clientes';
+import { getUsuarios, updateUsuario } from '../../../api/usuarios';
 import '../../../css/components/admin/ClienteForm.css';
-import { showConfirm} from '../../../alerts/alerts';
+import { showConfirm } from '../../../alerts/alerts';
 import { toast } from 'sonner';
 
-
 const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = useState({
     documento: initialData.documento || '',
-    nombre: initialData.nombre || '',
-    apellido: initialData.apellido || '',
-    correo: initialData.correo || '',
     telefono: initialData.telefono || '',
     observacion_medica: initialData.observacion_medica || '',
     estado: initialData.estado ?? true,
+    id_usuario: initialData.id_usuario?._id || initialData.id_usuario || '',
   });
 
-  const [errors, setErrors] = useState({}); // Estado para almacenar los errores
+  const [usuarioData, setUsuarioData] = useState({
+    nombre: initialData.id_usuario?.nombre || '',
+    apellido: initialData.id_usuario?.apellido || '',
+    correo: initialData.id_usuario?.correo || '',
+  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const [usuarios, setUsuarios] = useState([]);
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const fetchUsuarios = async () => {
+      try {
+        const data = await getUsuarios();
+        setUsuarios(data?.data || data || []);
+      } catch (err) {
+        console.log('Error al cargar usuarios:', err);
+        toast.error('Error al cargar usuarios');
+      }
+    };
+    fetchUsuarios();
+  }, []);
+
+  // Cuando se selecciona otro usuario, actualiza los campos de usuarioData
+  useEffect(() => {
+    if (formData.id_usuario && usuarios.length) {
+      const usuario = usuarios.find(u => u._id === formData.id_usuario);
+      setUsuarioData({
+        nombre: usuario?.nombre || '',
+        apellido: usuario?.apellido || '',
+        correo: usuario?.correo || '',
+      });
+    }
+  }, [formData.id_usuario, usuarios]);
+
+  const handleClienteChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setFormData(prev => ({ ...prev, [name]: checked }));
+  const handleUsuarioChange = (e) => {
+    const { name, value } = e.target;
+    setUsuarioData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const validate = async () => {
     const newErrors = {};
-
-    // Validación de documento
     if (!formData.documento) {
       newErrors.documento = 'El documento es requerido.';
     } else if (formData.documento.length < 8 || formData.documento.length > 12) {
@@ -39,55 +73,34 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     } else if (!/^\d+$/.test(formData.documento)) {
       newErrors.documento = 'El documento debe contener solo números.';
     } else {
-      // Verificar existencia del documento
       const exists = await checkClienteExistence({ documento: formData.documento });
-      // Si existe y NO es el mismo cliente que estamos editando
+      
       if (exists && (!initialData._id || formData.documento !== initialData.documento)) {
         newErrors.documento = 'El documento ya está registrado.';
       }
     }
-
-    // Validación de nombre
-    if (!formData.nombre) {
-      newErrors.nombre = 'El nombre es requerido.';
-    }
-
-    // Validación de apellido
-    if (!formData.apellido) {
-      newErrors.apellido = 'El apellido es requerido.';
-    }
-
-    // Validación de correo
-    if (!formData.correo) {
-      newErrors.correo = 'El correo es requerido.';
-    } else if (!/\S+@\S+\.\S+/.test(formData.correo)) {
-      newErrors.correo = 'El correo debe tener un formato válido.';
-    } else {
-      // Verificar existencia del correo
-      const exists = await checkClienteExistence({ correo: formData.correo });
-      if (exists && (!initialData._id || formData.correo !== initialData.correo)) {
-        newErrors.correo = 'El correo ya está registrado.';
-      }
-    }
-
-    // Validación de teléfono
     if (!formData.telefono) {
       newErrors.telefono = 'El teléfono es requerido.';
     } else if (!/^\d+$/.test(formData.telefono)) {
       newErrors.telefono = 'El teléfono debe contener solo números.';
     }
-
+    if (!formData.id_usuario) {
+      newErrors.id_usuario = 'Debe seleccionar un usuario asociado.';
+    }
+    if (!usuarioData.nombre) newErrors.nombre = 'El nombre es requerido.';
+    if (!usuarioData.apellido) newErrors.apellido = 'El apellido es requerido.';
+    if (!usuarioData.correo) newErrors.correo = 'El correo es requerido.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
+    console.log('Submitting form with data:', formData);
+    
     e.preventDefault();
-
-    if (!(await validate())) {
-      return;
-    }
-
+    if (!(await validate())) return;
+    console.log('Form data is valid:', formData);
+    
     const confirmResult = await showConfirm(
       initialData._id ? '¿Confirmas actualizar este cliente?' : '¿Confirmas crear este cliente?',
       'Confirmación'
@@ -95,10 +108,22 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     if (!confirmResult.isConfirmed) return;
 
     try {
-      if (initialData && initialData._id) {
+      // Si se está editando, primero actualiza el usuario si cambió algún campo
+      if (initialData._id) {
+        // Solo actualiza usuario si cambió algún campo
+        const usuarioOriginal = initialData.id_usuario || {};
+        const usuarioModificado =
+          usuarioOriginal.nombre !== usuarioData.nombre ||
+          usuarioOriginal.apellido !== usuarioData.apellido ||
+          usuarioOriginal.correo !== usuarioData.correo;
+
+        if (usuarioModificado) {
+          await updateUsuario(formData.id_usuario, usuarioData);
+        }
         await updateCliente(initialData._id, formData);
         toast.success('Cliente actualizado exitosamente!');
       } else {
+        // Al crear, solo crea el cliente (el usuario ya debe existir)
         await createCliente(formData);
         toast.success('Cliente creado exitosamente!');
       }
@@ -106,12 +131,10 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
         onSubmit();
         onClose();
       }, 900);
-
     } catch (err) {
-      toast.error('Error al guardar el cliente:', err);
+      console.error('Error al guardar el cliente:', err);
       toast.error('Error al guardar el cliente. Verifica los datos o intenta más tarde.');
     }
-    
   };
 
   return (
@@ -119,68 +142,83 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
       <div className="form-group">
         <label>Documento</label>
         <input
-          type="number"
+          type="text"
           name="documento"
           value={formData.documento}
-          onChange={handleChange}
+          onChange={handleClienteChange}
         />
         {errors.documento && <p className="form-error">{errors.documento}</p>}
       </div>
-
-      <div className="form-group">
-        <label>Nombre</label>
-        <input
-          type="text"
-          name="nombre"
-          value={formData.nombre}
-          onChange={handleChange}
-        />
-        {errors.nombre && <p className="form-error">{errors.nombre}</p>}
-      </div>
-
-      <div className="form-group">
-        <label>Apellido</label>
-        <input
-          type="text"
-          name="apellido"
-          value={formData.apellido}
-          onChange={handleChange}
-        />
-        {errors.apellido && <p className="form-error">{errors.apellido}</p>}
-      </div>
-
-      <div className="form-group">
-        <label>Correo</label>
-        <input
-          type="email"
-          name="correo"
-          value={formData.correo}
-          onChange={handleChange}
-        />
-        {errors.correo && <p className="form-error">{errors.correo}</p>}
-      </div>
-
       <div className="form-group">
         <label>Teléfono</label>
         <input
-          type="number"
+          type="text"
           name="telefono"
           value={formData.telefono}
-          onChange={handleChange}
+          onChange={handleClienteChange}
         />
         {errors.telefono && <p className="form-error">{errors.telefono}</p>}
       </div>
-
       <div className="form-group">
         <label>Observación Médica</label>
         <textarea
           name="observacion_medica"
           value={formData.observacion_medica}
-          onChange={handleChange}
+          onChange={handleClienteChange}
           rows="3"
         />
       </div>
-
+      <div className="form-group">
+        <label>Usuario Asociado</label>
+        <select
+          name="id_usuario"
+          value={formData.id_usuario}
+          onChange={handleClienteChange}
+          disabled={!!initialData._id} // No permitir cambiar usuario al editar
+        >
+          <option value="">Seleccione un usuario</option>
+          {usuarios.map(usuario => (
+            <option key={usuario._id} value={usuario._id}>
+              {usuario.nombre} {usuario.apellido} - {usuario.correo}
+            </option>
+          ))}
+        </select>
+        {errors.id_usuario && <p className="form-error">{errors.id_usuario}</p>}
+      </div>
+      {/* Campos de usuario */}
+      <div className="form-group">
+        <label>Nombre</label>
+        <input
+          type="text"
+          name="nombre"
+          value={usuarioData.nombre}
+          onChange={handleUsuarioChange}
+          disabled={!formData.id_usuario}
+        />
+        {errors.nombre && <p className="form-error">{errors.nombre}</p>}
+      </div>
+      <div className="form-group">
+        <label>Apellido</label>
+        <input
+          type="text"
+          name="apellido"
+          value={usuarioData.apellido}
+          onChange={handleUsuarioChange}
+          disabled={!formData.id_usuario}
+        />
+        {errors.apellido && <p className="form-error">{errors.apellido}</p>}
+      </div>
+      <div className="form-group">
+        <label>Correo</label>
+        <input
+          type="email"
+          name="correo"
+          value={usuarioData.correo}
+          onChange={handleUsuarioChange}
+          disabled={!formData.id_usuario}
+        />
+        {errors.correo && <p className="form-error">{errors.correo}</p>}
+      </div>
       <div className="form-group">
         <label>Estado</label>
         <label className="switch">
@@ -188,12 +226,11 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
             type="checkbox"
             name="estado"
             checked={formData.estado}
-            onChange={handleCheckboxChange}
+            onChange={handleClienteChange}
           />
           <span className="slider round"></span>
         </label>
       </div>
-
       <button type="submit" className="form-submit-button">
         {initialData._id ? 'Actualizar' : 'Registrar'}
       </button>

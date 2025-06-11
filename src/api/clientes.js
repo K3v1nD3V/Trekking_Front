@@ -56,6 +56,8 @@ export const deleteCliente = async (id) => {
 export const checkClienteExistence = async (criteria) => {
   try {
     const response = await api.post('/clientes/check-existence', criteria);    
+    console.log('Respuesta de verificación de existencia:', response);
+    
     return response.exists; // Devuelve true si existe, false si no
   } catch (error) {
     console.error('Error verificando existencia de cliente:', error);

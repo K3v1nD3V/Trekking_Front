@@ -27,10 +27,12 @@ const Clientes = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        
         const fetchClientes = async () => {
             try {
                 const data = await getClientes();
                 setClientes(data);
+                console.log("Clientes cargados:", data);
             } catch (err) {
                 setError(err.message || 'Error al cargar clientes');
             } finally {
@@ -117,20 +119,20 @@ const Clientes = () => {
         },
         {
             name: 'Nombre',
-            selector: row => row.nombre,
+            selector: row => row.id_usuario.nombre,
             sortable: true,
-            cell: row => row.nombre,
+            cell: row => row.id_usuario.nombre,
             width: '150px' 
         },
         {
             name: 'Apellido',
-            selector: row => row.apellido,
+            selector: row => row.id_usuario.apellido,
             wrap: true,
             width: '150px'
         },
         {
             name: 'Correo',
-            selector: row => row.correo,
+            selector: row => row.id_usuario.correo,
             wrap: true,
             width: '270px' 
         },
@@ -256,9 +258,9 @@ const Clientes = () => {
                     {detalleCliente && (
                     <div className="info-general-cliente">
                         <p><span className="label-cliente">Documento:</span> {detalleCliente.documento}</p>
-                        <p><span className="label-cliente">Nombre:</span> {detalleCliente.nombre}</p>
-                        <p><span className="label-cliente">Apellido:</span> {detalleCliente.apellido}</p>
-                        <p><span className="label-cliente">Correo:</span> {detalleCliente.correo}</p>
+                        <p><span className="label-cliente">Nombre:</span> {detalleCliente.id_usuario.nombre}</p>
+                        <p><span className="label-cliente">Apellido:</span> {detalleCliente.id_usuario.apellido}</p>
+                        <p><span className="label-cliente">Correo:</span> {detalleCliente.id_usuario.correo}</p>
                         <p><span className="label-cliente">Teléfono:</span> {detalleCliente.telefono}</p>
 
                         {detalleCliente.observacion_medica && (

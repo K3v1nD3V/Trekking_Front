@@ -3,22 +3,18 @@ import { getAuthToken, removeAuthToken } from './auth';
 
 // Configuración base de la API
 const api = axios.create({
-  baseURL: 'https://trekking-back.onrender.com/api',
+  baseURL: 'http://localhost:3000/api/',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
   }
 });
-
-// Interceptor para autenticación
-// api.interceptors.request.use(config => {
-//   const token = getAuthToken();
-
-//   if (config.requiresAuth && token) {
-//     config.headers.Authorization = `Bearer ${token}`;
+// const api = axios.create({
+//   baseURL: 'https://trekking-back.onrender.com/api',
+//   timeout: 10000,
+//   headers: {
+//     'Content-Type': 'application/json'
 //   }
-
-//   return config;
 // });
 
 api.interceptors.request.use(config => {

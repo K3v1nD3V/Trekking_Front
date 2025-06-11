@@ -25,6 +25,9 @@ const Usuarios = () => {
         const fetchUsuariosAndRoles = async () => {
             try {
                 const [usuariosData, rolesData] = await Promise.all([getUsuarios(), getRoles()]);
+                console.log("Usuarios cargados:", usuariosData);
+                console.log("Roles cargados:", rolesData);
+                
                 setUsuarios(usuariosData);
                 setRoles(rolesData);
             } catch (err) {
@@ -82,6 +85,12 @@ const Usuarios = () => {
             selector: row => row.nombre,
             sortable: true,
             cell: row => <div style={{ fontWeight: 600 }}>{row.nombre}</div>,
+            width: '250px'
+        },
+        {
+            name: 'Apellido',
+            selector: row => row.apellido,
+            sortable: true,
             width: '250px'
         },
         {

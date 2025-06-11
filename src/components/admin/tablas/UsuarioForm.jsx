@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'; 
 import { createUsuario, updateUsuario, getUsuarios } from '../../../api/usuarios'; // asumo getUsuarios está disponible
-import { showSuccess, showConfirm } from '../../../alerts/alerts';
+import { showConfirm } from '../../../alerts/alerts';
 import '../../../css/components/admin/ClienteForm.css';
 import { toast } from 'sonner';
 
@@ -8,9 +8,10 @@ import { toast } from 'sonner';
 const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
   const [formData, setFormData] = useState({
     nombre: initialData.nombre || '',
+    apellido: initialData.apellido || '',
     correo: initialData.correo || '',
     rol: initialData.rol || '',
-    contraseña: '' // Siempre inicia vacío
+    contraseña: '' // Solo al crear
   });
 
   const [correoExisteError, setCorreoExisteError] = useState('');
@@ -96,10 +97,17 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
           name="nombre"
           value={formData.nombre}
           onChange={handleChange}
-          required
         />
       </div>
-
+      <div className="form-group">
+        <label>Apellido</label>
+        <input
+          type="text"
+          name="apellido"
+          value={formData.apellido}
+          onChange={handleChange}
+        />
+      </div>
       <div className="form-group">
         <label>Correo</label>
         <input
@@ -108,7 +116,6 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
           name="correo"
           value={formData.correo}
           onChange={handleChange}
-          required
           className={correoExisteError ? 'input-error' : ''}
         />
         {correoExisteError && <p className="field-error">{correoExisteError}</p>}
@@ -120,7 +127,6 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
           name="rol"
           value={formData.rol}
           onChange={handleChange}
-          required
         >
           <option value="">Seleccione un rol</option>
           {roles.map(rol => (
