@@ -162,7 +162,7 @@ const RolesTable = () => {
       cell: row => (
         <div className="action-buttons">
           <span
-            className="action-button detail-button material-symbols-outlined"
+            className="detail-button material-symbols-outlined"
             onClick={(e) => {
               e.stopPropagation();
               handleVerDetalle(row);
@@ -171,7 +171,7 @@ const RolesTable = () => {
             info
           </span>
           <span
-            className="action-button edit-button material-symbols-outlined"
+            className="edit-button material-symbols-outlined"
             onClick={e => {
               e.stopPropagation();
               handleRolClick(row);
@@ -181,7 +181,7 @@ const RolesTable = () => {
           </span>
 
           <span
-            className="action-button delete-button material-symbols-outlined"
+            className="delete-button material-symbols-outlined"
             onClick={e => {
               e.stopPropagation();
               handleDeleteRol(row._id);
