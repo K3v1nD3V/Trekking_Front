@@ -14,7 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000/api/',
+        target: 'https://trekking-back.onrender.com',
         changeOrigin: true,
         secure: true, // Cambia esto a `true` para forzar la verificación SSL
       },
