@@ -259,12 +259,16 @@ const Paquetes = () => {
                         info
                     </span>
 
-                    <span className="action-button edit-button"
+                    <span
+                        className="action-button edit-button material-symbols-outlined"
                         onClick={(e) => {
                             e.stopPropagation();
                             setSelectedPaquete(row);
+                            setModalMode('editar'); // <-- ESTA LÍNEA ES CLAVE
                             setIsModalOpen(true);
-                        }} class="material-symbols-outlined">edit
+                        }}
+                    >
+                        edit
                     </span>
 
 

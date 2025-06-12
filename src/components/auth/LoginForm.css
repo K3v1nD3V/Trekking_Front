@@ -268,10 +268,10 @@ input:-webkit-autofill {
 }
 
 .input-description {
-  text-align: center;
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 15px;
+     text-align: center;
+    font-size: 1.1rem;
+    color: #4b4b4b;
+    margin-bottom: 15px;
 }
 
 input {
@@ -321,6 +321,118 @@ button {
   }
 }
 
+.recuperar-box {
+  display: flex;
+  max-width: 800px;
+  margin: 10rem auto;
+  min-height: 350px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+/* Mitad izquierda con mensaje */
+.recuperar-message {
+  flex: 1;
+  background-color: var(--primary-color, #C81E17);
+  color: #fff;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.recuperar-message h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.recuperar-message p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Mitad derecha con formulario */
+.recuperar-formulario {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f9f9f9;
+}
+
+.recuperar-formulario h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.input-description {
+  margin-bottom: 1.5rem;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+input[type="email"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.input-error {
+  border-color: #dc3545;
+}
+
+.field-error {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.success-message {
+  color: #28a745;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--primary-color, #C81E17);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #a21712;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .recuperar-box {
+    flex-direction: column;
+  }
+
+  .recuperar-message,
+  .recuperar-formulario {
+    flex: none;
+    width: 100%;
+    padding: 1.5rem;
+  }
+}
+
+
 
 /* Elimina los ojitos nativos del input tipo password */
 input[type="password"]::-ms-reveal,
@@ -335,3 +447,5 @@ input[type="password"]::-webkit-outer-spin-button {
   display: none;
   appearance: none;
 }
+
+
