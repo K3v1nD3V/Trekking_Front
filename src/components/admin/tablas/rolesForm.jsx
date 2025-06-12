@@ -199,12 +199,12 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
             const permisoActivo = formData.permisos.find(pm => pm.permiso === p.nombre);
             return (
               <div key={p._id} className="permission-item">
-                <label className="permission-label">
                   <input
                     type="checkbox"
                     checked={!!permisoActivo}
                     onChange={() => togglePermiso(p.nombre)}
                   />
+                <label className="permission-label">
                   {p.nombre}
                 </label>
 

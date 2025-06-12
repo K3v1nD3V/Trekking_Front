@@ -24,18 +24,21 @@
 
 .modal-close-button {
   position: absolute;
-  top: var(--space-sm);
   right: var(--space-sm);
   background: none;
   border: none;
-  width: 50px;
-  font-size: 1.8rem;
+  width: 40px;
+  font-size: 1.5rem;
+  font-weight: bold;
   cursor: pointer;
-  color: black;
+  color: var(--color-primary);
+  margin-top: 10px;
 }
 
+
 .modal-close-button:hover {
-  color: var(--color-primary);
+  color: white;
+  background-color: none !important;
 }
 
 .modal-content {
