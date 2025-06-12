@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { getVentas } from '../../api/ventas';
-
+import { getUsuarioById } from '../../api/usuarios';
 
 const ClienteCompras = () => {
   const [ventasCliente, setVentasCliente] = useState([]);
   const [expanded, setExpanded] = useState(null);
+  const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
     const fetchVentas = async () => {
       try {
-        const correoCliente = localStorage.getItem('usuario');
+        const idCliente = localStorage.getItem('usuario');
+        const usuarioResponse = await getUsuarioById(idCliente);
+        setUsuario(usuarioResponse);
+        console.log('Usuario obtenido:', usuarioResponse);
         const response = await getVentas();
         const ventas = response?.data || response || [];
-
+        console.log('Ventas obtenidas:', ventas);
+        
         const filtradas = ventas.filter(v => {
-          if (!v.id_cliente) return false;
-          if (typeof v.id_cliente === 'object') return v.id_cliente.correo === correoCliente;
-          return v.id_cliente.correo === correoCliente;
+          console.log('Filtrando venta:', v.id_cliente);
+          if (typeof v.id_cliente === 'object') return v.id_cliente.id_usuario === idCliente;
+          return false;
         });
+        // console.log('Filtrando venta:', filtradas);
         setVentasCliente(filtradas);
       } catch (error) {
         console.error('Error al obtener ventas del cliente:', error);
@@ -66,6 +72,7 @@ const ClienteCompras = () => {
             </div>
             {expanded === idx && (
               <div className="cliente-compras__detalle">
+                {console.log('Detalles de la venta:', venta)}
                 <p><b>Cliente:</b> {venta.id_cliente?.nombre} {venta.id_cliente?.apellido}</p>
                 <p><b>Documento:</b> {venta.id_cliente?.documento}</p>
                 <p><b>Correo:</b> {venta.id_cliente?.correo}</p>

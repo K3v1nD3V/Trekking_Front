@@ -12,7 +12,7 @@ export const getUsuarios = async () => {
 
 export const getUsuarioById = async (id) => {
   try {
-    const response = await api.get(`/usuarios/${id}`, { requiresAuth: true });
+    const response = await api.get(`/usuarios/${id}`);
     return response;
   } catch (error) {
     console.error(`Error fetching usuarios ${id}:`, error);

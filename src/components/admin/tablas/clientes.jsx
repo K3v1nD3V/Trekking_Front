@@ -119,22 +119,24 @@ const Clientes = () => {
         },
         {
             name: 'Nombre',
-            selector: row => row.id_usuario.nombre,
+            selector: row => {
+                console.log('Fila actual:', row);
+                return row?.id_usuario?.nombre || 'Sin nombre';
+            },
             sortable: true,
-            cell: row => row.id_usuario.nombre,
-            width: '150px' 
+            width: '150px'
         },
         {
             name: 'Apellido',
-            selector: row => row.id_usuario.apellido,
+            selector: row => row?.id_usuario?.apellido || 'Sin apellido',
             wrap: true,
             width: '150px'
         },
         {
             name: 'Correo',
-            selector: row => row.id_usuario.correo,
+            selector: row => row?.id_usuario?.correo || 'Sin correo',
             wrap: true,
-            width: '270px' 
+            width: '270px'
         },
         {
             name: 'Estado',
@@ -248,13 +250,13 @@ const Clientes = () => {
                 initialData={selectedCliente || {}}
               />
             </Modal>
+                    {console.log(detalleCliente)}
 
             {/* Modal de Detalle */}
             <Modal isOpen={!!detalleCliente} onClose={() => setDetalleCliente(null)}>
                 <div className="detalle-cliente-modal">
                     <h3>Detalle del Cliente</h3>
                     <hr />
-
                     {detalleCliente && (
                     <div className="info-general-cliente">
                         <p><span className="label-cliente">Documento:</span> {detalleCliente.documento}</p>

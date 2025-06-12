@@ -4,7 +4,6 @@ import jwtDecode from 'jwt-decode';
 import { toast } from 'sonner'; 
 
 import { login } from '../../api/auth';
-import { validateUsuario } from '../../api/usuarios';
 
 import './LoginForm.css';
 import logoImagen from '../../../public/LogoTrekking.png';
@@ -77,11 +76,15 @@ const Login = () => {
     try {
       const response = await login(email.toLowerCase(), password);
       const rol = response.usuario?.rol;
+      const token = response.token;
+      const decodedToken = jwtDecode(token);
+      const idUsuario = decodedToken.id;
 
+      console.log('Token decodificado:', idUsuario);
       if (rol === 'admin') {
         navigate('/admin');
       } else if (rol === 'cliente' || rol === 'usuario') {
-        localStorage.setItem('usuario', response.usuario.correo);
+        localStorage.setItem('usuario', idUsuario);
         navigate('/cliente');
       } else {
         setError('Rol no reconocido');
