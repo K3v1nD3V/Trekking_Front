@@ -119,18 +119,19 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
       ...prev,
       acompañantes: [...prev.acompañantes, acompañante._id],
     }));
-
+    console.log('acompañante submit: ', acompañante);
+    
     setAcompañantesList(prev => [
       ...prev,
-      { nombre: acompañante.nombre, documento: acompañante.documento },
+      { nombre: acompañante.id_usuario.nombre, documento: acompañante.documento },
     ]);
 
     setIsAcompananteFormVisible(false);
   };
 
   const filteredClientes = clientes.filter(cliente =>
-    `${cliente.nombre} ${cliente.apellido}`.toLowerCase().includes(clienteSearch.toLowerCase())
-  );
+  `${cliente.id_usuario?.nombre || ''} ${cliente.id_usuario?.apellido || ''} ${cliente.id_usuario?.correo || ''} ${cliente.documento}`.toLowerCase().includes(clienteSearch.toLowerCase())
+);
 
   const filteredPaquetes = paquetes.filter(paquete =>
     paquete.nombre.toLowerCase().includes(paqueteSearch.toLowerCase())
@@ -157,9 +158,9 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
             onChange={handleChange}
           >
             <option value="">Selecciona un cliente</option>
-            {filteredClientes.map(({ _id, nombre, apellido }) => (
-              <option key={_id} value={_id}>
-                {nombre} {apellido}
+            {filteredClientes.map((cliente) => (
+              <option key={cliente._id} value={cliente._id}>
+                {cliente.id_usuario?.nombre || ''} {cliente.id_usuario?.apellido || ''} - {cliente.documento}
               </option>
             ))}
           </select>
@@ -239,6 +240,7 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
           <ul className="acompañantes-list">
             {acompañantesList.map((acompañante, index) => (
               <li key={index} className="acompañante-item">
+                {console.log('acompañante: ', acompañante)}
                 <span>{acompañante.nombre}</span> - <span>{acompañante.documento}</span>
               </li>
             ))}

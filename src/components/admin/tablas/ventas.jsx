@@ -10,6 +10,7 @@ import '../../../css/components/tables.css';
 import { getVentas, createVenta, updateVenta } from '../../../api/ventas';
 import { getClientes } from '../../../api/clientes';
 import { getPaquetes } from '../../../api/paquetes';
+import { getUsuarios } from '../../../api/usuarios';
 // COMPONENTS
 import Load from '../../common/Load';
 import { toast } from 'sonner';
@@ -19,6 +20,7 @@ const Ventas = () => {
   const [ventas, setVentas] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [paquetes, setPaquetes] = useState([]);
+  const [usuarios, setUsuarios] = useState([]); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterText, setFilterText] = useState('');
   const [loading, setLoading] = useState(true);
@@ -27,14 +29,16 @@ const Ventas = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [ventasData, clientesData, paquetesData] = await Promise.all([
+        const [ventasData, clientesData, paquetesData, usuariosData] = await Promise.all([
           getVentas(),
           getClientes(),
           getPaquetes(),
+          getUsuarios()
         ]);
         setVentas(ventasData);
         setClientes(clientesData);
         setPaquetes(paquetesData);
+        setUsuarios(usuariosData);
       } catch (err) {
         setError(err.message || 'Error al cargar historial de ventas');
       } finally {
@@ -73,21 +77,38 @@ const Ventas = () => {
 };
 
 
-  const filteredVentas = ventas.filter((venta) => {
-    const clienteNombre = venta.id_cliente?.nombre || '';
-    const paqueteNombre = venta.id_paquete?.nombre || '';
-    const fecha = new Date(venta.fecha).toLocaleDateString();
-    const valor = venta.valor?.toString() || '';
+const filteredVentas = ventas.filter((venta) => {
+  console.log('Filtrando venta:', venta);
+  // console.log('usuarios:', usuarios);
   
-    const texto = filterText.toLowerCase();
-  
-    return (
-      clienteNombre.toLowerCase().includes(texto) ||
-      paqueteNombre.toLowerCase().includes(texto) ||
-      fecha.toLowerCase().includes(texto) ||
-      valor.toLowerCase().includes(texto)
-    );
-  });
+  let clienteNombre = usuarios.find(u => {
+    // console.log('Comparando usuario:', u, 'con venta cliente ID:', venta.id_cliente?.id_usuario?._id);
+    if (u._id === venta.id_cliente.id_usuario) {
+      // console.log('Cliente encontrado:', `${u.nombre} ${u.apellido}`);
+      return `${u.correo}`; 
+    }
+  })
+  clienteNombre = clienteNombre ? `${clienteNombre.nombre} ${clienteNombre.apellido}` : 'Desconocido';
+
+  const paqueteNombre = venta.id_paquete?.nombre || '';
+  const fecha = new Date(venta.fecha).toLocaleDateString();
+  const valor = venta.valor?.toString() || '';
+  const acompañantesNombres = venta.acompañantes.map(acomp => {
+    const acompUsuario = usuarios.find(u => u._id === acomp.id_usuario);
+    return acompUsuario ? `${acompUsuario.nombre} ${acompUsuario.apellido}` : acomp.documento || 'Desconocido';
+  }).join(', ');
+
+
+  const texto = filterText.toLowerCase();
+
+  return (
+    clienteNombre.toLowerCase().includes(texto) ||
+    paqueteNombre.toLowerCase().includes(texto) ||
+    fecha.toLowerCase().includes(texto) ||
+    valor.toLowerCase().includes(texto) ||
+    acompañantesNombres.toLowerCase().includes(texto)
+  );
+});
 
 const toggleEstado = async (row) => {
   const result = await showConfirm(
@@ -139,14 +160,19 @@ const toggleEstado = async (row) => {
 
   const columns = [
     {
-      name: 'Cliente',
-      selector: row => (
-        <span style={{ fontWeight: 'bold' }}>
-          {row.id_cliente ? row.id_cliente.nombre : 'Desconocido'}
-        </span>
-      ),
-      sortable: true,
-    },
+  name: 'Cliente',
+  selector: row => {
+    console.log('row cliente:', row);
+    
+    const usuarioEncontrado = usuarios.find(u => u._id === row.id_cliente.id_usuario);
+    
+    return usuarioEncontrado
+      ? `${usuarioEncontrado.correo}`
+      : 'Desconocido';
+  },
+  sortable: true,
+},
+
     {
       name: 'Paquete',
       selector: row => row.id_paquete ? row.id_paquete.nombre : 'Desconocido',
@@ -166,11 +192,16 @@ const toggleEstado = async (row) => {
   name: 'Acompañantes',
   selector: row => (
     <span>
+      {console.log('Acompañantes:', row.acompañantes)}
       {Array.isArray(row.acompañantes) && row.acompañantes.length > 0
         ? row.acompañantes
             .map(acomp => {
-              return acomp ? `${acomp.nombre} ${acomp.apellido}` : 'Desconocido';
-            })
+              const usuarioEncontrado = usuarios.find(u => u._id === acomp.id_usuario);
+              return usuarioEncontrado && usuarioEncontrado.nombre && usuarioEncontrado.apellido
+                ? `${usuarioEncontrado.nombre} ${usuarioEncontrado.apellido} (${usuarioEncontrado.correo})`
+                : 'Desconocido'
+            }
+            )
             .join(', ')
         : 'Ninguno'}
     </span>

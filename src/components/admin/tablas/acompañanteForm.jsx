@@ -27,7 +27,7 @@ const AcompananteForm = ({ onSubmit }) => {
   }, []);
 
   const filteredClientes = clientes.filter(c =>
-    `${c.nombre} ${c.apellido} ${c.documento}`.toLowerCase().includes(search.toLowerCase())
+  `${c.id_usuario?.nombre || ''} ${c.id_usuario?.apellido || ''} ${c.id_usuario?.correo || ''} ${c.documento}`.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleChange = (e) => {
@@ -133,7 +133,7 @@ const AcompananteForm = ({ onSubmit }) => {
           <option value="">Selecciona un cliente</option>
           {filteredClientes.map(cliente => (
             <option key={cliente._id} value={cliente._id}>
-              {cliente.nombre} {cliente.apellido} - {cliente.documento}
+              {cliente.id_usuario?.nombre || ''} {cliente.id_usuario?.apellido || ''} - {cliente.documento}
             </option>
           ))}
         </select>
@@ -151,39 +151,6 @@ const AcompananteForm = ({ onSubmit }) => {
             onChange={handleChange}
           />
           {errors.documento && <p className="form-error">{errors.documento}</p>}
-        </div>
-
-        <div className="form-group">
-          <label>Nombre</label>
-          <input
-            type="text"
-            name="nombre"
-            value={formData.nombre}
-            onChange={handleChange}
-          />
-          {errors.nombre && <p className="form-error">{errors.nombre}</p>}
-        </div>
-
-        <div className="form-group">
-          <label>Apellido</label>
-          <input
-            type="text"
-            name="apellido"
-            value={formData.apellido}
-            onChange={handleChange}
-          />
-          {errors.apellido && <p className="form-error">{errors.apellido}</p>}
-        </div>
-
-        <div className="form-group">
-          <label>Correo</label>
-          <input
-            type="email"
-            name="correo"
-            value={formData.correo}
-            onChange={handleChange}
-          />
-          {errors.correo && <p className="form-error">{errors.correo}</p>}
         </div>
 
         <div className="form-group">
