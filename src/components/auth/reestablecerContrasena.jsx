@@ -14,18 +14,13 @@ const RestablecerContrasena = () => {
   const [cargando, setCargando] = useState(false);
   const [tokenValido, setTokenValido] = useState(true);
 
-  // Verificar el token cuando el componente se monte
   useEffect(() => {
     const verificarToken = async () => {
       try {
-        // No es necesario enviar nada, solo comprobar si el token decodifica
-
-        axios.post(`${import.meta.env.VITE_API_URL}/usuarios/cambiar-contrasena`, {
+        await axios.post(`${import.meta.env.VITE_API_URL}/usuarios/cambiar-contrasena`, {
           token,
           nuevaContraseña: nuevaContrasena,
         });
-
-        // Si no lanza error, asumimos que es válido (aunque no cambia la contraseña aún)
         setTokenValido(true);
       } catch (err) {
         setTokenValido(false);
@@ -35,7 +30,8 @@ const RestablecerContrasena = () => {
     };
 
     verificarToken();
-  }, [token, navigate]);
+    // eslint-disable-next-line
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,8 +47,9 @@ const RestablecerContrasena = () => {
       return;
     }
 
-    if (nuevaContrasena.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
+    const contrasenaValida = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(nuevaContrasena);
+    if (!contrasenaValida) {
+      setError('La contraseña debe tener mínimo 6 caracteres, una mayúscula y una minúscula');
       return;
     }
 
@@ -74,50 +71,53 @@ const RestablecerContrasena = () => {
 
   if (!tokenValido) {
     return (
-      <div className="login-wrapper">
-        <div className="login-box">
-          <div className="login-form">
-            <h2>Token inválido</h2>
-            <p className="input-description">
-              El enlace de recuperación ha expirado o no es válido. Serás redirigido al inicio de sesión...
-            </p>
-          </div>
+      <div className="recuperar-box">
+        <div className="recuperar-formulario">
+          <h2>Token inválido</h2>
+          <p className="input-description">
+            El enlace de recuperación ha expirado o no es válido. Serás redirigido al inicio de sesión...
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="login-wrapper">
-      <div className="login-box">
-        <div className="login-form">
-          <h2>Restablecer Contraseña</h2>
-          <form onSubmit={handleSubmit}>
-            <p className="input-description">Ingresa tu nueva contraseña.</p>
+    <div className="recuperar-box">
+      <div className="recuperar-message">
+        <h2>¿Listo para recuperar el acceso?</h2>
+        <p>
+          Estás a un paso de volver a ingresar. Ingresa tu nueva contraseña y asegúrate de que sea segura.
+        </p>
+      </div>
 
-            <input
-              type="password"
-              placeholder="Nueva contraseña"
-              value={nuevaContrasena}
-              onChange={(e) => setNuevaContrasena(e.target.value)}
-              className={error ? 'input-error' : ''}
-            />
+      <div className="recuperar-formulario">
+        <h2>Restablecer Contraseña</h2>
+        <p className="input-description">Digita tu nueva contraseña. Debe contener al menos 6 caracteres, una mayúscula y una minúscula.</p>
 
-            <input
-              type="password"
-              placeholder="Confirmar contraseña"
-              value={confirmarContrasena}
-              onChange={(e) => setConfirmarContrasena(e.target.value)}
-              className={error ? 'input-error' : ''}
-            />
+        <form onSubmit={handleSubmit} noValidate>
+          <input
+            type="password"
+            placeholder="Nueva contraseña"
+            value={nuevaContrasena}
+            onChange={(e) => setNuevaContrasena(e.target.value)}
+            className={error ? 'input-error' : ''}
+          />
 
-            {error && <p className="field-error">{error}</p>}
+          <input
+            type="password"
+            placeholder="Confirmar contraseña"
+            value={confirmarContrasena}
+            onChange={(e) => setConfirmarContrasena(e.target.value)}
+            className={error ? 'input-error' : ''}
+          />
 
-            <button type="submit" disabled={cargando}>
-              {cargando ? 'Cambiando...' : 'Cambiar contraseña'}
-            </button>
-          </form>
-        </div>
+          {error && <p className="field-error">{error}</p>}
+
+          <button type="submit" disabled={cargando}>
+            {cargando ? 'Cambiando...' : 'Cambiar contraseña'}
+          </button>
+        </form>
       </div>
     </div>
   );

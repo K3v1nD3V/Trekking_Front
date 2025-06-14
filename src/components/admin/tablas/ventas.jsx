@@ -66,7 +66,6 @@ const Ventas = () => {
     delete nuevaVenta.__v;
 
     await createVenta(nuevaVenta);
-    alert("Venta creada con éxito.");
     setIsModalOpen(false);
     const ventasActualizadas = await getVentas();
     setVentas(ventasActualizadas);
