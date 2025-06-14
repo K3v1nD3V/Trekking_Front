@@ -76,11 +76,19 @@ const Tours = () => {
     }
   };
 
-  const filteredData = tours.filter((tour) =>
-    Object.values(tour).some((value) =>
-      String(value).toLowerCase().includes(filterText.toLowerCase())
-    )
-  );
+  const filteredData = tours.filter((tour) => {
+    const texto = filterText.toLowerCase();
+    const nombrePaquete = (tour.id_paquete?.nombre || '').toLowerCase();
+    const fechaHora = tour.fechaHora ? new Date(tour.fechaHora).toLocaleString().toLowerCase() : '';
+    const cupos = String(tour.cupos || '').toLowerCase();
+    const fechaLimite = tour.fecha_limite_inscripcion ? new Date(tour.fecha_limite_inscripcion).toLocaleDateString().toLowerCase() : '';
+    return (
+      nombrePaquete.includes(texto) ||
+      fechaHora.includes(texto) ||
+      cupos.includes(texto) ||
+      fechaLimite.includes(texto)
+    );
+  });
 
   const columns = [
     {
@@ -164,6 +172,7 @@ const Tours = () => {
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
             className="table-search"
+            style={{ border: '2px solid #c81e17', borderRadius: 7, padding: '7px 12px', minWidth: 160, maxWidth: 220, outline: 'none' }}
           />
           <button onClick={handleCrearTour} className="table-button">
             Registrar Tour
