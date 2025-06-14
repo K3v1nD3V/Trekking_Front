@@ -55,7 +55,8 @@ const RestablecerContrasena = () => {
 
     setCargando(true);
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/usuarios/cambiar-contrasena/${token}`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/usuarios/cambiar-contrasena`, {
+        token, // el token va en el cuerpo
         nuevaContraseña: nuevaContrasena,
       });
       
