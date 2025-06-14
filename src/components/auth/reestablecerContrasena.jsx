@@ -14,24 +14,6 @@ const RestablecerContrasena = () => {
   const [cargando, setCargando] = useState(false);
   const [tokenValido, setTokenValido] = useState(true);
 
-  useEffect(() => {
-    const verificarToken = async () => {
-      try {
-        await axios.post(`${import.meta.env.VITE_API_URL}/usuarios/cambiar-contrasena/${token}`, {
-          nuevaContraseña: nuevaContrasena,
-        });
-        
-        setTokenValido(true);
-      } catch (err) {
-        setTokenValido(false);
-        toast.error('Token inválido o expirado. Serás redirigido al inicio de sesión.');
-        setTimeout(() => navigate('/login'), 5000);
-      }
-    };
-
-    verificarToken();
-    // eslint-disable-next-line
-  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,7 +38,7 @@ const RestablecerContrasena = () => {
     setCargando(true);
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/usuarios/cambiar-contrasena`, {
-        token, // el token va en el cuerpo
+        token,
         nuevaContraseña: nuevaContrasena,
       });
       
