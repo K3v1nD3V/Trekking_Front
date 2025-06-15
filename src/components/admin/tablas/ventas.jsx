@@ -35,6 +35,8 @@ const Ventas = () => {
           getPaquetes(),
           getUsuarios()
         ]);
+        console.log('Ventas:', ventasData);
+        
         setVentas(ventasData);
         setClientes(clientesData);
         setPaquetes(paquetesData);
@@ -80,6 +82,7 @@ const Ventas = () => {
 const filteredVentas = ventas.filter((venta) => {
   console.log('Filtrando venta:', venta);
   // console.log('usuarios:', usuarios);
+  console.log('ID Cliente:', venta);
   
   let clienteNombre = usuarios.find(u => {
     // console.log('Comparando usuario:', u, 'con venta cliente ID:', venta.id_cliente?.id_usuario?._id);

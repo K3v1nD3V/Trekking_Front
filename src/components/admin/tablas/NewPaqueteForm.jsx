@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import '../../../css/components/admin/PaqueteFormStyles.css';
 import { updatePaquete, createPaquete } from '../../../api/paquetes';
-import { showSuccess, showError, showConfirm } from '../../../alerts/alerts'
+import { showConfirm } from '../../../alerts/alerts'
 import { toast } from 'sonner';
 
 
@@ -95,6 +95,7 @@ const NewPaqueteForm = ({ onSubmit, onClose, initialData = {}, servicios }) => {
     if (!confirm.isConfirmed) return;
   
     const formDataToSend = new FormData();
+
     Object.entries({
       nombre: formData.nombre,
       descripcion: formData.descripcion,

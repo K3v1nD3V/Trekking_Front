@@ -75,7 +75,7 @@ const Paquetes = () => {
     };
 
     const handleSubmit = () => {
-        window.location.reload();
+        // window.location.reload();
         setIsModalOpen(false);
     };
 

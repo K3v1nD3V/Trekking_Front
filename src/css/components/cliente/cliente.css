@@ -198,6 +198,10 @@
     flex-direction: column;
     gap: 0.25rem;
   }
+
+  .package-info .btn {
+    margin-top: 15px;
+  }
   
   /* Nombre del paquete */
   .package-name {

@@ -11,6 +11,11 @@
   --color-fondo-claro: #ffffff;
   --color-hover: #f5e6db;
 }
+.form-error{
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
 
 /* Reseteo global de márgenes, padding y tipografía */
 * {

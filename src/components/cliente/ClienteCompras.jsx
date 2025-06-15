@@ -5,14 +5,12 @@ import { getUsuarioById } from '../../api/usuarios';
 const ClienteCompras = () => {
   const [ventasCliente, setVentasCliente] = useState([]);
   const [expanded, setExpanded] = useState(null);
-  const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
     const fetchVentas = async () => {
       try {
         const idCliente = localStorage.getItem('usuario');
         const usuarioResponse = await getUsuarioById(idCliente);
-        setUsuario(usuarioResponse);
         console.log('Usuario obtenido:', usuarioResponse);
         const response = await getVentas();
         const ventas = response?.data || response || [];

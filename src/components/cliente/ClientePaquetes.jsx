@@ -105,6 +105,24 @@ const ClientePaquetes = () => {
                     <p className="package-detail"><b>Destino:</b> {paquete.destino}</p>
                     <p className="package-detail"><b>Valor:</b> ${paquete.valor?.toLocaleString('es-CO')}</p>
                     <p className="package-detail"><b>Lugar de encuentro:</b> {paquete.lugar_encuentro}</p>
+                    <a href={`https://wa.me/573238893608/?texto=Me%gustaria%tener%más%informacíon%sobre%el%paquete%${paquete.nombre}`} className="btn btn-primary">
+                      Contactanos
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        width="30"
+                        height="30"
+                        style={{ margin: '0 6px' }}
+                    >
+                        <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9"></path>
+                        <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1"></path>
+                    </svg>
+                </a>
                   </div>
                   <span className="package-toggle-icon">
                     {expanded === idx ? '▲' : '▼'}

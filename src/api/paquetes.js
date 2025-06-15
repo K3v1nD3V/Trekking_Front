@@ -21,6 +21,7 @@ export const getPaqueteById = async (id) => {
 };
 
 export const createPaquete = async (paqueteData) => {
+  console.log('Creando paquete con datos:', paqueteData);
   try {
     const response = await api.post(
       '/paquetes', 
@@ -50,6 +51,7 @@ export const createPaquete = async (paqueteData) => {
 };
 
 export const updatePaquete = async (id, paqueteData) => {
+  console.log('Actualizando paquete con ID:', id, 'y datos:', paqueteData);
   try {
     const response = await api.put(
       `/paquetes/${id}`, 
