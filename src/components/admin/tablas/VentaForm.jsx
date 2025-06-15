@@ -105,13 +105,17 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
 
     try {
       console.log('Nueva venta:', nuevaVenta);
-      
+    
       await onSubmit(nuevaVenta);  
-      onClose?.();
+    
+      toast.success('¡Venta creada exitosamente!'); 
+    
+      onClose?.(); // ⬅️ luego cierras el formulario
     } catch (error) {
       console.error('Error al crear venta:', error);
       toast.error('Error al crear la venta.');
-    }       
+    }
+           
   };
   
   const handleSubmitAcompañante = (acompañante) => {

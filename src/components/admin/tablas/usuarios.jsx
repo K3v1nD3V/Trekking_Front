@@ -66,6 +66,7 @@ const Usuarios = () => {
     const handleSubmit = () => {
         window.location.reload();
         setIsModalOpen(false);
+        
     };
 
     const filteredData = usuarios.filter(item =>
@@ -103,7 +104,7 @@ const Usuarios = () => {
             name: 'Rol',
             selector: row => getRoleName(row.rol),
             wrap: true,
-            width: '300px'
+            width: '200px'
         },
         {
             name: 'Acciones',

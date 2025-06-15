@@ -70,19 +70,25 @@ const RolesTable = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteRol = async (id) => {
+  const handleDeleteRol = async (id, nombre) => {
+    if (nombre?.toLowerCase() === 'admin') {
+      toast.error('No se puede eliminar el rol "admin".');
+      return;
+    }
+  
     const result = await showConfirm('¿Estás seguro de que deseas eliminar este rol?', 'Eliminar Rol');
     if (!result.isConfirmed) return;
-
+  
     try {
       await deleteRol(id);
       toast.success('¡Rol eliminado exitosamente!');
       setRoles(prev => prev.filter(rol => rol._id !== id));
     } catch (error) {
-      toast.error('Error eliminando el rol:', error.message);
-      toast.error('Error', 'Hubo un error al eliminar el rol.');
+      console.error('Error eliminando el rol:', error.message);
+      toast.error('Hubo un error al eliminar el rol.');
     }
   };
+  
 
   const handleSubmit = async (nuevoRol) => {
     if (modalMode === 'crear') {
@@ -96,45 +102,54 @@ const RolesTable = () => {
   };
   
   // 🔘 Componente Estado (interruptor)
-  const EstadoCell = ({ row }) => { 
+  const EstadoCell = ({ row }) => {
+    const isAdmin = row.nombre?.toLowerCase() === 'admin';
     const toggleEstado = async () => {
+      if (isAdmin) return; // no permitir cambios para admin
+  
       const accion = row.estado ? 'desactivar' : 'activar';
       const result = await showConfirm(
         `¿Estás seguro de que deseas ${accion} este rol?`,
         'Cambiar Estado'
       );
-    
+  
       if (!result.isConfirmed) return;
-    
+  
       try {
         const updatedRol = {
           nombre: row.nombre,
           estado: !row.estado,
           permisos: row.permisos.map(p => typeof p === 'string' ? p : p._id),
         };
-    
+  
         await updateRol(row._id, updatedRol);
-    
+  
         setRoles(prev =>
           prev.map(r => r._id === row._id ? { ...r, estado: !row.estado } : r)
         );
-    
+  
         toast.success(`Estado cambiado a ${!row.estado ? 'Activo' : 'Inactivo'}`);
       } catch (error) {
         console.error('Error actualizando estado:', error.message);
         toast.error('Hubo un error al cambiar el estado.');
-      }    
+      }
     };
-
+  
     return (
       <div className="estado-switch">
         <label className="switch">
-          <input type="checkbox" checked={row.estado} onChange={toggleEstado} />
+          <input
+            type="checkbox"
+            checked={row.estado}
+            disabled={isAdmin}
+            onChange={toggleEstado}
+          />
           <span className="slider round"></span>
         </label>
       </div>
     );
   };
+  
 
   // 🔍 Filtro
   const filteredData = roles.filter(item =>
@@ -184,11 +199,12 @@ const RolesTable = () => {
             className="delete-button material-symbols-outlined"
             onClick={e => {
               e.stopPropagation();
-              handleDeleteRol(row._id);
+              handleDeleteRol(row._id, row.nombre); // Pasamos también el nombre
             }}
           >
             delete
           </span>
+
         </div>
       ),
       ignoreRowClick: true,

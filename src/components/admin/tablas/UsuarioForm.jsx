@@ -57,7 +57,6 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
     if (!result.isConfirmed) return;
 
     try {
-      const dataToSubmit = { ...formData };
       if (isEditing) {
         delete dataToSubmit.contraseña;
         await updateUsuario(initialData._id, dataToSubmit);

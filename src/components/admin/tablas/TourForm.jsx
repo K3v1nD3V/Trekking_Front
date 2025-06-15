@@ -57,43 +57,45 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
     const newErrors = {};
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Ignorar la hora para comparar solo la fecha
-  
+
+    // Validar fecha y hora del tour
     if (!formData.fechaHora) {
       newErrors.fechaHora = 'Debe seleccionar una fecha y hora.';
     } else {
       const fechaHora = new Date(formData.fechaHora);
-      if (fechaHora < new Date()) {
-        newErrors.fechaHora = 'La fecha y hora del tour no pueden ser menores a la fecha actual.';
+      if (isNaN(fechaHora.getTime())) {
+        newErrors.fechaHora = 'La fecha y hora no es válida.';
+      } else if (fechaHora < new Date()) {
+        newErrors.fechaHora = 'La fecha y hora del tour no pueden ser menores a la fecha y hora actual.';
       }
     }
-  
+
+    // Validar paquete
     if (!formData.id_paquete) {
       newErrors.id_paquete = 'Debe seleccionar un paquete.';
     }
-  
-    if (!formData.cupos || formData.cupos <= 0) {
+
+    // Validar cupos
+    if (!formData.cupos || isNaN(formData.cupos) || parseInt(formData.cupos, 10) <= 0) {
       newErrors.cupos = 'Debe ingresar un número de cupos mayor a 0.';
     }
-  
+
+    // Validar fecha límite de inscripción
     if (!formData.fecha_limite_inscripcion) {
       newErrors.fecha_limite_inscripcion = 'Debe seleccionar una fecha límite de inscripción.';
     } else {
       const fechaLimite = new Date(formData.fecha_limite_inscripcion);
-      const fechaHora = new Date(formData.fechaHora);
-  
-      if (fechaLimite < today) {
+      fechaLimite.setHours(0, 0, 0, 0);
+      const fechaHora = formData.fechaHora ? new Date(formData.fechaHora) : null;
+      if (isNaN(fechaLimite.getTime())) {
+        newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción no es válida.';
+      } else if (fechaLimite < today) {
         newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción no puede ser menor a la fecha actual.';
-      }
-  
-      if (fechaLimite >= fechaHora) {
+      } else if (fechaHora && fechaLimite >= fechaHora) {
         newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción debe ser menor que la fecha y hora del tour.';
       }
-  
-      if (fechaLimite < today) {
-        newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción no puede ser menor a la fecha actual.';
-      }
     }
-  
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -139,7 +141,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
           onChange={handleChange}
           required
         />
-        {errors.fechaHora && <p className="form-error">{errors.fechaHora}</p>}
+        {errors.fechaHora && <p className="form-error" style={{ color: '#c81e17', fontWeight: 500 }}>{errors.fechaHora}</p>}
       </div>
 
       <div className="tour-form-group">
@@ -158,7 +160,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
             </option>
           ))}
         </select>
-        {errors.id_paquete && <p className="form-error">{errors.id_paquete}</p>}
+        {errors.id_paquete && <p className="form-error" style={{ color: '#c81e17', fontWeight: 500 }}>{errors.id_paquete}</p>}
       </div>
 
       <div className="tour-form-group">
@@ -172,7 +174,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
           min="1"
           required
         />
-        {errors.cupos && <p className="form-error">{errors.cupos}</p>}
+        {errors.cupos && <p className="form-error" style={{ color: '#c81e17', fontWeight: 500 }}>{errors.cupos}</p>}
       </div>
 
       <div className="tour-form-group">
@@ -185,7 +187,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
           onChange={handleChange}
           required
         />
-        {errors.fecha_limite_inscripcion && <p className="form-error">{errors.fecha_limite_inscripcion}</p>}
+        {errors.fecha_limite_inscripcion && <p className="form-error" style={{ color: '#c81e17', fontWeight: 500 }}>{errors.fecha_limite_inscripcion}</p>}
       </div>
 
       <div className="tour-form-buttons">
