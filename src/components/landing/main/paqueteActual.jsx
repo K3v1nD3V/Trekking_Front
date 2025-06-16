@@ -55,7 +55,7 @@ const PaqueteActual = ({ paquete, servicios }) => {
                 </div>
                 <p className="paquete-description">{paquete.descripcion}</p>
                 <p className="paquete-price">${paquete.valor.toLocaleString('es-ES')}</p>
-                <a href="https://wa.me/573238893608/?texto=Mas%Info%sobre%nueva%Coleccion%porfavor" className="btn btn-primary">
+                <a href="https://wa.me/573053512023/?texto=Mas%Info%sobre%nueva%Coleccion%porfavor" className="btn btn-primary">
                     {t('packages.contactUs')}
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
