@@ -64,35 +64,92 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     }));
   };
 
-  const validate = async () => {
-    const newErrors = {};
-    if (!formData.documento) {
-      newErrors.documento = 'El documento es requerido.';
-    } else if (formData.documento.length < 8 || formData.documento.length > 12) {
-      newErrors.documento = 'El documento debe tener entre 8 y 12 caracteres.';
-    } else if (!/^\d+$/.test(formData.documento)) {
-      newErrors.documento = 'El documento debe contener solo números.';
-    } else {
-      const exists = await checkClienteExistence({ documento: formData.documento });
+  // const validate = async () => {
+  //   const newErrors = {};
+  //   if (!formData.documento) {
+  //     newErrors.documento = 'El documento es requerido.';
+  //   } else if (formData.documento.length < 8 || formData.documento.length > 12) {
+  //     newErrors.documento = 'El documento debe tener entre 8 y 12 caracteres.';
+  //   } else if (!/^\d+$/.test(formData.documento)) {
+  //     newErrors.documento = 'El documento debe contener solo números.';
+  //   } else {
+  //     const exists = await checkClienteExistence({ documento: formData.documento });
       
-      if (exists && (!initialData._id || formData.documento !== initialData.documento)) {
-        newErrors.documento = 'El documento ya está registrado.';
-      }
+  //     if (exists && (!initialData._id || formData.documento !== initialData.documento)) {
+  //       newErrors.documento = 'El documento ya está registrado.';
+  //     }
+  //   }
+  //   if (!formData.telefono) {
+  //     newErrors.telefono = 'El teléfono es requerido.';
+  //   } else if (!/^\d+$/.test(formData.telefono)) {
+  //     newErrors.telefono = 'El teléfono debe contener solo números.';
+  //   }
+  //   if (!formData.id_usuario) {
+  //     newErrors.id_usuario = 'Debe seleccionar un usuario asociado.';
+  //   }
+  //   if (!usuarioData.nombre) newErrors.nombre = 'El nombre es requerido.';
+  //   if (!usuarioData.apellido) newErrors.apellido = 'El apellido es requerido.';
+  //   if (!usuarioData.correo) newErrors.correo = 'El correo es requerido.';
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
+
+  const validate = async () => {
+  const newErrors = {};
+
+  // Documento
+  if (!formData.documento) {
+    newErrors.documento = 'El documento es requerido.';
+  } else if (formData.documento.length < 8 || formData.documento.length > 12) {
+    newErrors.documento = 'Debe tener entre 8 y 12 dígitos.';
+  } else if (!/^\d+$/.test(formData.documento)) {
+    newErrors.documento = 'Debe contener solo números.';
+  } else {
+    const exists = await checkClienteExistence({ documento: formData.documento });
+    if (exists && (!initialData._id || formData.documento !== initialData.documento)) {
+      newErrors.documento = 'Ya está registrado.';
     }
-    if (!formData.telefono) {
-      newErrors.telefono = 'El teléfono es requerido.';
-    } else if (!/^\d+$/.test(formData.telefono)) {
-      newErrors.telefono = 'El teléfono debe contener solo números.';
-    }
-    if (!formData.id_usuario) {
-      newErrors.id_usuario = 'Debe seleccionar un usuario asociado.';
-    }
-    if (!usuarioData.nombre) newErrors.nombre = 'El nombre es requerido.';
-    if (!usuarioData.apellido) newErrors.apellido = 'El apellido es requerido.';
-    if (!usuarioData.correo) newErrors.correo = 'El correo es requerido.';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  }
+
+  // Teléfono
+  if (!formData.telefono) {
+    newErrors.telefono = 'El teléfono es requerido.';
+  } else if (!/^\d{7,15}$/.test(formData.telefono)) {
+    newErrors.telefono = 'Debe tener entre 7 y 15 dígitos numéricos.';
+  }
+
+  // Usuario asociado
+  if (!formData.id_usuario) {
+    newErrors.id_usuario = 'Debe seleccionar un usuario.';
+  }
+
+  // Nombre
+  if (!usuarioData.nombre) {
+    newErrors.nombre = 'El nombre es requerido.';
+  } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuarioData.nombre)) {
+    newErrors.nombre = 'Solo se permiten letras y espacios.';
+  }
+
+  // Apellido
+  if (!usuarioData.apellido) {
+    newErrors.apellido = 'El apellido es requerido.';
+  } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuarioData.apellido)) {
+    newErrors.apellido = 'Solo se permiten letras y espacios.';
+  }
+
+  // Correo
+  if (!usuarioData.correo) {
+    newErrors.correo = 'El correo es requerido.';
+  } else if (
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usuarioData.correo)
+  ) {
+    newErrors.correo = 'El formato de correo no es válido.';
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
 
   const handleSubmit = async (e) => {
     console.log('Submitting form with data:', formData);
