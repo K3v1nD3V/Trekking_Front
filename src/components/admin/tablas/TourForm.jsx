@@ -4,7 +4,6 @@ import { showSuccess, showError, showConfirm } from '../../../alerts/alerts';
 import '../../../css/components/admin/TourForm.css';
 import { toast } from 'sonner';
 
-
 const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({
     fechaHora: initialData.fechaHora || '',
@@ -37,9 +36,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
     try {
       const response = await getPaquetes();
       setPaquetes(response);
-    // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      setError('Error al cargar los paquetes');
       showError('Error', 'No se pudieron cargar los paquetes.');
     }
   };
@@ -50,15 +47,18 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       ...prev,
       [name]: value,
     }));
-    setError('');
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '', // limpiar el error del campo al escribir
+    }));
   };
 
   const validate = () => {
     const newErrors = {};
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Ignorar la hora para comparar solo la fecha
+    today.setHours(0, 0, 0, 0);
 
-    // Validar fecha y hora del tour
+    // Fecha y hora del tour
     if (!formData.fechaHora) {
       newErrors.fechaHora = 'Debe seleccionar una fecha y hora.';
     } else {
@@ -66,33 +66,37 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       if (isNaN(fechaHora.getTime())) {
         newErrors.fechaHora = 'La fecha y hora no es válida.';
       } else if (fechaHora < new Date()) {
-        newErrors.fechaHora = 'La fecha y hora del tour no pueden ser menores a la fecha y hora actual.';
+        newErrors.fechaHora = 'La fecha del tour no puede ser en el pasado.';
       }
     }
 
-    // Validar paquete
+    // Paquete
     if (!formData.id_paquete) {
       newErrors.id_paquete = 'Debe seleccionar un paquete.';
     }
 
-    // Validar cupos
-    if (!formData.cupos || isNaN(formData.cupos) || parseInt(formData.cupos, 10) <= 0) {
-      newErrors.cupos = 'Debe ingresar un número de cupos mayor a 0.';
+    // Cupos
+    const cupos = parseInt(formData.cupos, 10);
+    if (!formData.cupos) {
+      newErrors.cupos = 'Debe ingresar la cantidad de cupos.';
+    } else if (isNaN(cupos) || cupos <= 0) {
+      newErrors.cupos = 'Los cupos deben ser un número mayor a 0.';
     }
 
-    // Validar fecha límite de inscripción
+    // Fecha límite de inscripción
     if (!formData.fecha_limite_inscripcion) {
-      newErrors.fecha_limite_inscripcion = 'Debe seleccionar una fecha límite de inscripción.';
+      newErrors.fecha_limite_inscripcion = 'Debe seleccionar una fecha límite.';
     } else {
       const fechaLimite = new Date(formData.fecha_limite_inscripcion);
+      const fechaTour = new Date(formData.fechaHora);
       fechaLimite.setHours(0, 0, 0, 0);
-      const fechaHora = formData.fechaHora ? new Date(formData.fechaHora) : null;
+
       if (isNaN(fechaLimite.getTime())) {
-        newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción no es válida.';
+        newErrors.fecha_limite_inscripcion = 'Fecha límite inválida.';
       } else if (fechaLimite < today) {
-        newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción no puede ser menor a la fecha actual.';
-      } else if (fechaHora && fechaLimite >= fechaHora) {
-        newErrors.fecha_limite_inscripcion = 'La fecha límite de inscripción debe ser menor que la fecha y hora del tour.';
+        newErrors.fecha_limite_inscripcion = 'No puede ser menor a la fecha actual.';
+      } else if (formData.fechaHora && fechaLimite >= fechaTour) {
+        newErrors.fecha_limite_inscripcion = 'Debe ser anterior a la fecha del tour.';
       }
     }
 
@@ -122,9 +126,8 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
         await onSubmit(formattedData);
         toast.success(initialData._id ? 'Tour actualizado con éxito' : 'Tour creado con éxito');
         onClose?.();
-      // eslint-disable-next-line no-unused-vars
-      } catch (submitError) {
-        toast.error('Error', 'Ocurrió un error al guardar el tour.');
+      } catch {
+        toast.error('Error al guardar el tour.');
       }
     }
   };
@@ -139,9 +142,9 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
           name="fechaHora"
           value={formData.fechaHora}
           onChange={handleChange}
-          required
+          className={errors.fechaHora ? 'input-error' : ''}
         />
-        {errors.fechaHora && <p className="form-error" style={{ color: '#c81e17', fontWeight: 500 }}>{errors.fechaHora}</p>}
+        {errors.fechaHora && <p className="form-error">{errors.fechaHora}</p>}
       </div>
 
       <div className="tour-form-group">
@@ -151,7 +154,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
           name="id_paquete"
           value={formData.id_paquete}
           onChange={handleChange}
-          required
+          className={errors.id_paquete ? 'input-error' : ''}
         >
           <option value="">Seleccione un paquete</option>
           {paquetes.map((paquete) => (
@@ -160,7 +163,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
             </option>
           ))}
         </select>
-        {errors.id_paquete && <p className="form-error" style={{ color: '#c81e17', fontWeight: 500 }}>{errors.id_paquete}</p>}
+        {errors.id_paquete && <p className="form-error">{errors.id_paquete}</p>}
       </div>
 
       <div className="tour-form-group">
@@ -171,10 +174,10 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
           name="cupos"
           value={formData.cupos}
           onChange={handleChange}
+          className={errors.cupos ? 'input-error' : ''}
           min="1"
-          required
         />
-        {errors.cupos && <p className="form-error" style={{ color: '#c81e17', fontWeight: 500 }}>{errors.cupos}</p>}
+        {errors.cupos && <p className="form-error">{errors.cupos}</p>}
       </div>
 
       <div className="tour-form-group">
@@ -185,20 +188,16 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
           name="fecha_limite_inscripcion"
           value={formData.fecha_limite_inscripcion}
           onChange={handleChange}
-          required
+          className={errors.fecha_limite_inscripcion ? 'input-error' : ''}
         />
-        {errors.fecha_limite_inscripcion && <p className="form-error" style={{ color: '#c81e17', fontWeight: 500 }}>{errors.fecha_limite_inscripcion}</p>}
+        {errors.fecha_limite_inscripcion && <p className="form-error">{errors.fecha_limite_inscripcion}</p>}
       </div>
 
       <div className="tour-form-buttons">
         <button type="submit" className="tour-form-submit-button">
           {initialData._id ? 'Actualizar' : 'Registrar'}
         </button>
-        <button
-          type="button"
-          className="cancel-btn"
-          onClick={onClose}
-        >
+        <button type="button" className="cancel-btn" onClick={onClose}>
           Cancelar
         </button>
       </div>

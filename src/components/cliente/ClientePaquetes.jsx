@@ -105,7 +105,7 @@ const ClientePaquetes = () => {
                     <p className="package-detail"><b>Destino:</b> {paquete.destino}</p>
                     <p className="package-detail"><b>Valor:</b> ${paquete.valor?.toLocaleString('es-CO')}</p>
                     <p className="package-detail"><b>Lugar de encuentro:</b> {paquete.lugar_encuentro}</p>
-                    <a href={`https://wa.me/573238893608/?texto=Me%gustaria%tener%más%informacíon%sobre%el%paquete%${paquete.nombre}`} className="btn btn-primary">
+                    <a href={`https://wa.me/573053512023/?texto=Me%gustaria%tener%más%informacíon%sobre%el%paquete%${paquete.nombre}`} className="btn btn-primary">
                       Contactanos
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
