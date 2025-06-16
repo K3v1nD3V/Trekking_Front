@@ -21,22 +21,23 @@ const Usuarios = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const fetchUsuariosAndRoles = async () => {
+        try {
+            const [usuariosData, rolesData] = await Promise.all([getUsuarios(), getRoles()]);
+            console.log("Usuarios cargados:", usuariosData);
+            console.log("Roles cargados:", rolesData);
+            
+            setUsuarios(usuariosData);
+            setRoles(rolesData);
+        } catch (err) {
+            setError(err.message || 'Error al cargar usuarios y roles');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchUsuariosAndRoles = async () => {
-            try {
-                const [usuariosData, rolesData] = await Promise.all([getUsuarios(), getRoles()]);
-                console.log("Usuarios cargados:", usuariosData);
-                console.log("Roles cargados:", rolesData);
-                
-                setUsuarios(usuariosData);
-                setRoles(rolesData);
-            } catch (err) {
-                setError(err.message || 'Error al cargar usuarios y roles');
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchUsuariosAndRoles();
+      fetchUsuariosAndRoles();
     }, []);
 
     const handleCrearUsuario = () => {
@@ -64,9 +65,8 @@ const Usuarios = () => {
     };
 
     const handleSubmit = () => {
-        window.location.reload();
-        setIsModalOpen(false);
-        
+      fetchUsuariosAndRoles();
+      setIsModalOpen(false);
     };
 
     const filteredData = usuarios.filter(item =>

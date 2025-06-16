@@ -26,20 +26,19 @@ const Clientes = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        
-        const fetchClientes = async () => {
-            try {
-                const data = await getClientes();
-                setClientes(data);
-                console.log("Clientes cargados:", data);
-            } catch (err) {
-                setError(err.message || 'Error al cargar clientes');
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchClientes = async () => {
+        try {
+            const data = await getClientes();
+            setClientes(data);
+            console.log("Clientes cargados:", data);
+        } catch (err) {
+            setError(err.message || 'Error al cargar clientes');
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchClientes();
     }, []);
 
@@ -62,10 +61,27 @@ const Clientes = () => {
         }
     };
 
-    const handleSubmit = () => {
-        window.location.reload();
+    const handleSubmit = (nuevoCliente, type) => {
+        console.log('Datos del cliente a guardar:', nuevoCliente, type);
+        // console.log(clientes);
+        fetchClientes();
+        // if (type == "edit") {
+        //     console.log("Nuevo cliente con ID:", nuevoCliente.cliente._id);
+            
+        //     setClientes(prev =>
+        //         prev.map(cliente =>
+        //             cliente._id === nuevoCliente.cliente._id ? nuevoCliente.cliente : cliente
+        //         )
+        //     );
+        // } else if (type == "create") {
+        //     // Nuevo
+        //     setClientes(prev => [...prev, nuevoCliente.cliente]);
+        // }
+
         setIsModalOpen(false);
+        toast.success(`Cliente ${type == "edit" ? 'actualizado' : 'registrado'} correctamente`);
     };
+
 
     const toggleEstado = async (row) => {
         const nuevoEstado = !row.estado;
@@ -120,7 +136,6 @@ const Clientes = () => {
         {
             name: 'Nombre',
             selector: row => {
-                console.log('Fila actual:', row);
                 return row?.id_usuario?.nombre || 'Sin nombre';
             },
             sortable: true,

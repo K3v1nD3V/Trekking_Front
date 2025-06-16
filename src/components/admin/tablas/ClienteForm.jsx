@@ -120,17 +120,23 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
         if (usuarioModificado) {
           await updateUsuario(formData.id_usuario, usuarioData);
         }
-        await updateCliente(initialData._id, formData);
+
+        const clienteActualizado = await updateCliente(initialData._id, formData);
+        console.log('Cliente actualizado:', clienteActualizado);
+
         toast.success('Cliente actualizado exitosamente!');
+        setTimeout(() => {
+          onSubmit(clienteActualizado, "edit");
+          onClose();
+        }, 900);
       } else {
-        // Al crear, solo crea el cliente (el usuario ya debe existir)
-        await createCliente(formData);
+        const clienteCreado = await createCliente(formData);
         toast.success('Cliente creado exitosamente!');
+        setTimeout(() => {
+          onSubmit(clienteCreado, "create"); // Incluye el _id y todo lo nuevo
+          onClose();
+        }, 900);
       }
-      setTimeout(() => {
-        onSubmit();
-        onClose();
-      }, 900);
     } catch (err) {
       console.error('Error al guardar el cliente:', err);
       toast.error('Error al guardar el cliente. Verifica los datos o intenta más tarde.');

@@ -24,18 +24,18 @@ const ServiciosTable = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchServicios = async () => {
-            try {
-                const data = await getServicios();
-                setServicios(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchServicios = async () => {
+        try {
+            const data = await getServicios();
+            setServicios(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchServicios();
     }, []);
 
@@ -64,7 +64,7 @@ const ServiciosTable = () => {
     };
 
     const handleSubmit = () => {
-        window.location.reload(); // Considera mejorar esto por una actualización del estado
+        fetchServicios();
         setIsModalOpen(false);
         toast.success(selectedServicio ? '¡Servicio actualizado exitosamente!' : '¡Servicio creado exitosamente!');
     };

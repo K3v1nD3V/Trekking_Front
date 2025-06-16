@@ -36,7 +36,7 @@ export const createCliente = async (clienteData) => {
 export const updateCliente = async (id, clienteData) => {
   try {
     const response = await api.put(`/clientes/${id}`, clienteData, { requiresAuth: true });
-    return response.data;
+    return response;
   } catch (error) {
     console.error(`Error updating cliente ${id}:`, error);
     throw error;

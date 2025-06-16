@@ -37,24 +37,24 @@ const Paquetes = () => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    
-    useEffect(() => {
-        const fetchPaquetes = async () => {
-          try {
-            const paquetes = await getPaquetes();
-            const servicios = await getServicios();
 
-            setServicios(servicios)
-            setPaquetes(paquetes);
-          } catch (err) {
-            setError(err.message);
-          } finally {
-            setLoading(false);
-          }
-        };
-    
+    const fetchPaquetes = async () => {
+        try {
+        const paquetes = await getPaquetes();
+        const servicios = await getServicios();
+
+        setServicios(servicios)
+        setPaquetes(paquetes);
+        } catch (err) {
+        setError(err.message);
+        } finally {
+        setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchPaquetes();
-      }, []);
+    }, []);
 
     const handleCrearPaquete = () => {
         setSelectedPaquete(null);
@@ -75,7 +75,7 @@ const Paquetes = () => {
     };
 
     const handleSubmit = () => {
-        // window.location.reload();
+        fetchPaquetes();
         setIsModalOpen(false);
     };
 
@@ -124,6 +124,7 @@ const Paquetes = () => {
       
     const DetallePaqueteModal = ({ paquete }) => (
         <div className="detalle-paquete-modal">
+            {console.log(paquete)},
             <h3>Detalles del Paquete</h3>
             <hr />
             <div className="info-general">
