@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import DataTable from "react-data-table-component";
-// MODAL
 import Modal from '../../common/Modal';
-// FORM
 import ClienteForm from "./ClienteForm.jsx";
-// API
 import { getClientes, deleteCliente, updateCliente } from '../../../api/clientes';
-// CSS
 import '../../../css/components/tables.css';
 import '../../../css/components/admin/cliente.css';
 import { toast } from 'sonner';
-// ALERTAS
 import { showConfirm } from '../../../alerts/alerts';
-// ICONO
 import { IoReloadOutline } from "react-icons/io5";
-// COMPONENT
 import Load from '../../common/Load';
 
 const Clientes = () => {
@@ -22,24 +15,21 @@ const Clientes = () => {
     const [filterText, setFilterText] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCliente, setSelectedCliente] = useState(null);
-    const [detalleCliente, setDetalleCliente] = useState(null); // Nuevo modal detalle
+    const [detalleCliente, setDetalleCliente] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        
         const fetchClientes = async () => {
             try {
                 const data = await getClientes();
                 setClientes(data);
-                console.log("Clientes cargados:", data);
             } catch (err) {
                 setError(err.message || 'Error al cargar clientes');
             } finally {
                 setLoading(false);
             }
         };
-
         fetchClientes();
     }, []);
 
@@ -69,7 +59,10 @@ const Clientes = () => {
 
     const toggleEstado = async (row) => {
         const nuevoEstado = !row.estado;
-        const mensaje = `¿Estás seguro de ${nuevoEstado ? 'activar' : 'desactivar'} al cliente ${row.nombre} ${row.apellido}?`;
+        const nombre = row?.id_usuario?.nombre || 'Nombre';
+        const apellido = row?.id_usuario?.apellido || 'Apellido';
+
+        const mensaje = `¿Estás seguro de ${nuevoEstado ? 'activar' : 'desactivar'} al cliente ${nombre} ${apellido}?`;
         const result = await showConfirm(mensaje, 'Confirmar cambio de estado');
         if (!result.isConfirmed) return;
 
@@ -119,10 +112,7 @@ const Clientes = () => {
         },
         {
             name: 'Nombre',
-            selector: row => {
-                console.log('Fila actual:', row);
-                return row?.id_usuario?.nombre || 'Sin nombre';
-            },
+            selector: row => row?.id_usuario?.nombre || 'Sin nombre',
             sortable: true,
             width: '150px'
         },
@@ -141,7 +131,7 @@ const Clientes = () => {
         {
             name: 'Estado',
             cell: row => <EstadoCell row={row} />,
-            width: '170px' 
+            width: '170px'
         },
         {
             name: 'Acciones',
@@ -157,7 +147,8 @@ const Clientes = () => {
                         <span className="material-symbols-outlined">info</span>
                     </span>
 
-                    <span className="action-button edit-button"
+                    <span
+                        className="action-button edit-button"
                         onClick={(e) => {
                             e.stopPropagation();
                             setSelectedCliente(row);
@@ -167,10 +158,13 @@ const Clientes = () => {
                         <span className="material-symbols-outlined">edit</span>
                     </span>
 
-                    <span className="action-button delete-button"
+                    <span
+                        className="action-button delete-button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleDeleteCliente(row._id, `${row.nombre} ${row.apellido}`);
+                            const nombre = row?.id_usuario?.nombre || '';
+                            const apellido = row?.id_usuario?.apellido || '';
+                            handleDeleteCliente(row._id, `${nombre} ${apellido}`);
                         }}
                     >
                         <span className="material-symbols-outlined">delete</span>
@@ -178,7 +172,7 @@ const Clientes = () => {
                 </div>
             ),
             ignoreRowClick: true,
-            width: '200px' 
+            width: '200px'
         }
     ];
 
@@ -195,92 +189,89 @@ const Clientes = () => {
 
     return (
         <>
-          <div className="table-header">
-            <h2 className="table-title">Gestión de Clientes</h2>
-            <div className="table-controls">
-              <input
-                type="text"
-                placeholder="Buscar Clientes..."
-                value={filterText}
-                onChange={e => setFilterText(e.target.value)}
-                className="table-search"
-              />
-              <button onClick={handleCrearCliente} className="table-button">
-                Registrar Cliente
-                <span className="material-symbols-outlined">add_circle</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="table-container">
-            <DataTable
-              columns={columns}
-              data={filteredData}
-              pagination
-              paginationPerPage={10}
-              progressPending={loading}
-              progressComponent={<Load />}
-              highlightOnHover
-              customStyles={{
-                headCells: {
-                  style: {
-                    backgroundColor: '#fafafa',
-                    fontWeight: '600',
-                    fontSize: '14px',
-                  },
-                },
-                cells: {
-                  style: {
-                    fontSize: '14px',
-                    padding: '16px 12px', 
-                    verticalAlign: 'top',
-                  },
-                },
-              }}
-            />
-
-            {/* Modal para Crear/Editar Cliente */}
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-              <h2 className="modal-title">
-                {selectedCliente ? 'Actualizar Cliente' : 'Registrar Cliente'}
-              </h2>
-              <ClienteForm
-                onSubmit={handleSubmit}
-                onClose={() => setIsModalOpen(false)}
-                initialData={selectedCliente || {}}
-              />
-            </Modal>
-                    {console.log(detalleCliente)}
-
-            {/* Modal de Detalle */}
-            <Modal isOpen={!!detalleCliente} onClose={() => setDetalleCliente(null)}>
-                <div className="detalle-cliente-modal">
-                    <h3>Detalle del Cliente</h3>
-                    <hr />
-                    {detalleCliente && (
-                    <div className="info-general-cliente">
-                        <p><span className="label-cliente">Documento:</span> {detalleCliente.documento}</p>
-                        <p><span className="label-cliente">Nombre:</span> {detalleCliente.id_usuario.nombre}</p>
-                        <p><span className="label-cliente">Apellido:</span> {detalleCliente.id_usuario.apellido}</p>
-                        <p><span className="label-cliente">Correo:</span> {detalleCliente.id_usuario.correo}</p>
-                        <p><span className="label-cliente">Teléfono:</span> {detalleCliente.telefono}</p>
-
-                        {detalleCliente.observacion_medica && (
-                        <p><span className="label-cliente">Observación Médica:</span> {detalleCliente.observacion_medica}</p>
-                        )}
-
-                        <p><span className="label-cliente">Estado:</span>
-                        <span className={`estado ${detalleCliente.estado ? 'activo' : 'inactivo'}`}>
-                            {detalleCliente.estado ? 'Activo' : 'Inactivo'}
-                        </span>
-                        </p>
-                    </div>
-                    )}
+            <div className="table-header">
+                <h2 className="table-title">Gestión de Clientes</h2>
+                <div className="table-controls">
+                    <input
+                        type="text"
+                        placeholder="Buscar Clientes..."
+                        value={filterText}
+                        onChange={e => setFilterText(e.target.value)}
+                        className="table-search"
+                    />
+                    <button onClick={handleCrearCliente} className="table-button">
+                        Registrar Cliente
+                        <span className="material-symbols-outlined">add_circle</span>
+                    </button>
                 </div>
-            </Modal>
+            </div>
 
-            
-          </div>
+            <div className="table-container">
+                <DataTable
+                    columns={columns}
+                    data={filteredData}
+                    pagination
+                    paginationPerPage={10}
+                    progressPending={loading}
+                    progressComponent={<Load />}
+                    highlightOnHover
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                backgroundColor: '#fafafa',
+                                fontWeight: '600',
+                                fontSize: '14px',
+                            },
+                        },
+                        cells: {
+                            style: {
+                                fontSize: '14px',
+                                padding: '16px 12px',
+                                verticalAlign: 'top',
+                            },
+                        },
+                    }}
+                />
+
+                {/* Modal para Crear/Editar Cliente */}
+                <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                    <h2 className="modal-title">
+                        {selectedCliente ? 'Actualizar Cliente' : 'Registrar Cliente'}
+                    </h2>
+                    <ClienteForm
+                        onSubmit={handleSubmit}
+                        onClose={() => setIsModalOpen(false)}
+                        initialData={selectedCliente || {}}
+                    />
+                </Modal>
+
+                {/* Modal de Detalle */}
+                <Modal isOpen={!!detalleCliente} onClose={() => setDetalleCliente(null)}>
+                    <div className="detalle-cliente-modal">
+                        <h3>Detalle del Cliente</h3>
+                        <hr />
+                        {detalleCliente && (
+                            <div className="info-general-cliente">
+                                <p><span className="label-cliente">Documento:</span> {detalleCliente.documento}</p>
+                                <p><span className="label-cliente">Nombre:</span> {detalleCliente.id_usuario?.nombre}</p>
+                                <p><span className="label-cliente">Apellido:</span> {detalleCliente.id_usuario?.apellido}</p>
+                                <p><span className="label-cliente">Correo:</span> {detalleCliente.id_usuario?.correo}</p>
+                                <p><span className="label-cliente">Teléfono:</span> {detalleCliente.telefono}</p>
+
+                                {detalleCliente.observacion_medica && (
+                                    <p><span className="label-cliente">Observación Médica:</span> {detalleCliente.observacion_medica}</p>
+                                )}
+
+                                <p><span className="label-cliente">Estado:</span>
+                                    <span className={`estado ${detalleCliente.estado ? 'activo' : 'inactivo'}`}>
+                                        {detalleCliente.estado ? 'Activo' : 'Inactivo'}
+                                    </span>
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                </Modal>
+            </div>
         </>
     );
 };
