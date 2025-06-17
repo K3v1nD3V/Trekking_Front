@@ -96,16 +96,17 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
       ? '¿Estás seguro de actualizar este usuario?'
       : '¿Deseas crear este nuevo usuario?';
     const confirmTitle = initialData._id ? 'Actualizar' : 'Registrar';
+    
+    const isEditing = !!initialData._id;
 
     const result = await showConfirm(confirmText, confirmTitle);
     if (!result.isConfirmed) return;
 
     const dataToSubmit = { ...formData };
     if (initialData._id) delete dataToSubmit.contraseña;
+    
 
     try {
-      const dataToSubmit = { ...formData };
-      
       if (isEditing) {
         delete dataToSubmit.contraseña;
         await updateUsuario(initialData._id, dataToSubmit);
