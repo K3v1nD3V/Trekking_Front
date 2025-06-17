@@ -15,6 +15,8 @@ import { IoReloadOutline } from "react-icons/io5";
 // API
 import { getPaquetes, deletePaquete } from '../../../api/paquetes';
 import { getServicios } from '../../../api/servicios';
+import { getTours } from '../../../api/tours';
+import { getVentas } from '../../../api/ventas';
 // COMPONENTS
 import Load from '../../common/Load';
 import {showConfirm } from '../../../alerts/alerts'
@@ -85,22 +87,36 @@ const Paquetes = () => {
     //     )
     // );
 
-    const handleDeletePaquete = async (id) => {
-        const result = await showConfirm('¿Estás seguro de que deseas eliminar este paquete?', 'Eliminar paquete');
-      
-        if (!result.isConfirmed) return;
-      
-        try {
-          await deletePaquete(id);
-      
-          toast.success('¡Paquete eliminado exitosamente!');
-      
-          setPaquetes(prevPaquetes => prevPaquetes.filter(paquete => paquete._id !== id));
-        } catch (error) {
-          console.error('Error eliminando el paquete:', error.message);
-          toast.error('Error al eliminar', 'Hubo un problema al intentar eliminar el paquete.');
-        }
-      };
+const handleDeletePaquete = async (id) => {
+  const result = await showConfirm(
+    '¿Estás seguro de que deseas eliminar este paquete?',
+    'Eliminar paquete'
+  );
+
+  if (!result.isConfirmed) return;
+
+  try {
+    // Consultamos Tours y Ventas
+    const [tours, ventas] = await Promise.all([getTours(), getVentas()]);
+
+    const tieneTour = tours.some(tour => tour.id_paquete === id || tour.id_paquete?._id === id);
+    const tieneVenta = ventas.some(venta => venta.id_paquete === id || venta.id_paquete?._id === id);
+
+    if (tieneTour || tieneVenta) {
+      toast.error('No puedes eliminar este paquete porque está asociado a un tour o una venta.');
+      return;
+    }
+
+    await deletePaquete(id);
+    toast.success('¡Paquete eliminado exitosamente!');
+
+    setPaquetes(prev => prev.filter(paquete => paquete._id !== id));
+  } catch (error) {
+    console.error('Error eliminando el paquete:', error.message);
+    toast.error('Error al eliminar', 'Hubo un problema al intentar eliminar el paquete.');
+  }
+};
+
       
 
     const paquetes_servicios = paquetes.map(paquete => ({
