@@ -50,28 +50,41 @@ const ServicioForm = ({ onSubmit, onClose, initialData = {} }) => {
     setShowPreview(false);
   };
 
-  const validate = () => {
-    const newErrors = {};
+const validate = () => {
+  const newErrors = {};
 
-    if (!formData.nombre.trim()) {
-      newErrors.nombre = 'El nombre del servicio es requerido.';
-    }
+  // Validación nombre
+  if (!formData.nombre.trim()) {
+    newErrors.nombre = 'El nombre del servicio es requerido.';
+  } else if (formData.nombre.length < 3) {
+    newErrors.nombre = 'El nombre debe tener al menos 3 caracteres.';
+  } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)) {
+    newErrors.nombre = 'El nombre solo puede contener letras y espacios.';
+  }
 
-    if (!formData.descripcion.trim()) {
-      newErrors.descripcion = 'La descripción es requerida.';
-    }
+  // Validación descripción
+  if (!formData.descripcion.trim()) {
+    newErrors.descripcion = 'La descripción es requerida.';
+  } else if (formData.descripcion.length < 10) {
+    newErrors.descripcion = 'La descripción debe tener al menos 10 caracteres.';
+  }
 
-    if (formData.estado !== true && formData.estado !== false) {
-      newErrors.estado = 'El estado debe ser un valor booleano.';
-    }
+  // Validación icono
+  if (!formData.icono.trim()) {
+    newErrors.icono = 'El icono es requerido.';
+  } else if (!/^[a-z_]+$/.test(formData.icono)) {
+    newErrors.icono = 'El icono debe contener solo letras minúsculas y guiones bajos.';
+  }
 
-    if (!formData.icono.trim()) {
-      newErrors.icono = 'El icono es requerido.';
-    }
+  // Validación estado (booleano)
+  if (typeof formData.estado !== 'boolean') {
+    newErrors.estado = 'El estado debe ser un valor booleano.';
+  }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

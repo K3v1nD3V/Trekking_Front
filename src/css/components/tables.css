@@ -47,7 +47,7 @@
 .table-button {
   width: 110%;
   height: 46px;
-  margin-top: 5px;
+  /* margin-top: 5px; */
   background-color: #C81E17;
   color: white;
   border: none;
@@ -62,7 +62,7 @@
 }
 
 .table-button .material-symbols-outlined{
-  color: white;
+color: white;
 margin-top: 2px;
 }
 

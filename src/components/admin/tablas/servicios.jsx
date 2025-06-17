@@ -194,7 +194,7 @@ const ServiciosTable = () => {
                 <div className="table-controls">
                     <input
                         type="text"
-                        placeholder="Buscar servicios..."
+                        placeholder="Buscar Servicios..."
                         value={filterText}
                         onChange={(e) => setFilterText(e.target.value)}
                         className="table-search"
