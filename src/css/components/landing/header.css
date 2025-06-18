@@ -222,3 +222,10 @@
   gap: 1rem;
   margin-left: auto;
 }
+
+.icon-home-large {
+  font-size: 22px;
+  margin-right: 6px;
+  vertical-align: middle;
+  color: #b10000;
+}
