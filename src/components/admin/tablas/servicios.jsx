@@ -15,6 +15,8 @@ import { toast } from 'sonner';
 import { showConfirm } from '../../../alerts/alerts';
 // API
 import { deleteServicio, updateServicio, getServicios } from '../../../api/servicios';
+import { getPaquetes } from '../../../api/paquetes';
+
 
 const ServiciosTable = () => {
     const [filterText, setFilterText] = useState('');
@@ -44,19 +46,37 @@ const ServiciosTable = () => {
         setIsModalOpen(true);
     };
 
-    const handleDeleteServicio = async (id) => {
-        const result = await showConfirm('¿Estás seguro de que deseas eliminar este servicio?', 'Confirmar eliminación');
-        if (!result.isConfirmed) return;
 
-        try {
-            await deleteServicio(id);
-            toast.success('¡Servicio eliminado exitosamente!');
-            setServicios((prev) => prev.filter((servicio) => servicio._id !== id));
-        } catch (error) {
-            console.error('Error eliminando el servicio:', error.message);
-            toast.error('Error', 'Hubo un error al eliminar el servicio.');
+    const handleDeleteServicio = async (id) => {
+    const result = await showConfirm(
+        '¿Estás seguro de que deseas eliminar este servicio?',
+        'Confirmar eliminación'
+    );
+
+    if (!result.isConfirmed) return;
+
+    try {
+        // Verificar si el servicio está en uso en paquetes
+        const paquetes = await getPaquetes();
+        const estaEnUso = paquetes.some(paquete =>
+            Array.isArray(paquete.servicios) &&
+            paquete.servicios.includes(id)
+        );
+
+        if (estaEnUso) {
+            toast.error('No puedes eliminar este servicio porque está asignado a uno o más paquetes.');
+            return;
         }
-    };
+
+        await deleteServicio(id);
+        toast.success('¡Servicio eliminado exitosamente!');
+        setServicios((prev) => prev.filter((servicio) => servicio._id !== id));
+    } catch (error) {
+        console.error('Error eliminando el servicio:', error.message);
+        toast.error('Hubo un error al eliminar el servicio.');
+    }
+};
+
 
     const handleServicioClick = (row) => {
         setSelectedServicio(row);
@@ -194,7 +214,7 @@ const ServiciosTable = () => {
                 <div className="table-controls">
                     <input
                         type="text"
-                        placeholder="Buscar servicios..."
+                        placeholder="Buscar Servicios..."
                         value={filterText}
                         onChange={(e) => setFilterText(e.target.value)}
                         className="table-search"

@@ -280,7 +280,7 @@ const RolesTable = () => {
         <div className="table-controls">
           <input
             type="text"
-            placeholder="Buscar roles..."
+            placeholder="Buscar Roles..."
             value={filterText}
             onChange={e => setFilterText(e.target.value)}
             className="table-search"

@@ -168,11 +168,10 @@ const Tours = () => {
         <div className="table-controls">
           <input
             type="text"
-            placeholder="Buscar tours..."
+            placeholder="Buscar Tours..."
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
             className="table-search"
-            style={{ border: '2px solid #c81e17', borderRadius: 7, padding: '7px 12px', minWidth: 160, maxWidth: 220, outline: 'none' }}
           />
           <button onClick={handleCrearTour} className="table-button">
             Registrar Tour

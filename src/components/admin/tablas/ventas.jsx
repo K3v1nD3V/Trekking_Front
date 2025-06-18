@@ -165,9 +165,15 @@ const Ventas = () => {
       sortable: true,
     },
     {
-      name: 'Valor',
-      selector: row => row.valor.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }),
-      sortable: true,
+        name: 'Valor',
+        selector: row =>
+          row.valor.toLocaleString('es-CO', {
+            style: 'currency',
+            currency: 'COP',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+          }),
+        sortable: true,
     },
     {
       name: 'Acompañantes',
@@ -210,7 +216,7 @@ const Ventas = () => {
         <div className="table-controls">
           <input
             type="text"
-            placeholder="Buscar ventas..."
+            placeholder="Buscar Ventas..."
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
             className="table-search"

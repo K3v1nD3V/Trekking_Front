@@ -13,6 +13,7 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
     contraseña: ''
   });
 
+  const [originalData] = useState({ ...initialData });
   const [errors, setErrors] = useState({});
   const [correoExisteError, setCorreoExisteError] = useState('');
   const correoRef = useRef(null);
@@ -29,52 +30,45 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
     const regexLetras = /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/;
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // 1. Validar nombre
-    if (!formData.nombre.trim()) {
-      newErrors.nombre = 'El nombre es requerido.';
-    } else if (formData.nombre.trim().length < 3) {
-      newErrors.nombre = 'El nombre debe tener al menos 3 caracteres.';
-    } else if (!regexLetras.test(formData.nombre.trim())) {
-      newErrors.nombre = 'El nombre solo puede contener letras.';
-    }
+    if (!formData.nombre.trim()) newErrors.nombre = 'El nombre es requerido.';
+    else if (formData.nombre.trim().length < 3) newErrors.nombre = 'El nombre debe tener al menos 3 caracteres.';
+    else if (!regexLetras.test(formData.nombre.trim())) newErrors.nombre = 'El nombre solo puede contener letras.';
 
-    // 2. Validar apellido
-    if (!formData.apellido.trim()) {
-      newErrors.apellido = 'El apellido es requerido.';
-    } else if (formData.apellido.trim().length < 5) {
-      newErrors.apellido = 'El apellido debe tener al menos 5 caracteres.';
-    } else if (!regexLetras.test(formData.apellido.trim())) {
-      newErrors.apellido = 'El apellido solo puede contener letras.';
-    }
+    if (!formData.apellido.trim()) newErrors.apellido = 'El apellido es requerido.';
+    else if (formData.apellido.trim().length < 5) newErrors.apellido = 'El apellido debe tener al menos 5 caracteres.';
+    else if (!regexLetras.test(formData.apellido.trim())) newErrors.apellido = 'El apellido solo puede contener letras.';
 
-    // 3. Validar correo
-    if (!formData.correo.trim()) {
-      newErrors.correo = 'El correo es requerido.';
-    } else if (!regexCorreo.test(formData.correo.trim())) {
-      newErrors.correo = 'Ingrese un correo válido con @ y dominio.';
-    }
+    if (!formData.correo.trim()) newErrors.correo = 'El correo es requerido.';
+    else if (!regexCorreo.test(formData.correo.trim())) newErrors.correo = 'Ingrese un correo válido con @ y dominio.';
 
-    // 4. Validar rol
-    if (!formData.rol.trim()) {
-      newErrors.rol = 'Debe seleccionar un rol.';
-    }
+    if (!formData.rol.trim()) newErrors.rol = 'Debe seleccionar un rol.';
 
-    // 5. Validar contraseña solo si es nuevo usuario
     if (!initialData._id) {
-      if (!formData.contraseña.trim()) {
-        newErrors.contraseña = 'La contraseña es requerida.';
-      } else if (formData.contraseña.trim().length < 6) {
-        newErrors.contraseña = 'La contraseña debe tener al menos 6 caracteres.';
-      }
+      if (!formData.contraseña.trim()) newErrors.contraseña = 'La contraseña es requerida.';
+      else if (formData.contraseña.trim().length < 6) newErrors.contraseña = 'La contraseña debe tener al menos 6 caracteres.';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  const isModified = () => {
+    return (
+      formData.nombre !== originalData.nombre ||
+      formData.apellido !== originalData.apellido ||
+      formData.correo !== originalData.correo ||
+      formData.rol !== originalData.rol
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+
+    if (initialData._id && !isModified()) {
+      toast.error('No se han realizado cambios en el formulario.');
+      return;
+    }
 
     if (!initialData._id) {
       try {
@@ -96,24 +90,20 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
       ? '¿Estás seguro de actualizar este usuario?'
       : '¿Deseas crear este nuevo usuario?';
     const confirmTitle = initialData._id ? 'Actualizar' : 'Registrar';
-    
-    const isEditing = !!initialData._id;
 
     const result = await showConfirm(confirmText, confirmTitle);
     if (!result.isConfirmed) return;
 
     const dataToSubmit = { ...formData };
     if (initialData._id) delete dataToSubmit.contraseña;
-    
 
     try {
-      if (isEditing) {
-        delete dataToSubmit.contraseña;
+      if (initialData._id) {
         await updateUsuario(initialData._id, dataToSubmit);
-        await toast.success('¡Usuario actualizado exitosamente!');
+        toast.success('¡Usuario actualizado exitosamente!');
       } else {
         await createUsuario(dataToSubmit);
-        await toast.success('¡Usuario creado exitosamente!');
+        toast.success('¡Usuario creado exitosamente!');
       }
 
       setTimeout(() => {
@@ -122,8 +112,6 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
       }, 900);
     } catch (error) {
       const mensaje = error?.response?.data?.message || error.message || '';
-      console.error('Error en UsuarioForm:', mensaje);
-
       if (
         mensaje.includes('E11000') ||
         mensaje.toLowerCase().includes('duplicate key') ||
@@ -132,7 +120,8 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
         setCorreoExisteError('Este correo ya está registrado');
         correoRef.current?.focus();
       } else {
-        console.error('Error al guardar usuario:', mensaje);
+        toast.error('Error al guardar usuario.');
+        console.error('Error en UsuarioForm:', mensaje);
       }
     }
   };
@@ -224,3 +213,4 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
 };
 
 export default UsuarioForm;
+

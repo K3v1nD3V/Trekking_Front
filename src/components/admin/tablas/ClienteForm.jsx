@@ -20,6 +20,8 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     correo: initialData.id_usuario?.correo || '',
   });
 
+  const [originalFormData] = useState(formData);
+  const [originalUsuarioData] = useState(usuarioData);
   const [usuarios, setUsuarios] = useState([]);
   const [errors, setErrors] = useState({});
 
@@ -36,7 +38,6 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     fetchUsuarios();
   }, []);
 
-  // Cuando se selecciona otro usuario, actualiza los campos de usuarioData
   useEffect(() => {
     if (formData.id_usuario && usuarios.length) {
       const usuario = usuarios.find(u => u._id === formData.id_usuario);
@@ -64,100 +65,78 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     }));
   };
 
-  // const validate = async () => {
-  //   const newErrors = {};
-  //   if (!formData.documento) {
-  //     newErrors.documento = 'El documento es requerido.';
-  //   } else if (formData.documento.length < 8 || formData.documento.length > 12) {
-  //     newErrors.documento = 'El documento debe tener entre 8 y 12 caracteres.';
-  //   } else if (!/^\d+$/.test(formData.documento)) {
-  //     newErrors.documento = 'El documento debe contener solo números.';
-  //   } else {
-  //     const exists = await checkClienteExistence({ documento: formData.documento });
-      
-  //     if (exists && (!initialData._id || formData.documento !== initialData.documento)) {
-  //       newErrors.documento = 'El documento ya está registrado.';
-  //     }
-  //   }
-  //   if (!formData.telefono) {
-  //     newErrors.telefono = 'El teléfono es requerido.';
-  //   } else if (!/^\d+$/.test(formData.telefono)) {
-  //     newErrors.telefono = 'El teléfono debe contener solo números.';
-  //   }
-  //   if (!formData.id_usuario) {
-  //     newErrors.id_usuario = 'Debe seleccionar un usuario asociado.';
-  //   }
-  //   if (!usuarioData.nombre) newErrors.nombre = 'El nombre es requerido.';
-  //   if (!usuarioData.apellido) newErrors.apellido = 'El apellido es requerido.';
-  //   if (!usuarioData.correo) newErrors.correo = 'El correo es requerido.';
-  //   setErrors(newErrors);
-  //   return Object.keys(newErrors).length === 0;
-  // };
-
   const validate = async () => {
-  const newErrors = {};
+    const newErrors = {};
 
-  // Documento
-  if (!formData.documento) {
-    newErrors.documento = 'El documento es requerido.';
-  } else if (formData.documento.length < 8 || formData.documento.length > 12) {
-    newErrors.documento = 'Debe tener entre 8 y 12 dígitos.';
-  } else if (!/^\d+$/.test(formData.documento)) {
-    newErrors.documento = 'Debe contener solo números.';
-  } else {
-    const exists = await checkClienteExistence({ documento: formData.documento });
-    if (exists && (!initialData._id || formData.documento !== initialData.documento)) {
-      newErrors.documento = 'Ya está registrado.';
+    if (!formData.documento) {
+      newErrors.documento = 'El documento es requerido.';
+    } else if (formData.documento.length < 8 || formData.documento.length > 12) {
+      newErrors.documento = 'Debe tener entre 8 y 12 dígitos.';
+    } else if (!/^\d+$/.test(formData.documento)) {
+      newErrors.documento = 'Debe contener solo números.';
+    } else {
+      const exists = await checkClienteExistence({ documento: formData.documento });
+      if (exists && (!initialData._id || formData.documento !== initialData.documento)) {
+        newErrors.documento = 'Ya está registrado.';
+      }
     }
-  }
 
-  // Teléfono
-  if (!formData.telefono) {
-    newErrors.telefono = 'El teléfono es requerido.';
-  } else if (!/^\d{7,15}$/.test(formData.telefono)) {
-    newErrors.telefono = 'Debe tener entre 7 y 15 dígitos numéricos.';
-  }
+    if (!formData.telefono) {
+      newErrors.telefono = 'El teléfono es requerido.';
+    } else if (!/^\d{7,15}$/.test(formData.telefono)) {
+      newErrors.telefono = 'Debe tener entre 7 y 15 dígitos numéricos.';
+    }
 
-  // Usuario asociado
-  if (!formData.id_usuario) {
-    newErrors.id_usuario = 'Debe seleccionar un usuario.';
-  }
+    if (!formData.id_usuario) {
+      newErrors.id_usuario = 'Debe seleccionar un usuario.';
+    }
 
-  // Nombre
-  if (!usuarioData.nombre) {
-    newErrors.nombre = 'El nombre es requerido.';
-  } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuarioData.nombre)) {
-    newErrors.nombre = 'Solo se permiten letras y espacios.';
-  }
+    if (!usuarioData.nombre) {
+      newErrors.nombre = 'El nombre es requerido.';
+    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuarioData.nombre)) {
+      newErrors.nombre = 'Solo se permiten letras y espacios.';
+    }
 
-  // Apellido
-  if (!usuarioData.apellido) {
-    newErrors.apellido = 'El apellido es requerido.';
-  } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuarioData.apellido)) {
-    newErrors.apellido = 'Solo se permiten letras y espacios.';
-  }
+    if (!usuarioData.apellido) {
+      newErrors.apellido = 'El apellido es requerido.';
+    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuarioData.apellido)) {
+      newErrors.apellido = 'Solo se permiten letras y espacios.';
+    }
 
-  // Correo
-  if (!usuarioData.correo) {
-    newErrors.correo = 'El correo es requerido.';
-  } else if (
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usuarioData.correo)
-  ) {
-    newErrors.correo = 'El formato de correo no es válido.';
-  }
+    if (!usuarioData.correo) {
+      newErrors.correo = 'El correo es requerido.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usuarioData.correo)) {
+      newErrors.correo = 'El formato de correo no es válido.';
+    }
 
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
+  const isModified = () => {
+    const clienteModificado =
+      originalFormData.documento !== formData.documento ||
+      originalFormData.telefono !== formData.telefono ||
+      originalFormData.observacion_medica !== formData.observacion_medica ||
+      originalFormData.estado !== formData.estado;
+
+    const usuarioModificado =
+      originalUsuarioData.nombre !== usuarioData.nombre ||
+      originalUsuarioData.apellido !== usuarioData.apellido ||
+      originalUsuarioData.correo !== usuarioData.correo;
+
+    return clienteModificado || usuarioModificado;
+  };
 
   const handleSubmit = async (e) => {
-    console.log('Submitting form with data:', formData);
-    
     e.preventDefault();
     if (!(await validate())) return;
-    console.log('Form data is valid:', formData);
-    
+
+    if (initialData._id && !isModified()) {
+      toast.error('No se han realizado cambios en el formulario.');
+      return;
+    }
+
     const confirmResult = await showConfirm(
       initialData._id ? '¿Confirmas actualizar este cliente?' : '¿Confirmas crear este cliente?',
       'Confirmación'
@@ -165,9 +144,7 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     if (!confirmResult.isConfirmed) return;
 
     try {
-      // Si se está editando, primero actualiza el usuario si cambió algún campo
       if (initialData._id) {
-        // Solo actualiza usuario si cambió algún campo
         const usuarioOriginal = initialData.id_usuario || {};
         const usuarioModificado =
           usuarioOriginal.nombre !== usuarioData.nombre ||
@@ -179,8 +156,6 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
         }
 
         const clienteActualizado = await updateCliente(initialData._id, formData);
-        console.log('Cliente actualizado:', clienteActualizado);
-
         toast.success('Cliente actualizado exitosamente!');
         setTimeout(() => {
           onSubmit(clienteActualizado, "edit");
@@ -190,7 +165,7 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
         const clienteCreado = await createCliente(formData);
         toast.success('Cliente creado exitosamente!');
         setTimeout(() => {
-          onSubmit(clienteCreado, "create"); // Incluye el _id y todo lo nuevo
+          onSubmit(clienteCreado, "create");
           onClose();
         }, 900);
       }
@@ -200,7 +175,7 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
     }
   };
 
-  return (
+    return (
     <form className="cliente-form" onSubmit={handleSubmit}>
       <div className="form-group">
         <label>Documento</label>

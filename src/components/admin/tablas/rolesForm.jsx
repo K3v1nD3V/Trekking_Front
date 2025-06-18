@@ -6,7 +6,6 @@ import { getPermisos } from '../../../api/permisos';
 import { getPrivilegios } from '../../../api/privilegios';
 import { showConfirm } from '../../../alerts/alerts';
 
-
 const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
   const [formData, setFormData] = useState({
     nombreRol: '',
@@ -22,15 +21,18 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setPermisos(await getPermisos());
-        setPrivilegios(await getPrivilegios());
+        const [permisosData, privilegiosData] = await Promise.all([
+          getPermisos(),
+          getPrivilegios()
+        ]);
+        setPermisos(permisosData);
+        setPrivilegios(privilegiosData);
 
         if (initialData._id) {
           const permisosFormateados = initialData.permisos.map(p => ({
             permiso: p.nombre,
             privilegios: p.privilegios
           }));
-
           setFormData({
             nombreRol: initialData.nombre,
             estado: initialData.estado,
@@ -38,7 +40,6 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
           });
         }
       } catch (err) {
-        console.error(err);
         toast.error('No se pudieron cargar los datos iniciales.');
       }
     };
@@ -89,6 +90,25 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     }));
   };
 
+  const detectaCambios = () => {
+    if (!initialData._id) return true;
+
+    const nombreOriginal = initialData.nombre?.trim() || '';
+    const nombreActual = formData.nombreRol.trim();
+    if (nombreOriginal !== nombreActual) return true;
+    if (initialData.estado !== formData.estado) return true;
+
+    const permisosOriginal = (initialData.permisos || []).map(p => p._id || p).sort();
+    const permisosActuales = formData.permisos
+      .filter(p => p.privilegios.length > 0)
+      .map(p => {
+        const encontrado = permisos.find(perm => perm.nombre === p.permiso);
+        return encontrado?._id;
+      }).filter(Boolean).sort();
+
+    return JSON.stringify(permisosOriginal) !== JSON.stringify(permisosActuales);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -130,7 +150,7 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
     const permisosFinal = permisosValidos.map(p => {
       const permisoEncontrado = permisos.find(perm => perm.nombre === p.permiso);
       return permisoEncontrado?._id;
-    }).filter(id => id);
+    }).filter(Boolean);
 
     const dataToSend = {
       nombre: nombreTrimmed,
@@ -144,9 +164,13 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
         : '¿Deseas crear este rol?'
     );
     if (!confirmado) return;
-    
+
     try {
       if (initialData._id) {
+        if (!detectaCambios()) {
+          toast.error('No se han realizado cambios en el formulario.');
+          return;
+        }
         await updateRol(initialData._id, dataToSend);
         toast.success('¡Rol actualizado exitosamente!');
       } else {
@@ -157,7 +181,6 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
       onSubmit(formData);
       onClose();
     } catch (err) {
-      toast.error('Error al guardar el rol:', err);
       toast.error('Error al guardar el rol. Verifica los datos o intenta más tarde.');
     }
   };
@@ -199,14 +222,12 @@ const RolForm = ({ onSubmit, onClose, initialData = {} }) => {
             const permisoActivo = formData.permisos.find(pm => pm.permiso === p.nombre);
             return (
               <div key={p._id} className="permission-item">
-                  <input
-                    type="checkbox"
-                    checked={!!permisoActivo}
-                    onChange={() => togglePermiso(p.nombre)}
-                  />
-                <label className="permission-label">
-                  {p.nombre}
-                </label>
+                <input
+                  type="checkbox"
+                  checked={!!permisoActivo}
+                  onChange={() => togglePermiso(p.nombre)}
+                />
+                <label className="permission-label">{p.nombre}</label>
 
                 {permisoActivo && (
                   <div className="privilegios-list">

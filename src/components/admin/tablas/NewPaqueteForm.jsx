@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
 import '../../../css/components/admin/PaqueteFormStyles.css';
 import { updatePaquete, createPaquete } from '../../../api/paquetes';
-import { showConfirm } from '../../../alerts/alerts'
+import { showConfirm } from '../../../alerts/alerts';
 import { toast } from 'sonner';
-
 
 const NewPaqueteForm = ({ onSubmit, onClose, initialData = {}, servicios }) => {
   const [formData, setFormData] = useState({
@@ -49,6 +48,23 @@ const NewPaqueteForm = ({ onSubmit, onClose, initialData = {}, servicios }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const hasChanges = () => {
+    const campos = ['nombre', 'descripcion', 'valor', 'lugar_encuentro', 'destino'];
+    const camposModificados = campos.some(campo => String(formData[campo]) !== String(initialData[campo] || ''));
+
+    const serviciosOriginal = (initialData.servicios || []).map(s => s._id).sort();
+    const serviciosActual = formData.servicios.map(s => s._id).sort();
+
+    const multimediaOriginal = (initialData.multimedia || []).sort();
+    const multimediaActual = formData.multimedia.sort();
+
+    const serviciosModificados = JSON.stringify(serviciosOriginal) !== JSON.stringify(serviciosActual);
+    const multimediaModificada = JSON.stringify(multimediaOriginal) !== JSON.stringify(multimediaActual);
+    const hayMediaNueva = newMedia.length > 0;
+
+    return camposModificados || serviciosModificados || multimediaModificada || hayMediaNueva;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -57,7 +73,6 @@ const NewPaqueteForm = ({ onSubmit, onClose, initialData = {}, servicios }) => {
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     const totalMedia = formData.multimedia.length + newMedia.length + files.length;
-
     if (totalMedia > 5) return alert('Máximo 5 archivos multimedia permitidos.');
     setNewMedia(prev => [...prev, ...files]);
   };
@@ -84,16 +99,20 @@ const NewPaqueteForm = ({ onSubmit, onClose, initialData = {}, servicios }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     if (!validate()) return;
-  
+
+    if (formData._id && !hasChanges()) {
+      toast.error('No se han realizado cambios en el formulario.');
+      return;
+    }
+
     const confirm = await showConfirm(
       formData._id ? '¿Estás seguro de actualizar este paquete?' : '¿Deseas crear este nuevo paquete?',
       formData._id ? 'Confirmar actualización' : 'Confirmar creación'
     );
-  
+
     if (!confirm.isConfirmed) return;
-  
+
     const formDataToSend = new FormData();
 
     Object.entries({
@@ -103,10 +122,10 @@ const NewPaqueteForm = ({ onSubmit, onClose, initialData = {}, servicios }) => {
       lugar_encuentro: formData.lugar_encuentro,
       destino: formData.destino
     }).forEach(([key, value]) => formDataToSend.append(key, value));
-  
+
     formData.servicios.forEach(servicio => formDataToSend.append('servicios[]', servicio._id));
     newMedia.forEach(file => formDataToSend.append('images', file));
-  
+
     try {
       if (formData._id) {
         await updatePaquete(formData._id, formDataToSend);
