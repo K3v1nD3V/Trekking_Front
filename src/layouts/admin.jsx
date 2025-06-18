@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import NavOption from '../components/common/NavOption';
 import logo from '../../public/LogoTrekking.png';
+import { logout } from '../api/auth';
 
 import '../css/layouts/admin.css';
 import '../css/common/Error.css';
@@ -17,10 +18,10 @@ const Admin = () => {
   };
 
   const handleLogout = async () => {
-    const confirmed = await showConfirm('¿Estás seguro de que deseas cerrar sesión?');
-    if (confirmed) {
-      localStorage.clear();
-      navigate('/login');
+    const result = await showConfirm('¿Estás seguro de que deseas cerrar sesión?');
+    if (result.isConfirmed) {
+      logout();
+      navigate('/');
     }
   };
 
@@ -38,11 +39,18 @@ const Admin = () => {
           <img className='logoStyle' src={logo} alt="Logo Trekking San Cristóbal" />
         </div>
 
-        {/* Ícono de inicio (Home) sin botón visible */}
-        <div onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-          <span className="material-symbols-outlined">
-            home
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '40px', color: '#8B2B1B' }}>
+              home
+            </span>
+          </div>
+
+          <div onClick={() => handleLogout()}>
+            <span className="material-symbols-outlined iconStyle" style={{ fontSize: '40px', color: '#8B2B1B' }}>
+              logout
+            </span>
+          </div>
         </div>
       </header>
 
@@ -88,12 +96,12 @@ const Admin = () => {
                 <div className="menu-section">
                   <h3 className="section-title">Gestión Configuración</h3>
                   <NavOption icon={<span className="material-symbols-outlined iconStyle">manage_accounts</span>} text="Roles" to="/admin/roles" />
-                  <NavOption
+                  {/* <NavOption
                     icon={<span className="material-symbols-outlined iconStyle">logout</span>}
                     text="Cerrar Sesión"
                     onClick={handleLogout}
                     isLogout={true}
-                  />
+                  /> */}
                 </div>
               </div>
             </nav>

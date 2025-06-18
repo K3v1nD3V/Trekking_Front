@@ -13,7 +13,6 @@ const NavOption = ({ icon, text, to, isLogout }) => {
       
       if (result.isConfirmed) {
         logout();
-        navigate('/login');
       }
 
       return; 
