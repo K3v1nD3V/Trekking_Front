@@ -78,40 +78,41 @@ const RestablecerContrasena = () => {
         <p className="input-description">Digita tu nueva contraseña. Debe contener al menos 6 caracteres, una mayúscula y una minúscula.</p>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="password-container-register">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Nueva contraseña"
-              value={nuevaContrasena}
-              onChange={(e) => setNuevaContrasena(e.target.value)}
-              className={error ? 'input-error' : ''}
-            />
-            <span
-              className="material-icons toggle-password"
-              onClick={() => setShowPassword(prev => !prev)}
-            >
-              {showPassword ? 'visibility_off' : 'visibility'}
-            </span>
-          </div>
+        <div className="password-container-register">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Nueva contraseña"
+            value={nuevaContrasena}
+            onChange={(e) => setNuevaContrasena(e.target.value)}
+            className={`wide-input ${error ? 'input-error' : ''}`}
+          />
+          <span
+            className="material-icons toggle-password"
+            onClick={() => setShowPassword(prev => !prev)}
+          >
+            {showPassword ? 'visibility_off' : 'visibility'}
+          </span>
+        </div>
 
-          <div className="password-container-register">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Confirmar contraseña"
-              value={confirmarContrasena}
-              onChange={(e) => setConfirmarContrasena(e.target.value)}
-              className={error ? 'input-error' : ''}
-            />
-            {confirmarContrasena && (
-              <span
-                className={`material-icons password-check-icon ${
-                  confirmarContrasena === nuevaContrasena ? 'valid' : 'invalid'
-                }`}
-              >
-                {confirmarContrasena === nuevaContrasena ? 'check_circle' : 'cancel'}
-              </span>
-            )}
-          </div>
+        <div className="password-container-register">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Confirmar contraseña"
+            value={confirmarContrasena}
+            onChange={(e) => setConfirmarContrasena(e.target.value)}
+            className={`wide-input ${error ? 'input-error' : ''}`}
+          />
+          {confirmarContrasena && (
+            <span
+              className={`material-icons password-check-icon ${
+                confirmarContrasena === nuevaContrasena ? 'valid' : 'invalid'
+              }`}
+            >
+              {confirmarContrasena === nuevaContrasena ? 'check_circle' : 'cancel'}
+            </span>
+          )}
+        </div>
+
 
           {error && <p className="field-error">{error}</p>}
 

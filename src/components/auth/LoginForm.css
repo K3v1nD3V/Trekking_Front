@@ -449,3 +449,7 @@ input[type="password"]::-webkit-outer-spin-button {
 }
 
 
+.wide-input {
+  width: 100%;
+  padding-right: 2.5rem; /* espacio para el ícono */
+}
