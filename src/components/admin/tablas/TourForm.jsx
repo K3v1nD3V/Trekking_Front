@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getPaquetes } from '../../../api/paquetes';
 import { showSuccess, showError, showConfirm } from '../../../alerts/alerts';
 import '../../../css/components/admin/TourForm.css';
@@ -12,6 +12,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
     fecha_limite_inscripcion: initialData.fecha_limite_inscripcion || '',
   });
 
+  const [originalData, setOriginalData] = useState({});
   const [paquetes, setPaquetes] = useState([]);
   const [errors, setErrors] = useState({});
 
@@ -20,7 +21,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
   }, []);
 
   useEffect(() => {
-    setFormData({
+    const formattedInitial = {
       fechaHora: initialData.fechaHora
         ? new Date(initialData.fechaHora).toISOString().slice(0, 16)
         : '',
@@ -29,7 +30,9 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       fecha_limite_inscripcion: initialData.fecha_limite_inscripcion
         ? new Date(initialData.fecha_limite_inscripcion).toISOString().slice(0, 10)
         : '',
-    });
+    };
+    setFormData(formattedInitial);
+    setOriginalData(formattedInitial);
   }, [initialData]);
 
   const loadPaquetes = async () => {
@@ -49,7 +52,7 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
     }));
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [name]: '', // limpiar el error del campo al escribir
+      [name]: '',
     }));
   };
 
@@ -58,7 +61,6 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Fecha y hora del tour
     if (!formData.fechaHora) {
       newErrors.fechaHora = 'Debe seleccionar una fecha y hora.';
     } else {
@@ -70,12 +72,10 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       }
     }
 
-    // Paquete
     if (!formData.id_paquete) {
       newErrors.id_paquete = 'Debe seleccionar un paquete.';
     }
 
-    // Cupos
     const cupos = parseInt(formData.cupos, 10);
     if (!formData.cupos) {
       newErrors.cupos = 'Debe ingresar la cantidad de cupos.';
@@ -83,7 +83,6 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
       newErrors.cupos = 'Los cupos deben ser un número mayor a 0.';
     }
 
-    // Fecha límite de inscripción
     if (!formData.fecha_limite_inscripcion) {
       newErrors.fecha_limite_inscripcion = 'Debe seleccionar una fecha límite.';
     } else {
@@ -104,10 +103,24 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const isUnchanged = () => {
+    return (
+      formData.fechaHora === originalData.fechaHora &&
+      formData.id_paquete === originalData.id_paquete &&
+      String(formData.cupos) === String(originalData.cupos) &&
+      formData.fecha_limite_inscripcion === originalData.fecha_limite_inscripcion
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validate()) return;
+
+    if (initialData._id && isUnchanged()) {
+      toast.error('No se han realizado cambios en el formulario.');
+      return;
+    }
 
     const result = await showConfirm(
       initialData._id ? '¿Estás seguro de actualizar este tour?' : '¿Confirmas crear este tour?',

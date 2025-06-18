@@ -46,19 +46,6 @@ const ServiciosTable = () => {
         setIsModalOpen(true);
     };
 
-    // const handleDeleteServicio = async (id) => {
-    //     const result = await showConfirm('¿Estás seguro de que deseas eliminar este servicio?', 'Confirmar eliminación');
-    //     if (!result.isConfirmed) return;
-
-    //     try {
-    //         await deleteServicio(id);
-    //         toast.success('¡Servicio eliminado exitosamente!');
-    //         setServicios((prev) => prev.filter((servicio) => servicio._id !== id));
-    //     } catch (error) {
-    //         console.error('Error eliminando el servicio:', error.message);
-    //         toast.error('Error', 'Hubo un error al eliminar el servicio.');
-    //     }
-    // };
 
     const handleDeleteServicio = async (id) => {
     const result = await showConfirm(

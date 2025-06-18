@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../../css/components/admin/ServicioForm.css';
 import { updateServicio, createServicio } from '../../../api/servicios';
-import { showConfirm } from '../../../alerts/alerts';// Ajusta la ruta
+import { showConfirm } from '../../../alerts/alerts';
 import { toast } from 'sonner';
 
 const ICONS = [
@@ -20,10 +20,22 @@ const ServicioForm = ({ onSubmit, onClose, initialData = {} }) => {
     icono: initialData.icono || '',
   });
 
+  const [originalData, setOriginalData] = useState(null);
   const [iconPreview, setIconPreview] = useState(formData.icono || '');
   const [showPreview, setShowPreview] = useState(!!formData.icono);
   const [showIconMenu, setShowIconMenu] = useState(false);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (initialData._id) {
+      setOriginalData({
+        nombre: initialData.nombre || '',
+        descripcion: initialData.descripcion || '',
+        estado: initialData.estado ?? true,
+        icono: initialData.icono || '',
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,14 +46,14 @@ const ServicioForm = ({ onSubmit, onClose, initialData = {} }) => {
     setFormData((prev) => ({ ...prev, icono: icon }));
     setIconPreview(icon);
     setShowPreview(true);
-    setShowIconMenu(false); // Ocultar el menú después de seleccionar un icono
+    setShowIconMenu(false);
   };
 
   const handleIconChange = (e) => {
     const value = e.target.value;
     setFormData((prev) => ({ ...prev, icono: value }));
     setIconPreview(value);
-    setShowPreview(!!value.trim()); // Mostrar la vista previa solo si hay texto
+    setShowPreview(!!value.trim());
   };
 
   const resetIcon = () => {
@@ -50,77 +62,83 @@ const ServicioForm = ({ onSubmit, onClose, initialData = {} }) => {
     setShowPreview(false);
   };
 
-const validate = () => {
-  const newErrors = {};
+  const validate = () => {
+    const newErrors = {};
 
-  // Validación nombre
-  if (!formData.nombre.trim()) {
-    newErrors.nombre = 'El nombre del servicio es requerido.';
-  } else if (formData.nombre.length < 3) {
-    newErrors.nombre = 'El nombre debe tener al menos 3 caracteres.';
-  } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)) {
-    newErrors.nombre = 'El nombre solo puede contener letras y espacios.';
-  }
+    if (!formData.nombre.trim()) {
+      newErrors.nombre = 'El nombre del servicio es requerido.';
+    } else if (formData.nombre.length < 3) {
+      newErrors.nombre = 'El nombre debe tener al menos 3 caracteres.';
+    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)) {
+      newErrors.nombre = 'El nombre solo puede contener letras y espacios.';
+    }
 
-  // Validación descripción
-  if (!formData.descripcion.trim()) {
-    newErrors.descripcion = 'La descripción es requerida.';
-  } else if (formData.descripcion.length < 10) {
-    newErrors.descripcion = 'La descripción debe tener al menos 10 caracteres.';
-  }
+    if (!formData.descripcion.trim()) {
+      newErrors.descripcion = 'La descripción es requerida.';
+    } else if (formData.descripcion.length < 10) {
+      newErrors.descripcion = 'La descripción debe tener al menos 10 caracteres.';
+    }
 
-  // Validación icono
-  if (!formData.icono.trim()) {
-    newErrors.icono = 'El icono es requerido.';
-  } else if (!/^[a-z_]+$/.test(formData.icono)) {
-    newErrors.icono = 'El icono debe contener solo letras minúsculas y guiones bajos.';
-  }
+    if (!formData.icono.trim()) {
+      newErrors.icono = 'El icono es requerido.';
+    } else if (!/^[a-z_]+$/.test(formData.icono)) {
+      newErrors.icono = 'El icono debe contener solo letras minúsculas y guiones bajos.';
+    }
 
-  // Validación estado (booleano)
-  if (typeof formData.estado !== 'boolean') {
-    newErrors.estado = 'El estado debe ser un valor booleano.';
-  }
+    if (typeof formData.estado !== 'boolean') {
+      newErrors.estado = 'El estado debe ser un valor booleano.';
+    }
 
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
+  const isEqualToOriginal = () => {
+    return (
+      originalData &&
+      originalData.nombre === formData.nombre &&
+      originalData.descripcion === formData.descripcion &&
+      originalData.icono === formData.icono &&
+      originalData.estado === formData.estado
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validate()) return;
 
-        // Mostrar confirmación antes de enviar
-        const result = await showConfirm(
-            initialData._id
-                ? '¿Quieres actualizar este servicio?'
-                : '¿Quieres crear este servicio?',
-            'Confirma la acción'
-        );
+    if (initialData._id && isEqualToOriginal()) {
+      toast.error('No se han realizado cambios en el formulario.');
+      return;
+    }
 
-        if (!result.isConfirmed) {
-            // Usuario canceló la acción
-            return;
-        }
+    const result = await showConfirm(
+      initialData._id
+        ? '¿Quieres actualizar este servicio?'
+        : '¿Quieres crear este servicio?',
+      'Confirma la acción'
+    );
 
-        try {
-            if (initialData._id) {
-                await updateServicio(initialData._id, formData);
-                await toast.success('¡Servicio actualizado exitosamente!');
-            } else {
-                await createServicio(formData);
-                await toast.success('¡Servicio creado exitosamente!');
-            }
-            setTimeout(() => {
-                onSubmit(formData);
-                onClose();
-            }, 900);
-        } catch (error) {
-            console.error('Error al enviar los datos:', error.message);
-            await toast.success('Error', 'Hubo un error al procesar la solicitud.');
-        }
-    };
+    if (!result.isConfirmed) return;
+
+    try {
+      if (initialData._id) {
+        await updateServicio(initialData._id, formData);
+        await toast.success('¡Servicio actualizado exitosamente!');
+      } else {
+        await createServicio(formData);
+        await toast.success('¡Servicio creado exitosamente!');
+      }
+      setTimeout(() => {
+        onSubmit(formData);
+        onClose();
+      }, 900);
+    } catch (error) {
+      console.error('Error al enviar los datos:', error.message);
+      await toast.error('Hubo un error al procesar la solicitud.');
+    }
+  };
 
   return (
     <form className="servicio-form" onSubmit={handleSubmit}>
@@ -216,18 +234,18 @@ const validate = () => {
         )}
       </div>
 
-            <button type="submit" className="form-submit-button">
-                {initialData._id ? 'Actualizar' : 'Registrar'} 
-            </button>
-            <button
-          type="button"
-          className="cancel-btn"
-          onClick={onClose}
-        >
-          Cancelar
-        </button>
-        </form>
-    );
+      <button type="submit" className="form-submit-button">
+        {initialData._id ? 'Actualizar' : 'Registrar'}
+      </button>
+      <button
+        type="button"
+        className="cancel-btn"
+        onClick={onClose}
+      >
+        Cancelar
+      </button>
+    </form>
+  );
 };
 
 export default ServicioForm;
