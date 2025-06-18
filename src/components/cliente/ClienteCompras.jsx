@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getVentas } from '../../api/ventas';
-import { getUsuarioById } from '../../api/usuarios';
+// import { getUsuarioById } from '../../api/usuarios';
 
 const ClienteCompras = () => {
   const [ventasCliente, setVentasCliente] = useState([]);
   const [expanded, setExpanded] = useState(null);
-
+  const { t } = useTranslation();
+  
   useEffect(() => {
     const fetchVentas = async () => {
       try {
         const idCliente = localStorage.getItem('usuario');
-        const usuarioResponse = await getUsuarioById(idCliente);
-        console.log('Usuario obtenido:', usuarioResponse);
+        // const usuarioResponse = await getUsuarioById(idCliente);
         const response = await getVentas();
         const ventas = response?.data || response || [];
-        console.log('Ventas obtenidas:', ventas);
         
         const filtradas = ventas.filter(v => {
-          console.log('Filtrando venta:', v.id_cliente);
           if (typeof v.id_cliente === 'object') return v.id_cliente.id_usuario === idCliente;
           return false;
         });
@@ -33,15 +32,15 @@ const ClienteCompras = () => {
   if (!ventasCliente.length) {
     return (
       <section className="cliente-compras">
-        <h2 className="cliente-compras__titulo">Mis Compras</h2>
-        <div className="cliente-compras__mensaje">No tienes compras registradas.</div>
+        <h2 className="cliente-compras__titulo">{t('compras.title')}</h2>
+        <div className="cliente-compras__mensaje">{t('compras.noPurchases')}</div>
       </section>
     );
   }
 
   return (
     <section className="cliente-compras">
-      <h2 className="cliente-compras__titulo">Mis Compras</h2>
+      <h2 className="cliente-compras__titulo">{t('compras.title')}</h2>
       <div className="cliente-compras__lista">
         {ventasCliente.map((venta, idx) => (
           <div
@@ -57,11 +56,11 @@ const ClienteCompras = () => {
               />
               <div className="cliente-compras__info">
                 <h3 className="cliente-compras__paquete">{venta.id_paquete?.nombre || 'Paquete'}</h3>
-                <p><b>Destino:</b> {venta.id_paquete?.destino || '---'}</p>
-                <p><b>Valor:</b> ${venta.valor?.toLocaleString('es-CO')}</p>
-                <p><b>Fecha:</b> {venta.fecha ? new Date(venta.fecha).toLocaleDateString() : '---'}</p>
+                <p><b>{t('compras.destination')}:</b> {venta.id_paquete?.destino || '---'}</p>
+                <p><b>{t('compras.value')}:</b> ${venta.valor?.toLocaleString('es-CO')}</p>
+                <p><b>{t('compras.date')}:</b> {venta.fecha ? new Date(venta.fecha).toLocaleDateString() : '---'}</p>
                 <span className={`cliente-compras__estado ${venta.estado ? 'estado--activa' : 'estado--inactiva'}`}>
-                  {venta.estado ? 'Activa' : 'Inactiva'}
+                  {venta.estado ? t('compras.active') : t('compras.inactive')}
                 </span>
               </div>
               <span className="cliente-compras__icono">
@@ -71,12 +70,12 @@ const ClienteCompras = () => {
             {expanded === idx && (
               <div className="cliente-compras__detalle">
                 {console.log('Detalles de la venta:', venta)}
-                <p><b>Cliente:</b> {venta.id_cliente?.nombre} {venta.id_cliente?.apellido}</p>
-                <p><b>Documento:</b> {venta.id_cliente?.documento}</p>
-                <p><b>Correo:</b> {venta.id_cliente?.correo}</p>
-                <p><b>Teléfono:</b> {venta.id_cliente?.telefono}</p>
-                <p><b>Observación médica:</b> {venta.id_cliente?.observacion_medica || '---'}</p>
-                <p><b>Acompañantes:</b> {venta.acompañantes?.length
+                <p><b>{t('compras.client')}:</b> {venta.id_cliente?.nombre} {venta.id_cliente?.apellido}</p>
+                <p><b>{t('compras.document')}:</b> {venta.id_cliente?.documento}</p>
+                <p><b>{t('compras.email')}:</b> {venta.id_cliente?.correo}</p>
+                <p><b>{t('compras.phone')}:</b> {venta.id_cliente?.telefono}</p>
+                <p><b>{t('compras.medicalObservation')}:</b> {venta.id_cliente?.observacion_medica || '---'}</p>
+                <p><b>{t('compras.companions')}:</b> {venta.acompañantes?.length
                   ? venta.acompañantes.map((a, i) =>
                       typeof a === 'object'
                         ? `${a.nombre} ${a.apellido} (${a.documento})`
@@ -84,8 +83,8 @@ const ClienteCompras = () => {
                     ).join(', ')
                   : 'Ninguno'}
                 </p>
-                <p><b>Lugar de encuentro:</b> {venta.id_paquete?.lugar_encuentro || '---'}</p>
-                <p><b>Descripción:</b> {venta.id_paquete?.descripcion || '---'}</p>
+                <p><b>{t('compras.meetingPoint')}:</b> {venta.id_paquete?.lugar_encuentro || '---'}</p>
+                <p><b>{t('compras.description')}:</b> {venta.id_paquete?.descripcion || '---'}</p>
               </div>
             )}
           </div>

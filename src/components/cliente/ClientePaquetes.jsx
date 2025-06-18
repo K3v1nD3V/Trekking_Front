@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { getPaquetes } from '../../api/paquetes';
 import { getServicios } from '../../api/servicios';
+import { useTranslation } from 'react-i18next';
 
 const ClientePaquetes = () => {
   const [paquetes, setPaquetes] = useState([]);
   const [servicios, setServicios] = useState([]);
   const [expanded, setExpanded] = useState(null);
   const [searchText, setSearchText] = useState('');
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchPaquetes = async () => {
@@ -37,8 +39,8 @@ const ClientePaquetes = () => {
   if (!paquetes.length) {
     return (
       <section className="packages-section">
-        <h2 className="packages-title">Paquetes Disponibles</h2>
-        <div className="packages-placeholder">No hay paquetes disponibles.</div>
+        <h2 className="packages-title">{t('clientPackages.title')}</h2>
+        <div className="packages-placeholder">{t('clientPackages.noPackages')}</div>
       </section>
     );
   }
@@ -46,7 +48,7 @@ const ClientePaquetes = () => {
   return (
     <section className="packages-section">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-        <h2 className="packages-title" style={{ margin: 0 }}>Paquetes Disponibles</h2>
+        <h2 className="packages-title" style={{ margin: 0 }}>{t('clientPackages.title')}</h2>
         <input
           type="text"
           placeholder="Buscar paquetes..."
@@ -102,11 +104,11 @@ const ClientePaquetes = () => {
                   />
                   <div className="package-info">
                     <h3 className="package-name">{paquete.nombre}</h3>
-                    <p className="package-detail"><b>Destino:</b> {paquete.destino}</p>
-                    <p className="package-detail"><b>Valor:</b> ${paquete.valor?.toLocaleString('es-CO')}</p>
-                    <p className="package-detail"><b>Lugar de encuentro:</b> {paquete.lugar_encuentro}</p>
+                    <p className="package-detail"><b>{t('clientPackages.destination')}:</b> {paquete.destino}</p>
+                    <p className="package-detail"><b>{t('clientPackages.value')}:</b> ${paquete.valor?.toLocaleString('es-CO')}</p>
+                    <p className="package-detail"><b>{t('clientPackages.meetingPoint')}:</b> {paquete.lugar_encuentro}</p>
                     <a href={`https://wa.me/573053512023/?texto=Me%gustaria%tener%más%informacíon%sobre%el%paquete%${paquete.nombre}`} className="btn btn-primary">
-                      Contactanos
+                      {t('clientPackages.contactUs')}
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -131,8 +133,8 @@ const ClientePaquetes = () => {
 
                 {expanded === idx && (
                   <div className="package-details">
-                    <p><b>Descripción:</b> {paquete.descripcion}</p>
-                    <p><b>Servicios incluidos:</b></p>
+                    <p><b>{t('clientPackages.description')}:</b> {paquete.descripcion}</p>
+                    <p><b>{t('clientPackages.includedServices')}:</b></p>
                     <div className="services-icons-list">
                       {serviciosPaquete.length ? (
                         serviciosPaquete.map(servicio => (
@@ -147,13 +149,17 @@ const ClientePaquetes = () => {
                           </span>
                         ))
                       ) : (
-                        <span>No hay servicios listados.</span>
+                        <span> 
+                          {t('clientPackages.noServicesIncluded')}
+                        </span>
                       )}
                     </div>
 
                     {paquete.multimedia?.length > 1 && (
                       <div className="gallery-section">
-                        <p><b>Galería:</b></p>
+                        <p><b>
+                          {t('clientPackages.gallery')}:  
+                        </b></p>
                         <div className="gallery-images">
                           {paquete.multimedia.slice(1).map((img, i) => (
                             <img

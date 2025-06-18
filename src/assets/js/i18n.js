@@ -50,7 +50,39 @@ const resources = {
             highlight: "“Each path we walk is a story we write together in connection with the earth and the soul.”",
             text1: "At <strong>Trekking San Cristóbal</strong>, each route is an invitation to reconnect with the essential: nature, inner silence, and the power of simplicity. Our paths through the mountains and hidden corners of Antioquia awaken the senses, relieve stress, and fill the soul with authentic life.",
             text2: "Here, you don't just walk through landscapes; <strong>you feel them, live them, and carry them with you.</strong> Each experience is designed to transform your day, your mind, and your energy. If you're looking for more than just a hike, if you desire a real moment with yourself and with those who share a passion for nature, this is your place."
-        }
+        },
+        compras:{
+            title: "My Purchases",
+            noPurchases: "You have no purchases registered.",
+            destination: "Destination",
+            date: "Date",
+            value: "Value",
+            active: "Active",
+            inactive: "Inactive",
+            client: "Client",
+            document: "Document",
+            email: "Email",
+            phone: "Phone",
+            medicalObservation: "Medical Observation",
+            companions: "Companions",
+            meetingPoint: "Meeting Point",
+            description: "Description",
+        },
+        clientPackages: {
+            title: "Available Packages",
+            noPackages: "No packages available.",
+            destination: "Destination",
+            date: "Date",
+            value: "Value",
+            meetingPoint: "Meeting Point",
+            description: "Description",
+            includedServices: "Included Services",
+            noServices: "No services listed.",
+            gallery: "Gallery",
+            active: "Active",
+            inactive: "Inactive",
+            contactUs: "Contact Us"
+        },
     }
   },
   es: {
@@ -100,7 +132,39 @@ const resources = {
             highlight: "“Cada sendero recorrido es una historia que escribimos juntos en conexión con la tierra y el alma.”",
             text1: "En <strong>Trekking San Cristóbal</strong>, cada ruta es una invitación a reconectar con lo esencial: la naturaleza, el silencio interior y el poder de lo simple. Nuestros caminos por las montañas y rincones ocultos de Antioquia despiertan sentidos, liberan el estrés y llenan el alma de vida auténtica.",
             text2: "Aquí no solo recorres paisajes; <strong>los sientes, los vives, los llevas contigo.</strong> Cada experiencia está diseñada para transformar tu día, tu mente y tu energía. Si buscas más que una caminata, si deseas un momento real contigo mismo y con quienes comparten la pasión por lo natural, este es tu lugar."
-        }
+        },
+        compras:{
+            title: "Mis Compras",
+            noPurchases: "No tienes compras registradas.",
+            destination: "Destino",
+            date: "Fecha",
+            value: "Valor",
+            active: "Activa",
+            inactive: "Inactiva",
+            client: "Cliente",
+            document: "Documento",
+            email: "Correo Electrónico",
+            phone: "Teléfono",
+            medicalObservation: "Observación Médica",
+            companions: "Acompañantes",
+            meetingPoint: "Lugar de Encuentro",
+            description: "Descripción",
+        },
+        clientPackages: {
+            title: "Paquetes Disponibles",
+            noPackages: "No hay paquetes disponibles.",
+            destination: "Destino",
+            date: "Fecha",
+            value: "Valor",
+            meetingPoint: "Lugar de Encuentro",
+            description: "Descripción",
+            includedServices: "Servicios Incluidos",
+            noServices: "No hay servicios listados.",
+            gallery: "Galería",
+            active: "Activo",
+            inactive: "Inactivo",
+            contactUs: "Contáctanos"
+        },
     }
   }
 };
