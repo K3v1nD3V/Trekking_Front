@@ -161,11 +161,11 @@ textarea.text-area {
   align-items: center;
 }
 
-.password-container-register{
+.password-container-register {
   position: relative;
   display: flex;
   align-items: center;
-  width: 200px;;
+  width: 100%;
 }
 
 .password-check-icon {
