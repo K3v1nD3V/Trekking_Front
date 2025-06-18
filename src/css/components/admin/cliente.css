@@ -46,13 +46,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+/*   
   .paquetes-multimedia-container {
     position: relative;
     height: 100px;
     width: 100px;
     perspective: 1000px;
-    margin: 0 auto;
   }
   .paquetes-multimedia-container:hover{
     transform: scale(1.1);
@@ -77,14 +76,14 @@
   
   .paquetes-media-item:nth-child(3) {
     transform: translateX(30px) translateZ(-20px);
-  }
+  } */
   
   /* .paquetes-media-item:hover {
     transform: translateZ(50px) scale(1.1) !important;
     z-index: 10;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   } */
-  
+/*   
   .paquetes-multimedia-image {
     width: 80px;
     height: 80px;
@@ -115,7 +114,7 @@
     justify-content: center;
     font-size: 12px;
   }
-  
+   */
   /* Estilos para la galería en mosaico */
   .media-gallery {
     display: flex;

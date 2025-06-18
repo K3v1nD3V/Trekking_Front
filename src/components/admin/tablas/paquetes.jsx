@@ -138,33 +138,7 @@ const handleDeletePaquete = async (id) => {
     );
 
       
-    const DetallePaqueteModal = ({ paquete }) => (
-        <div className="detalle-paquete-modal">
-            {console.log(paquete)},
-            <h3>Detalles del Paquete</h3>
-            <hr />
-            <div className="info-general">
-                <div><span className="label">Nombre:</span> {paquete.nombre}</div>
-                <div><span className="label">Valor:</span> ${paquete.valor.toLocaleString()}</div>
-                <div><span className="label">Destino:</span> {paquete.destino}</div>
-                <div><span className="label">Lugar de Encuentro:</span> {paquete.lugar_encuentro}</div>
-            </div>
-            <h4>Descripción</h4>
-            <p>{paquete.descripcion}</p>
-            <h4>Servicios</h4>
-            {paquete.servicios && paquete.servicios.length > 0 ? (
-                <ul className="servicios-lista">
-                    {paquete.servicios.map((servicio, idx) => (
-                        <li key={idx}>{servicio.nombre}</li>
-                    ))}
-                </ul>
-            ) : (
-                <p className="text-muted">Este paquete no tiene servicios asignados.</p>
-            )}
-        </div>
-    );
-    
-    const MultimediaCell = ({ row }) => {
+    const DetallePaqueteModal = ({ paquete }) => {
         const exampleUrls = [
             'https://wallpapers.com/images/hd/hd-nature-phone-river-h14wu1u3zdvst0ch.jpg',
             'https://i.4cdn.org/wsg/1743099510944782.mp4',
@@ -172,55 +146,132 @@ const handleDeletePaquete = async (id) => {
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4_hN3SXm5l8jxG-Mfu1nohwQLjPb8hfKbsQ&s',
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4_hN3SXm5l8jxG-Mfu1nohwQLjPb8hfKbsQ&s',
         ];
-        
-        const mediaItems = (row.multimedia?.length > 0 ? row.multimedia : exampleUrls).slice(0, 3);
-        
-        return (
-            <div 
-                className="paquetes-multimedia-container"
-                onClick={() => {
-                    setIsMediaModalOpen(true);
-                    setSelectedMedia(row.multimedia?.length > 0 ? row.multimedia : exampleUrls);
-                }}
-            >
-                {mediaItems.map((item, index) => {
-                    const isVideo = item.includes('.mp4') || item.includes('.webm');
-                    const videoThumbnail = isVideo ? item.replace('.mp4', '.jpg').replace('.webm', '.jpg') : null;
-                    
-                    return (
-                        <div 
-                            key={index} 
-                            className="paquetes-media-item"
-                            style={{
-                                zIndex: index,
-                                transform: `translateX(${index * 15}px)`
-                            }}
-                        >
-                            {isVideo ? (
-                                <div className="video-thumbnail">
-                                    <img
-                                        src={videoThumbnail || 'https://i.imgur.com/KZpuufK.jpg'}
-                                        alt={`Video ${index + 1}`} 
+        const mediaItems = (paquete.multimedia?.length > 0 ? paquete.multimedia : exampleUrls).slice(0, 3);
+
+        return(
+            <div className="detalle-paquete-modal">
+                {console.log(paquete)},
+                <h3>Detalles del Paquete</h3>
+                <hr />
+                <div className="info-general">
+                    <div><span className="label">Nombre:</span> {paquete.nombre}</div>
+                    <div><span className="label">Valor:</span> ${paquete.valor.toLocaleString()}</div>
+                    <div><span className="label">Destino:</span> {paquete.destino}</div>
+                    <div><span className="label">Lugar de Encuentro:</span> {paquete.lugar_encuentro}</div>
+                </div>
+                <h4>Descripción</h4>
+                <p>{paquete.descripcion}</p>
+                <h4>Servicios</h4>
+                {paquete.servicios && paquete.servicios.length > 0 ? (
+                    <ul className="servicios-lista">
+                        {paquete.servicios.map((servicio, idx) => (
+                            <li key={idx}>{servicio.nombre}</li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="text-muted">Este paquete no tiene servicios asignados.</p>
+                )}
+                <h4>Multimedia</h4>
+                <div 
+                    className="paquetes-multimedia-container"
+                    // onClick={() => {
+                    //     setIsMediaModalOpen(true);
+                    //     setSelectedMedia(paquete.multimedia?.length > 0 ? paquete.multimedia : exampleUrls);
+                    // }}
+                    >
+                    {mediaItems.map((item, index) => {
+                        const isVideo = item.includes('.mp4') || item.includes('.webm');
+                        const videoThumbnail = isVideo ? item.replace('.mp4', '.jpg').replace('.webm', '.jpg') : null;
+                        
+                        return (
+                            <div 
+                                key={index} 
+                                className="paquetes-media-item"
+                            >
+                                {isVideo ? (
+                                    <div className="video-thumbnail">
+                                        <img
+                                            src={videoThumbnail || 'https://i.imgur.com/KZpuufK.jpg'}
+                                            alt={`Video ${index + 1}`} 
+                                            className="paquetes-multimedia-image"
+                                            onError={(e) => {
+                                                e.target.src = 'https://i.imgur.com/KZpuufK.jpg';
+                                            }}
+                                        />
+                                        <div className="video-play-icon">▶</div>
+                                    </div>
+                                ) : (
+                                    <img 
+                                        src={item}
+                                        alt={`Imagen ${index + 1}`}
                                         className="paquetes-multimedia-image"
-                                        onError={(e) => {
-                                            e.target.src = 'https://i.imgur.com/KZpuufK.jpg';
-                                        }}
                                     />
-                                    <div className="video-play-icon">▶</div>
-                                </div>
-                            ) : (
-                                <img 
-                                    src={item}
-                                    alt={`Imagen ${index + 1}`}
-                                    className="paquetes-multimedia-image"
-                                />
-                            )}
-                        </div>
-                    );
-                })}
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
-        );
+        )
     };
+    
+    // const MultimediaCell = ({ row }) => {
+    //     const exampleUrls = [
+    //         'https://wallpapers.com/images/hd/hd-nature-phone-river-h14wu1u3zdvst0ch.jpg',
+    //         'https://i.4cdn.org/wsg/1743099510944782.mp4',
+    //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCXMCnkvAqM19cMA6Pm7my9LYKv9HK_RWAEg&s',
+    //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4_hN3SXm5l8jxG-Mfu1nohwQLjPb8hfKbsQ&s',
+    //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4_hN3SXm5l8jxG-Mfu1nohwQLjPb8hfKbsQ&s',
+    //     ];
+        
+    //     const mediaItems = (row.multimedia?.length > 0 ? row.multimedia : exampleUrls).slice(0, 3);
+        
+    //     return (
+    //         <div 
+    //             className="paquetes-multimedia-container"
+    //             onClick={() => {
+    //                 setIsMediaModalOpen(true);
+    //                 setSelectedMedia(row.multimedia?.length > 0 ? row.multimedia : exampleUrls);
+    //             }}
+    //         >
+    //             {mediaItems.map((item, index) => {
+    //                 const isVideo = item.includes('.mp4') || item.includes('.webm');
+    //                 const videoThumbnail = isVideo ? item.replace('.mp4', '.jpg').replace('.webm', '.jpg') : null;
+                    
+    //                 return (
+    //                     <div 
+    //                         key={index} 
+    //                         className="paquetes-media-item"
+    //                         style={{
+    //                             zIndex: index,
+    //                             transform: `translateX(${index * 15}px)`
+    //                         }}
+    //                     >
+    //                         {isVideo ? (
+    //                             <div className="video-thumbnail">
+    //                                 <img
+    //                                     src={videoThumbnail || 'https://i.imgur.com/KZpuufK.jpg'}
+    //                                     alt={`Video ${index + 1}`} 
+    //                                     className="paquetes-multimedia-image"
+    //                                     onError={(e) => {
+    //                                         e.target.src = 'https://i.imgur.com/KZpuufK.jpg';
+    //                                     }}
+    //                                 />
+    //                                 <div className="video-play-icon">▶</div>
+    //                             </div>
+    //                         ) : (
+    //                             <img 
+    //                                 src={item}
+    //                                 alt={`Imagen ${index + 1}`}
+    //                                 className="paquetes-multimedia-image"
+    //                             />
+    //                         )}
+    //                     </div>
+    //                 );
+    //             })}
+    //         </div>
+    //     );
+    // };
 
     const columns = [
         {
@@ -257,11 +308,11 @@ const handleDeletePaquete = async (id) => {
             selector: row => row.destino,
             width: '190px'
         },
-        {
-            name: 'Multimedia',
-            cell: row => <MultimediaCell row={row} />,
-            width: '200px'
-        },
+        // {
+        //     name: 'Multimedia',
+        //     cell: row => <MultimediaCell row={row} />,
+        //     width: '200px'
+        // },
         {
             name: 'Acciones',
             cell: row => (
