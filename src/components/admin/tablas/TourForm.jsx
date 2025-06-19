@@ -112,38 +112,78 @@ const TourForm = ({ onSubmit, onClose, initialData = {} }) => {
     );
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!validate()) return;
+
+  //   if (initialData._id && isUnchanged()) {
+  //     toast.error('No se han realizado cambios en el formulario.');
+  //     return;
+  //   }
+
+  //   const result = await showConfirm(
+  //     initialData._id ? '¿Estás seguro de actualizar este tour?' : '¿Confirmas crear este tour?',
+  //     initialData._id ? 'Actualizar Tour' : 'Crear Tour'
+  //   );
+
+  //   if (result.isConfirmed) {
+  //     const formattedData = {
+  //       fechaHora: new Date(formData.fechaHora).toISOString(),
+  //       id_paquete: formData.id_paquete,
+  //       cupos: parseInt(formData.cupos, 10),
+  //       fecha_limite_inscripcion: new Date(formData.fecha_limite_inscripcion).toISOString(),
+  //     };
+
+  //     try {
+  //       await onSubmit(formattedData);
+  //       toast.success(initialData._id ? 'Tour actualizado con éxito' : 'Tour creado con éxito');
+  //       onClose?.();
+  //     } catch {
+  //       toast.error('Error al guardar el tour.');
+  //     }
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!validate()) return;
+  if (!validate()) return;
 
-    if (initialData._id && isUnchanged()) {
-      toast.error('No se han realizado cambios en el formulario.');
-      return;
-    }
+  if (initialData._id && isUnchanged()) {
+    toast.error('No se han realizado cambios en el formulario.');
+    return;
+  }
 
-    const result = await showConfirm(
-      initialData._id ? '¿Estás seguro de actualizar este tour?' : '¿Confirmas crear este tour?',
-      initialData._id ? 'Actualizar Tour' : 'Crear Tour'
-    );
+  const result = await showConfirm(
+    initialData._id ? '¿Estás seguro de actualizar este tour?' : '¿Confirmas crear este tour?',
+    initialData._id ? 'Actualizar Tour' : 'Crear Tour'
+  );
 
-    if (result.isConfirmed) {
+  if (result.isConfirmed) {
+    try {
+      const fechaHora = new Date(formData.fechaHora).toISOString();
+
+      // Corregir desfase solo para fecha_limite_inscripcion (tipo date)
+      const fechaLimite = new Date(formData.fecha_limite_inscripcion + 'T12:00:00');
+      const fecha_limite_inscripcion = fechaLimite.toISOString();
+
       const formattedData = {
-        fechaHora: new Date(formData.fechaHora).toISOString(),
+        fechaHora,
         id_paquete: formData.id_paquete,
         cupos: parseInt(formData.cupos, 10),
-        fecha_limite_inscripcion: new Date(formData.fecha_limite_inscripcion).toISOString(),
+        fecha_limite_inscripcion,
       };
 
-      try {
-        await onSubmit(formattedData);
-        toast.success(initialData._id ? 'Tour actualizado con éxito' : 'Tour creado con éxito');
-        onClose?.();
-      } catch {
-        toast.error('Error al guardar el tour.');
-      }
+      await onSubmit(formattedData);
+      toast.success(initialData._id ? 'Tour actualizado con éxito' : 'Tour creado con éxito');
+      onClose?.();
+    } catch {
+      toast.error('Error al guardar el tour.');
     }
-  };
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit} className="tour-form-container">
