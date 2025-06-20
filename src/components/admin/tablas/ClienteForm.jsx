@@ -1,261 +1,193 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { getRoles } from '../../../api/roles';
+import { createUsuario, updateUsuario, getUsuarios } from '../../../api/usuarios';
 import { createCliente, updateCliente, checkClienteExistence } from '../../../api/clientes';
-import { getUsuarios, updateUsuario } from '../../../api/usuarios';
-import '../../../css/components/admin/ClienteForm.css';
-import { showConfirm } from '../../../alerts/alerts';
 import { toast } from 'sonner';
+import { showConfirm } from '../../../alerts/alerts';
+import '../../../css/components/admin/ClienteForm.css';
 
-const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
-  const [formData, setFormData] = useState({
-    documento: initialData.documento || '',
-    telefono: initialData.telefono || '',
-    observacion_medica: initialData.observacion_medica || '',
-    estado: initialData.estado ?? true,
-    id_usuario: initialData.id_usuario?._id || initialData.id_usuario || '',
-  });
+const UsuarioClienteForm = ({ onClose, onSubmit, initialData = {} }) => {
+  const isEditing = Boolean(initialData?.usuario?._id);
+  const [roles, setRoles] = useState([]);
 
   const [usuarioData, setUsuarioData] = useState({
-    nombre: initialData.id_usuario?.nombre || '',
-    apellido: initialData.id_usuario?.apellido || '',
-    correo: initialData.id_usuario?.correo || '',
+    nombre: initialData.usuario?.nombre || '',
+    apellido: initialData.usuario?.apellido || '',
+    correo: initialData.usuario?.correo || '',
+    rol: initialData.usuario?.rol || '',
+    contraseña: ''
   });
 
-  const [originalFormData] = useState(formData);
-  const [originalUsuarioData] = useState(usuarioData);
-  const [usuarios, setUsuarios] = useState([]);
+  const [clienteData, setClienteData] = useState({
+    documento: initialData.cliente?.documento || '',
+    telefono: initialData.cliente?.telefono || '',
+    observacion_medica: initialData.cliente?.observacion_medica || '',
+    estado: initialData.cliente?.estado ?? true
+  });
+
   const [errors, setErrors] = useState({});
+  const correoRef = useRef();
 
   useEffect(() => {
-    const fetchUsuarios = async () => {
+    const fetchRoles = async () => {
       try {
-        const data = await getUsuarios();
-        setUsuarios(data?.data || data || []);
+        const data = await getRoles();
+        setRoles(data);
+  
+        // Buscar el rol "cliente"
+        const rolCliente = data.find(r => r.nombre.toLowerCase() === 'cliente');
+  
+        if (rolCliente) {
+          setUsuarioData(prev => ({
+            ...prev,
+            rol: rolCliente._id // Asignar siempre, incluso si se está editando
+          }));
+        } else {
+          toast.error('No se encontró el rol cliente');
+        }
       } catch (err) {
-        console.log('Error al cargar usuarios:', err);
-        toast.error('Error al cargar usuarios');
+        console.error('Error al cargar roles:', err);
+        toast.error('Error al cargar roles');
       }
     };
-    fetchUsuarios();
+  
+    fetchRoles();
   }, []);
+  
 
-  useEffect(() => {
-    if (formData.id_usuario && usuarios.length) {
-      const usuario = usuarios.find(u => u._id === formData.id_usuario);
-      setUsuarioData({
-        nombre: usuario?.nombre || '',
-        apellido: usuario?.apellido || '',
-        correo: usuario?.correo || '',
-      });
-    }
-  }, [formData.id_usuario, usuarios]);
-
-  const handleClienteChange = (e) => {
+  const handleChange = (e, setData) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleUsuarioChange = (e) => {
-    const { name, value } = e.target;
-    setUsuarioData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const validate = async () => {
     const newErrors = {};
+    const regexLetras = /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/;
+    const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!formData.documento) {
-      newErrors.documento = 'El documento es requerido.';
-    } else if (formData.documento.length < 8 || formData.documento.length > 12) {
-      newErrors.documento = 'Debe tener entre 8 y 12 dígitos.';
-    } else if (!/^\d+$/.test(formData.documento)) {
-      newErrors.documento = 'Debe contener solo números.';
-    } else {
-      const exists = await checkClienteExistence({ documento: formData.documento });
-      if (exists && (!initialData._id || formData.documento !== initialData.documento)) {
-        newErrors.documento = 'Ya está registrado.';
+    // Usuario
+    if (!usuarioData.nombre.trim()) newErrors.nombre = 'El nombre es requerido.';
+    else if (!regexLetras.test(usuarioData.nombre)) newErrors.nombre = 'Solo letras.';
+
+    if (!usuarioData.apellido.trim()) newErrors.apellido = 'El apellido es requerido.';
+    else if (!regexLetras.test(usuarioData.apellido)) newErrors.apellido = 'Solo letras.';
+
+    if (!usuarioData.correo.trim()) newErrors.correo = 'El correo es requerido.';
+    else if (!regexCorreo.test(usuarioData.correo)) newErrors.correo = 'Correo inválido.';
+    else if (!isEditing) {
+      const usuarios = await getUsuarios();
+      const correoExiste = usuarios.find(u => u.correo.toLowerCase() === usuarioData.correo.toLowerCase());
+      if (correoExiste) newErrors.correo = 'Correo ya registrado.';
+    }
+
+    if (!usuarioData.rol) newErrors.rol = 'Debe seleccionar un rol.';
+
+    if (!isEditing && !usuarioData.contraseña.trim()) newErrors.contraseña = 'La contraseña es requerida.';
+    else if (!isEditing && usuarioData.contraseña.trim().length < 6) newErrors.contraseña = 'Mínimo 6 caracteres.';
+
+    // Cliente
+    if (!clienteData.documento) newErrors.documento = 'Documento requerido.';
+    else if (!/^\d{8,12}$/.test(clienteData.documento)) newErrors.documento = 'Debe tener entre 8 y 12 números.';
+    else {
+      const existe = await checkClienteExistence({ documento: clienteData.documento });
+      if (existe && (!initialData.cliente || clienteData.documento !== initialData.cliente.documento)) {
+        newErrors.documento = 'Documento ya registrado.';
       }
     }
 
-    if (!formData.telefono) {
-      newErrors.telefono = 'El teléfono es requerido.';
-    } else if (!/^\d{7,15}$/.test(formData.telefono)) {
-      newErrors.telefono = 'Debe tener entre 7 y 15 dígitos numéricos.';
-    }
-
-    if (!formData.id_usuario) {
-      newErrors.id_usuario = 'Debe seleccionar un usuario.';
-    }
-
-    if (!usuarioData.nombre) {
-      newErrors.nombre = 'El nombre es requerido.';
-    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuarioData.nombre)) {
-      newErrors.nombre = 'Solo se permiten letras y espacios.';
-    }
-
-    if (!usuarioData.apellido) {
-      newErrors.apellido = 'El apellido es requerido.';
-    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuarioData.apellido)) {
-      newErrors.apellido = 'Solo se permiten letras y espacios.';
-    }
-
-    if (!usuarioData.correo) {
-      newErrors.correo = 'El correo es requerido.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usuarioData.correo)) {
-      newErrors.correo = 'El formato de correo no es válido.';
-    }
+    if (!clienteData.telefono) newErrors.telefono = 'Teléfono requerido.';
+    else if (!/^\d{7,15}$/.test(clienteData.telefono)) newErrors.telefono = 'Debe tener entre 7 y 15 dígitos.';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const isModified = () => {
-    const clienteModificado =
-      originalFormData.documento !== formData.documento ||
-      originalFormData.telefono !== formData.telefono ||
-      originalFormData.observacion_medica !== formData.observacion_medica ||
-      originalFormData.estado !== formData.estado;
-
-    const usuarioModificado =
-      originalUsuarioData.nombre !== usuarioData.nombre ||
-      originalUsuarioData.apellido !== usuarioData.apellido ||
-      originalUsuarioData.correo !== usuarioData.correo;
-
-    return clienteModificado || usuarioModificado;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!(await validate())) return;
 
-    if (initialData._id && !isModified()) {
-      toast.error('No se han realizado cambios en el formulario.');
-      return;
-    }
-
-    const confirmResult = await showConfirm(
-      initialData._id ? '¿Confirmas actualizar este cliente?' : '¿Confirmas crear este cliente?',
-      'Confirmación'
+    const confirm = await showConfirm(
+      isEditing ? '¿Actualizar usuario y cliente?' : '¿Crear nuevo usuario y cliente?',
+      isEditing ? 'Actualizar' : 'Registrar'
     );
-    if (!confirmResult.isConfirmed) return;
+    if (!confirm.isConfirmed) return;
 
     try {
-      if (initialData._id) {
-        const usuarioOriginal = initialData.id_usuario || {};
-        const usuarioModificado =
-          usuarioOriginal.nombre !== usuarioData.nombre ||
-          usuarioOriginal.apellido !== usuarioData.apellido ||
-          usuarioOriginal.correo !== usuarioData.correo;
-
-        if (usuarioModificado) {
-          await updateUsuario(formData.id_usuario, usuarioData);
-        }
-
-        const clienteActualizado = await updateCliente(initialData._id, formData);
-        toast.success('Cliente actualizado exitosamente!');
-        setTimeout(() => {
-          onSubmit(clienteActualizado, "edit");
-          onClose();
-        }, 900);
+      if (isEditing) {
+        await updateUsuario(initialData.usuario._id, usuarioData);
+        await updateCliente(initialData.cliente._id, {
+          ...clienteData,
+          id_usuario: initialData.usuario._id
+        });
+        toast.success('¡Usuario y cliente actualizados!');
       } else {
-        const clienteCreado = await createCliente(formData);
-        toast.success('Cliente creado exitosamente!');
-        setTimeout(() => {
-          onSubmit(clienteCreado, "create");
-          onClose();
-        }, 900);
+        const nuevoUsuario = await createUsuario(usuarioData);
+        const nuevoCliente = await createCliente({
+          ...clienteData,
+          id_usuario: nuevoUsuario._id
+        });
+        toast.success('¡Usuario y cliente registrados!');
       }
+
+      setTimeout(() => {
+        onSubmit();
+        onClose();
+      }, 1000);
     } catch (err) {
-      console.error('Error al guardar el cliente:', err);
-      toast.error('Error al guardar el cliente. Verifica los datos o intenta más tarde.');
+      toast.error('Error al guardar. Verifica e intenta nuevamente.');
+      console.error(err);
     }
   };
 
-    return (
+  return (
     <form className="cliente-form" onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label>Documento</label>
-        <input
-          type="text"
-          name="documento"
-          value={formData.documento}
-          onChange={handleClienteChange}
-        />
-        {errors.documento && <p className="form-error">{errors.documento}</p>}
-      </div>
-      <div className="form-group">
-        <label>Teléfono</label>
-        <input
-          type="text"
-          name="telefono"
-          value={formData.telefono}
-          onChange={handleClienteChange}
-        />
-        {errors.telefono && <p className="form-error">{errors.telefono}</p>}
-      </div>
-      <div className="form-group">
-        <label>Observación Médica</label>
-        <textarea
-          name="observacion_medica"
-          value={formData.observacion_medica}
-          onChange={handleClienteChange}
-          rows="3"
-        />
-      </div>
-      <div className="form-group">
-        <label>Usuario Asociado</label>
-        <select
-          name="id_usuario"
-          value={formData.id_usuario}
-          onChange={handleClienteChange}
-          disabled={!!initialData._id} // No permitir cambiar usuario al editar
-        >
-          <option value="">Seleccione un usuario</option>
-          {usuarios.map(usuario => (
-            <option key={usuario._id} value={usuario._id}>
-              {usuario.nombre} {usuario.apellido} - {usuario.correo}
-            </option>
-          ))}
-        </select>
-        {errors.id_usuario && <p className="form-error">{errors.id_usuario}</p>}
-      </div>
-      {/* Campos de usuario */}
+      <h3>Datos del Usuario</h3>
       <div className="form-group">
         <label>Nombre</label>
-        <input
-          type="text"
-          name="nombre"
-          value={usuarioData.nombre}
-          onChange={handleUsuarioChange}
-          disabled={!formData.id_usuario}
-        />
+        <input name="nombre" value={usuarioData.nombre} onChange={e => handleChange(e, setUsuarioData)} />
         {errors.nombre && <p className="form-error">{errors.nombre}</p>}
       </div>
       <div className="form-group">
         <label>Apellido</label>
-        <input
-          type="text"
-          name="apellido"
-          value={usuarioData.apellido}
-          onChange={handleUsuarioChange}
-          disabled={!formData.id_usuario}
-        />
+        <input name="apellido" value={usuarioData.apellido} onChange={e => handleChange(e, setUsuarioData)} />
         {errors.apellido && <p className="form-error">{errors.apellido}</p>}
       </div>
       <div className="form-group">
         <label>Correo</label>
-        <input
-          type="email"
-          name="correo"
-          value={usuarioData.correo}
-          onChange={handleUsuarioChange}
-          disabled={!formData.id_usuario}
-        />
+        <input name="correo" ref={correoRef} value={usuarioData.correo} onChange={e => handleChange(e, setUsuarioData)} />
         {errors.correo && <p className="form-error">{errors.correo}</p>}
+      </div>
+      <div className="form-group">
+        <label>Rol</label>
+        <select name="rol" value={usuarioData.rol} onChange={e => handleChange(e, setUsuarioData)}>
+          <option value="">Seleccione un rol</option>
+          {roles.map(r => <option key={r._id} value={r._id}>{r.nombre}</option>)}
+        </select>
+        {errors.rol && <p className="form-error">{errors.rol}</p>}
+      </div>
+      {!isEditing && (
+        <div className="form-group">
+          <label>Contraseña</label>
+          <input type="password" name="contraseña" value={usuarioData.contraseña} onChange={e => handleChange(e, setUsuarioData)} />
+          {errors.contraseña && <p className="form-error">{errors.contraseña}</p>}
+        </div>
+      )}
+
+      <h3>Datos del Cliente</h3>
+      <div className="form-group">
+        <label>Documento</label>
+        <input name="documento" value={clienteData.documento} onChange={e => handleChange(e, setClienteData)} />
+        {errors.documento && <p className="form-error">{errors.documento}</p>}
+      </div>
+      <div className="form-group">
+        <label>Teléfono</label>
+        <input name="telefono" value={clienteData.telefono} onChange={e => handleChange(e, setClienteData)} />
+        {errors.telefono && <p className="form-error">{errors.telefono}</p>}
+      </div>
+      <div className="form-group">
+        <label>Observación médica</label>
+        <textarea name="observacion_medica" rows="3" value={clienteData.observacion_medica} onChange={e => handleChange(e, setClienteData)} />
       </div>
       <div className="form-group">
         <label>Estado</label>
@@ -263,20 +195,19 @@ const ClienteForm = ({ onSubmit, onClose, initialData = {} }) => {
           <input
             type="checkbox"
             name="estado"
-            checked={formData.estado}
-            onChange={handleClienteChange}
+            checked={clienteData.estado}
+            onChange={e => handleChange(e, setClienteData)}
           />
           <span className="slider round"></span>
         </label>
       </div>
+
       <button type="submit" className="form-submit-button">
-        {initialData._id ? 'Actualizar' : 'Registrar'}
+        {isEditing ? 'Actualizar' : 'Registrar'}
       </button>
-      <button type="button" className="cancel-btn" onClick={onClose}>
-        Cancelar
-      </button>
+      <button type="button" className="cancel-btn" onClick={onClose}>Cancelar</button>
     </form>
   );
 };
 
-export default ClienteForm;
+export default UsuarioClienteForm;
