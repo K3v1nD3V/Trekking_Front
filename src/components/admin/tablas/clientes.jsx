@@ -168,7 +168,23 @@ const ClientesUsuarios = () => {
             className="action-button"
             onClick={(e) => {
               e.stopPropagation();
-              setDetalleCliente(row);
+              // Buscar el usuario que corresponde con el cliente
+                const usuarioDelCliente = row.id_usuario;
+
+                // Buscar en roles por coincidencia con usuario (solo si tienes una tabla de usuarios en memoria o si no hay, asumiremos rol 'cliente')
+                const rolDelUsuario = roles.find(rol => {
+                // Si tienes mapeo de usuarios con rol, aquí podrías hacer match. Como no tienes el ID del rol, vamos a asumir "cliente" por defecto
+                return rol.nombre.toLowerCase() === 'cliente';
+                });
+
+                setDetalleCliente({
+                ...row,
+                id_usuario: {
+                    ...usuarioDelCliente,
+                    rol: rolDelUsuario || { nombre: 'cliente' }
+                }
+                });
+
             }}
           >
             <span className="material-symbols-outlined">info</span>
@@ -304,7 +320,11 @@ const ClientesUsuarios = () => {
                 {detalleCliente.observacion_medica && (
                   <p><span className="label-cliente">Observación Médica:</span> {detalleCliente.observacion_medica}</p>
                 )}
-                <p><span className="label-cliente">Rol:</span> {getRoleName(detalleCliente.id_usuario?.rol)}</p>
+                <p>
+                    <span className="label-cliente">Rol:</span>{' '}
+                    {detalleCliente?.id_usuario?.rol?.nombre || 'Sin rol'}
+                    </p>
+
                 <p><span className="label-cliente">Estado:</span>
                   <span className={`estado ${detalleCliente.estado ? 'activo' : 'inactivo'}`}>
                     {detalleCliente.estado ? 'Activo' : 'Inactivo'}
