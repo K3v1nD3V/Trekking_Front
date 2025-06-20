@@ -142,7 +142,7 @@ const UsuarioClienteForm = ({ onClose, onSubmit, initialData = {} }) => {
 
   return (
     <form className="cliente-form" onSubmit={handleSubmit}>
-      <h3>Datos del Usuario</h3>
+      <h3 className='subtitulo-cliente'>Datos del Usuario</h3>
       <div className="form-group">
         <label>Nombre</label>
         <input name="nombre" value={usuarioData.nombre} onChange={e => handleChange(e, setUsuarioData)} />
@@ -174,7 +174,7 @@ const UsuarioClienteForm = ({ onClose, onSubmit, initialData = {} }) => {
         </div>
       )}
 
-      <h3>Datos del Cliente</h3>
+      <h3 className='subtitulo-cliente'>Datos del Cliente</h3>
       <div className="form-group">
         <label>Documento</label>
         <input name="documento" value={clienteData.documento} onChange={e => handleChange(e, setClienteData)} />
