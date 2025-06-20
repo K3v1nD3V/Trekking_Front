@@ -96,8 +96,15 @@ const ClientesUsuarios = () => {
     try {
       await updateCliente(row._id, updatedCliente);
       setClientes(prev =>
-        prev.map(cliente => (cliente._id === row._id ? updatedCliente : cliente))
-      );
+        prev.map(cliente =>
+          cliente._id === row._id
+            ? {
+                ...cliente,
+                estado: nuevoEstado // Solo actualiza el estado
+              }
+            : cliente
+        )
+      );      
       toast.success(`Cliente ${nuevoEstado ? 'activado' : 'desactivado'} correctamente`);
     } catch (error) {
       console.error('Error actualizando estado:', error.message);
