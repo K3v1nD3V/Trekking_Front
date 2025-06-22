@@ -9,6 +9,7 @@ import { getVentas, createVenta, updateVenta } from '../../../api/ventas';
 import { getClientes } from '../../../api/clientes';
 import { getPaquetes } from '../../../api/paquetes';
 import { getUsuarios } from '../../../api/usuarios';
+import { getTours } from '../../../api/tours';
 
 import Load from '../../common/Load';
 import { toast } from 'sonner';
@@ -19,6 +20,7 @@ const Ventas = () => {
   const [clientes, setClientes] = useState([]);
   const [paquetes, setPaquetes] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
+  const [tours, setTours] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterText, setFilterText] = useState('');
   const [loading, setLoading] = useState(true);
@@ -27,16 +29,18 @@ const Ventas = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [ventasData, clientesData, paquetesData, usuariosData] = await Promise.all([
+        const [ventasData, clientesData, paquetesData, usuariosData, toursData] = await Promise.all([
           getVentas(),
           getClientes(),
           getPaquetes(),
-          getUsuarios()
+          getUsuarios(),
+          getTours()
         ]);
-        setVentas(ventasData);
+        setVentas(Array.isArray(ventasData) ? ventasData : []);
         setClientes(clientesData);
         setPaquetes(paquetesData);
         setUsuarios(usuariosData);
+        setTours(toursData);
       } catch (err) {
         setError(err.message || 'Error al cargar historial de ventas');
       } finally {
@@ -46,43 +50,46 @@ const Ventas = () => {
     fetchData();
   }, []);
 
-  const handleNuevaVenta = async (formData) => {
-    try {
-      if (formData.acompañantes.includes(formData.id_cliente)) {
-        toast.error("El cliente principal no puede ser también un acompañante.");
-        return;
-      }
-
-      const nuevaVenta = {
-        ...formData,
-        id_cliente: formData.id_cliente,
-        id_paquete: formData.id_paquete,
-        acompañantes: formData.acompañantes,
-      };
-
-      delete nuevaVenta.__v;
-
-      await createVenta(nuevaVenta);
-      setIsModalOpen(false);
-      const ventasActualizadas = await getVentas();
-      setVentas(ventasActualizadas);
-    } catch (error) {
-      console.error(error);
-      toast.error("Error al crear la venta. Asegúrate de haber iniciado sesión.");
+const handleNuevaVenta = async (formData) => {
+  try {
+    if (formData.acompañantes.includes(formData.id_cliente)) {
+      toast.error("El cliente principal no puede ser también un acompañante.");
+      return;
     }
-  };
+
+    const nuevaVenta = {
+      ...formData,
+      fecha: formData.fecha, // 👉 Aquí se mantiene la fecha en formato "YYYY-MM-DD"
+    };
+
+    await createVenta(nuevaVenta);
+    setIsModalOpen(false);
+
+    const ventasActualizadas = await getVentas();
+    setVentas(ventasActualizadas);
+  } catch (error) {
+    console.error(error);
+    toast.error("Error al crear la venta. Asegúrate de haber iniciado sesión.");
+  }
+};
+
 
   const filteredVentas = ventas.filter((venta) => {
-    let clienteNombre = usuarios.find(u => u._id === venta.id_cliente.id_usuario);
-    clienteNombre = clienteNombre ? `${clienteNombre.nombre} ${clienteNombre.apellido}` : 'Desconocido';
+    const cliente = venta.id_cliente;
+    const clienteNombre = cliente?.id_usuario?.nombre
+      ? `${cliente.id_usuario.nombre} ${cliente.id_usuario.apellido}`
+      : cliente?.documento || 'Desconocido';
 
     const paqueteNombre = venta.id_paquete?.nombre || '';
     const fecha = new Date(venta.fecha).toLocaleDateString();
     const valor = venta.valor?.toString() || '';
-    const acompañantesNombres = venta.acompañantes.map(acomp => {
-      const acompUsuario = usuarios.find(u => u._id === acomp.id_usuario);
-      return acompUsuario ? `${acompUsuario.nombre} ${acompUsuario.apellido}` : acomp.documento || 'Desconocido';
-    }).join(', ');
+    const acompañantesNombres = Array.isArray(venta.acompañantes)
+      ? venta.acompañantes.map(acomp => {
+          return acomp?.id_usuario?.nombre
+            ? `${acomp.id_usuario.nombre} ${acomp.id_usuario.apellido}`
+            : acomp?.documento || 'Desconocido';
+        }).join(', ')
+      : 'Ninguno';
 
     const texto = filterText.toLowerCase();
 
@@ -107,22 +114,13 @@ const Ventas = () => {
       estado: !row.estado,
       id_cliente: row.id_cliente._id,
       id_paquete: row.id_paquete._id,
+      id_tour: row.id_tour?._id,
       acompañantes: row.acompañantes.map(acomp => acomp._id),
-    };
-    delete updatedVenta.__v;
-
-    const tableUpdatedVenta = {
-      ...row,
-      estado: !row.estado
     };
 
     try {
       await updateVenta(row._id, updatedVenta);
-      setVentas(prev =>
-        prev.map(venta =>
-          venta._id === row._id ? tableUpdatedVenta : venta
-        )
-      );
+      setVentas(prev => prev.map(venta => venta._id === row._id ? { ...venta, estado: !row.estado } : venta));
       toast.success('Estado actualizado correctamente');
     } catch (error) {
       console.error('Error actualizando estado:', error.message);
@@ -133,11 +131,7 @@ const Ventas = () => {
   const EstadoCell = ({ row }) => (
     <div className="estado-switch">
       <label className="switch">
-        <input
-          type="checkbox"
-          checked={row.estado}
-          onChange={() => toggleEstado(row)}
-        />
+        <input type="checkbox" checked={row.estado} onChange={() => toggleEstado(row)} />
         <span className="slider round"></span>
       </label>
     </div>
@@ -146,17 +140,14 @@ const Ventas = () => {
   const columns = [
     {
       name: 'Cliente',
-      selector: row => {
-        const usuarioEncontrado = usuarios.find(u => u._id === row.id_cliente.id_usuario);
-        return usuarioEncontrado
-          ? `${usuarioEncontrado.nombre} ${usuarioEncontrado.apellido}`
-          : 'Desconocido';
-      },
+      selector: row => row.id_cliente?.id_usuario?.nombre
+        ? `${row.id_cliente.id_usuario.nombre} ${row.id_cliente.id_usuario.apellido}`
+        : row.id_cliente?.documento || 'Desconocido',
       sortable: true,
     },
     {
       name: 'Paquete',
-      selector: row => row.id_paquete ? row.id_paquete.nombre : 'Desconocido',
+      selector: row => row.id_paquete?.nombre || 'Desconocido',
       sortable: true,
     },
     {
@@ -165,37 +156,36 @@ const Ventas = () => {
       sortable: true,
     },
     {
-        name: 'Valor',
-        selector: row =>
-          row.valor.toLocaleString('es-CO', {
-            style: 'currency',
-            currency: 'COP',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-          }),
-        sortable: true,
+      name: 'Valor',
+      selector: row => row.valor.toLocaleString('es-CO', {
+        style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0
+      }),
+      sortable: true,
     },
     {
       name: 'Acompañantes',
-      selector: row => (
-        <span>
-          {Array.isArray(row.acompañantes) && row.acompañantes.length > 0
-            ? row.acompañantes
-                .map(acomp => {
-                  const usuarioEncontrado = usuarios.find(u => u._id === acomp.id_usuario);
-                  return usuarioEncontrado && usuarioEncontrado.nombre && usuarioEncontrado.apellido
-                    ? `${usuarioEncontrado.nombre} ${usuarioEncontrado.apellido}`
-                    : 'Desconocido';
-                })
-                .join(', ')
-            : 'Ninguno'}
-        </span>
+      cell: row => (
+        Array.isArray(row.acompañantes) && row.acompañantes.length > 0
+          ? row.acompañantes.map(a => a.id_usuario?.nombre
+              ? `${a.id_usuario.nombre} ${a.id_usuario.apellido}`
+              : a.documento || 'Desconocido'
+            ).join(', ')
+          : 'Ninguno'
       ),
     },
     {
+      name: 'Fecha del Tour',
+      selector: row => {
+        const fechaTour = row?.id_tour?.fechaHora;
+        if (!fechaTour) return 'No disponible';
+        const fecha = new Date(fechaTour);
+        return `${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      },
+      sortable: true,
+    },
+    {
       name: 'Estado',
-      cell: row => <EstadoCell row={row} />,
-      width: '150px'
+      cell: row => <EstadoCell row={row} />, width: '150px'
     }
   ];
 
@@ -237,22 +227,6 @@ const Ventas = () => {
           highlightOnHover
           progressPending={loading}
           progressComponent={<Load />}
-          customStyles={{
-            headCells: {
-              style: {
-                backgroundColor: '#fafafa',
-                fontWeight: '600',
-                fontSize: '14px',
-              },
-            },
-            cells: {
-              style: {
-                fontSize: '14px',
-                padding: '12px 8px',
-                verticalAlign: 'top',
-              },
-            },
-          }}
         />
 
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -262,6 +236,7 @@ const Ventas = () => {
             onClose={() => setIsModalOpen(false)}
             clientes={clientes}
             paquetes={paquetes}
+            tours={tours}
           />
         </Modal>
 
@@ -276,3 +251,4 @@ const Ventas = () => {
 };
 
 export default Ventas;
+

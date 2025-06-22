@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-// CSS
 import '../../../css/components/admin/ventaForm.css';
-//MODAL
 import Modal from '../../common/Modal';
-import AcompananteForm from './acompañanteForm';
 import { showConfirm } from '../../../alerts/alerts';
 import { toast } from 'sonner';
 
-const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
+const VentaForm = ({ onSubmit, clientes, paquetes, tours, onClose }) => {
   const [formData, setFormData] = useState({
     cliente: '',
     paquete: '',
+    tour: '',
     fecha: '',
     valor: '',
     acompañantes: [],
@@ -19,48 +17,27 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
   });
 
   const [acompañantesList, setAcompañantesList] = useState([]);
-  const [isAcompananteFormVisible, setIsAcompananteFormVisible] = useState(false);
-  const [clienteSearch, setClienteSearch] = useState('');
-  const [paqueteSearch, setPaqueteSearch] = useState('');
+  const [nuevoAcompananteVisible, setNuevoAcompananteVisible] = useState(false);
+  const [nuevoAcompanante, setNuevoAcompanante] = useState({ nombre: '', apellido: '', documento: '' });
+  const [clienteNombre, setClienteNombre] = useState('');
+  const [paqueteNombre, setPaqueteNombre] = useState('');
   const [errors, setErrors] = useState({});
 
   const validate = () => {
     const newErrors = {};
-
-    if (!formData.cliente) {
-      newErrors.cliente = 'Debe seleccionar un cliente.';
-    }
-
-    if (!formData.paquete) {
-      newErrors.paquete = 'Debe seleccionar un paquete.';
-    }
-
-    if (!formData.fecha) {
-      newErrors.fecha = 'Debe seleccionar una fecha.';
-    } else {
-      const hoyStr = new Date().toISOString().split('T')[0];
-      if (formData.fecha > hoyStr) {
-        newErrors.fecha = 'La fecha no puede ser futura.';
-      }
-    }
-
-    if (!formData.valor || formData.valor <= 0) {
-      newErrors.valor = 'El valor debe ser un número positivo.';
-    }
-
+    if (!formData.cliente) newErrors.cliente = 'Debe seleccionar un cliente.';
+    if (!formData.paquete) newErrors.paquete = 'Debe seleccionar un paquete.';
+    if (!formData.tour) newErrors.tour = 'Debe seleccionar un tour.';
+    if (!formData.fecha) newErrors.fecha = 'Debe seleccionar una fecha.';
+    else if (formData.fecha > new Date().toISOString().split('T')[0]) newErrors.fecha = 'La fecha no puede ser futura.';
+    if (!formData.valor || formData.valor <= 0) newErrors.valor = 'El valor debe ser un número positivo.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleChange = (e) => {
-    const { name, value, type, selectedOptions } = e.target;
-
-    if (type === 'select-multiple') {
-      const values = Array.from(selectedOptions, option => option.value);
-      setFormData(prev => ({ ...prev, [name]: values }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleCheckboxChange = (e) => {
@@ -70,25 +47,18 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validate()) return;
-
-    const result = await showConfirm(
-      '¿Quieres crear esta venta?',
-      'Confirma la acción'
-    );
-
+    const result = await showConfirm('¿Quieres crear esta venta?', 'Confirma la acción');
     if (!result.isConfirmed) return;
-
     const nuevaVenta = {
       id_cliente: formData.cliente,
       id_paquete: formData.paquete,
-      fecha: new Date(formData.fecha).toISOString(),
+      id_tour: formData.tour,
+      fecha: formData.fecha , // string "YYYY-MM-DD", tal como lo espera el backend
       valor: parseFloat(formData.valor),
       acompañantes: formData.acompañantes.filter(id => id !== formData.cliente),
       estado: formData.estado,
     };
-
     try {
       await onSubmit(nuevaVenta);
       toast.success('¡Venta creada exitosamente!');
@@ -99,151 +69,137 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
     }
   };
 
-  const handleSubmitAcompañante = (acompañante) => {
-    if (acompañante._id === formData.cliente) {
-      toast.error("El cliente no puede ser su propio acompañante.");
-      return;
-    }
-
-    if (formData.acompañantes.includes(acompañante._id)) {
-      toast.error("Este acompañante ya fue agregado.");
-      return;
-    }
-
-    setFormData(prev => ({
-      ...prev,
-      acompañantes: [...prev.acompañantes, acompañante._id],
-    }));
-
-    setAcompañantesList(prev => [
-      ...prev,
-      { nombre: acompañante.id_usuario.nombre, documento: acompañante.documento },
-    ]);
-
-    setIsAcompananteFormVisible(false);
+  const agregarNuevoAcompanante = () => {
+    const idTemporal = `nuevo-${Date.now()}`;
+    const nuevo = { _id: idTemporal, id_usuario: { nombre: nuevoAcompanante.nombre, apellido: nuevoAcompanante.apellido }, documento: nuevoAcompanante.documento };
+    setFormData(prev => ({ ...prev, acompañantes: [...prev.acompañantes, idTemporal] }));
+    setAcompañantesList(prev => ([...prev, { nombre: `${nuevoAcompanante.nombre} ${nuevoAcompanante.apellido}`, documento: nuevoAcompanante.documento }]));
+    setNuevoAcompananteVisible(false);
+    setNuevoAcompanante({ nombre: '', apellido: '', documento: '' });
   };
-
-  const filteredClientes = clientes.filter(cliente =>
-    `${cliente.id_usuario?.nombre || ''} ${cliente.id_usuario?.apellido || ''} ${cliente.id_usuario?.correo || ''} ${cliente.documento}`.toLowerCase().includes(clienteSearch.toLowerCase())
-  );
-
-  const filteredPaquetes = paquetes.filter(paquete =>
-    paquete.nombre.toLowerCase().includes(paqueteSearch.toLowerCase())
-  );
 
   return (
     <>
-      <form
-        className="venta-form"
-        onSubmit={handleSubmit}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') e.preventDefault();
-        }}
-      >
-        {/* Cliente */}
+      <form className="venta-form" onSubmit={handleSubmit} onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}>
         <div className="form-group">
-          <label htmlFor="cliente">Cliente</label>
+          <label>Cliente</label>
           <input
-            type="text"
-            placeholder="Buscar cliente..."
-            value={clienteSearch}
-            onChange={(e) => setClienteSearch(e.target.value)}
-            className="cliente-search"
-          />
-          <select
-            id="cliente"
-            name="cliente"
-            value={formData.cliente}
-            onChange={handleChange}
+            list="clientes"
+            value={clienteNombre}
+            onChange={(e) => {
+              setClienteNombre(e.target.value);
+              const encontrado = clientes.find(c => `${c.id_usuario?.nombre} ${c.id_usuario?.apellido} - ${c.documento}` === e.target.value);
+              if (encontrado) setFormData(prev => ({ ...prev, cliente: encontrado._id }));
+            }}
+            placeholder="Escribe el nombre o documento"
             className={errors.cliente ? 'input-error' : ''}
-          >
-            <option value="">Selecciona un cliente</option>
-            {filteredClientes.map((cliente) => (
-              <option key={cliente._id} value={cliente._id}>
-                {cliente.id_usuario?.nombre || ''} {cliente.id_usuario?.apellido || ''} - {cliente.documento}
-              </option>
+          />
+          <datalist id="clientes">
+            {clientes.map(c => (
+              <option key={c._id} value={`${c.id_usuario?.nombre} ${c.id_usuario?.apellido} - ${c.documento}`} />
             ))}
-          </select>
+          </datalist>
           {errors.cliente && <p className="form-error">{errors.cliente}</p>}
         </div>
 
-        {/* Paquete */}
         <div className="form-group">
-          <label htmlFor="paquete">Paquete</label>
+          <label>Paquete</label>
           <input
-            type="text"
-            placeholder="Buscar paquete..."
-            value={paqueteSearch}
-            onChange={(e) => setPaqueteSearch(e.target.value)}
-            className="paquete-search"
-          />
-          <select
-            id="paquete"
-            name="paquete"
-            value={formData.paquete}
-            onChange={handleChange}
+            list="paquetes"
+            value={paqueteNombre}
+            onChange={(e) => {
+              setPaqueteNombre(e.target.value);
+              const encontrado = paquetes.find(p => p.nombre === e.target.value);
+              if (encontrado) setFormData(prev => ({ ...prev, paquete: encontrado._id }));
+            }}
+            placeholder="Escribe el nombre del paquete"
             className={errors.paquete ? 'input-error' : ''}
-          >
-            <option value="">Selecciona un paquete</option>
-            {filteredPaquetes.map(({ _id, nombre }) => (
-              <option key={_id} value={_id}>{nombre}</option>
-            ))}
-          </select>
+          />
+          <datalist id="paquetes">
+            {paquetes.map(p => <option key={p._id} value={p.nombre} />)}
+          </datalist>
           {errors.paquete && <p className="form-error">{errors.paquete}</p>}
         </div>
 
-        {/* Fecha */}
         <div className="form-group">
-          <label htmlFor="fecha">Fecha</label>
-          <input
-            type="date"
-            id="fecha"
-            name="fecha"
-            value={formData.fecha}
-            onChange={handleChange}
-            max={new Date().toISOString().split('T')[0]}
-            className={errors.fecha ? 'input-error' : ''}
-          />
+          <label>Tour</label>
+          <select name="tour" value={formData.tour} onChange={handleChange} className={errors.tour ? 'input-error' : ''}>
+            <option value="">Selecciona un tour</option>
+            {Array.isArray(tours) && tours.map(({ _id, fechaHora, id_paquete }) => {
+              const paquete = paquetes.find(p => p._id === (id_paquete?._id || id_paquete));
+              return (
+                <option key={_id} value={_id}>
+                  {new Date(fechaHora).toLocaleString()} - {paquete?.nombre || 'Paquete desconocido'}
+                </option>
+              );
+            })}
+          </select>
+          {errors.tour && <p className="form-error">{errors.tour}</p>}
+        </div>
+
+        <div className="form-group">
+          <label>Fecha</label>
+          <input type="date" name="fecha" value={formData.fecha} onChange={handleChange} className={errors.fecha ? 'input-error' : ''} />
           {errors.fecha && <p className="form-error">{errors.fecha}</p>}
         </div>
 
-        {/* Valor */}
         <div className="form-group">
-          <label htmlFor="valor">Valor</label>
-          <input
-            type="number"
-            id="valor"
-            name="valor"
-            value={formData.valor}
-            onChange={handleChange}
-            className={errors.valor ? 'input-error' : ''}
-          />
+          <label>Valor</label>
+          <input type="number" name="valor" value={formData.valor} onChange={handleChange} className={errors.valor ? 'input-error' : ''} />
           {errors.valor && <p className="form-error">{errors.valor}</p>}
         </div>
 
-        {/* Acompañante Switch */}
         <div className="form-group">
-          <label>Agregar acompañante</label>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={isAcompananteFormVisible}
-              onChange={(e) => {
-                if (!formData.cliente) {
-                  toast.error("Primero selecciona un cliente.");
-                  return;
+          <label>Acompañantes</label>
+          <input
+            list="acompanantes"
+            placeholder="Buscar acompañante"
+            onChange={(e) => {
+              const seleccionado = clientes.find(c => `${c.id_usuario?.nombre} ${c.id_usuario?.apellido} - ${c.documento}` === e.target.value);
+              if (seleccionado && seleccionado._id !== formData.cliente) {
+                if (!formData.acompañantes.includes(seleccionado._id)) {
+                  setFormData(prev => ({ ...prev, acompañantes: [...prev.acompañantes, seleccionado._id] }));
+                  setAcompañantesList(prev => ([...prev, { nombre: `${seleccionado.id_usuario?.nombre} ${seleccionado.id_usuario?.apellido}`, documento: seleccionado.documento }]));
+                } else {
+                  toast.error("Este acompañante ya fue agregado.");
                 }
-                setIsAcompananteFormVisible(e.target.checked);
-              }}
-            />
-            <span className="slider round"></span>
-          </label>
+              } else if (seleccionado?._id === formData.cliente) {
+                toast.error("El cliente no puede ser su propio acompañante.");
+              }
+            }}
+          />
+          <datalist id="acompanantes">
+            {clientes.filter(c => c._id !== formData.cliente).map(c => (
+              <option key={c._id} value={`${c.id_usuario?.nombre} ${c.id_usuario?.apellido} - ${c.documento}`} />
+            ))}
+          </datalist>
+          <button type="button" onClick={() => setNuevoAcompananteVisible(true)} className="small-btn">+ Nuevo acompañante</button>
         </div>
 
-        {/* Lista de Acompañantes */}
+        {nuevoAcompananteVisible && (
+          <div className="form-group">
+            <label>Nuevo Acompañante</label>
+            <input
+              placeholder="Nombre"
+              value={nuevoAcompanante.nombre}
+              onChange={(e) => setNuevoAcompanante(prev => ({ ...prev, nombre: e.target.value }))}
+            />
+            <input
+              placeholder="Apellido"
+              value={nuevoAcompanante.apellido}
+              onChange={(e) => setNuevoAcompanante(prev => ({ ...prev, apellido: e.target.value }))}
+            />
+            <input
+              placeholder="Documento"
+              value={nuevoAcompanante.documento}
+              onChange={(e) => setNuevoAcompanante(prev => ({ ...prev, documento: e.target.value }))}
+            />
+            <button type="button" onClick={agregarNuevoAcompanante} className="small-btn">Agregar</button>
+          </div>
+        )}
+
         {acompañantesList.length > 0 && (
           <div className="form-group">
-            <label>Acompañantes</label>
             <ul className="acompañantes-list">
               {acompañantesList.map((a, i) => (
                 <li key={i} className="acompañante-item">
@@ -254,33 +210,17 @@ const VentaForm = ({ onSubmit, clientes, paquetes, onClose }) => {
           </div>
         )}
 
-        {/* Estado */}
         <div className="form-group">
           <label>Estado</label>
           <label className="switch">
-            <input
-              type="checkbox"
-              name="estado"
-              checked={formData.estado}
-              onChange={handleCheckboxChange}
-            />
+            <input type="checkbox" name="estado" checked={formData.estado} onChange={handleCheckboxChange} />
             <span className="slider round"></span>
           </label>
         </div>
 
-        {/* Botones */}
         <button type="submit" className="form-submit-button">Registrar</button>
         <button type="button" className="cancel-btn" onClick={onClose}>Cancelar</button>
       </form>
-
-      {/* Portal de Acompañantes */}
-      {isAcompananteFormVisible &&
-        ReactDOM.createPortal(
-          <div className="acompanante-modal-content">
-            <AcompananteForm onSubmit={handleSubmitAcompañante} />
-          </div>,
-          document.querySelector('.modal-overlay')
-        )}
     </>
   );
 };

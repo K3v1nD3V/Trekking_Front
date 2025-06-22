@@ -9,13 +9,7 @@ const api = axios.create({
     'Content-Type': 'application/json'
   }
 });
-// const api = axios.create({
-//   baseURL: 'https://trekking-back.onrender.com/api',
-//   timeout: 10000,
-//   headers: {
-//     'Content-Type': 'application/json'
-//   }
-// });
+
 
 api.interceptors.request.use(config => {
   const token = getAuthToken();
