@@ -59,7 +59,8 @@ const ClienteCompras = () => {
                 <h3 className="cliente-compras__paquete">{venta.id_paquete?.nombre || 'Paquete'}</h3>
                 <p><b>{t('compras.destination')}:</b> {venta.id_paquete?.destino || '---'}</p>
                 <p><b>{t('compras.value')}:</b> ${venta.valor?.toLocaleString('es-CO')}</p>
-                <p><b>{t('compras.date')}:</b> {venta.fecha ? new Date(venta.fecha).toLocaleDateString() : '---'}</p>
+                <p><b>{t('compras.datePurchas')}:</b> {venta.fecha ? new Date(venta.fecha).toLocaleDateString() : '---'}</p>
+                <p><b>{t('compras.dateTour')}:</b> {venta.id_tour.fechaHora ? new Date(venta.id_tour.fechaHora).toLocaleDateString() : '---'}</p>
                 <span className={`cliente-compras__estado ${venta.estado ? 'estado--activa' : 'estado--inactiva'}`}>
                   {venta.estado ? t('compras.active') : t('compras.inactive')}
                 </span>
