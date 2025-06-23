@@ -161,11 +161,11 @@ textarea.text-area {
   align-items: center;
 }
 
-.password-container-register{
+.password-container-register {
   position: relative;
   display: flex;
   align-items: center;
-  width: 200px;;
+  width: 100%;
 }
 
 .password-check-icon {
@@ -449,3 +449,7 @@ input[type="password"]::-webkit-outer-spin-button {
 }
 
 
+.wide-input {
+  width: 100%;
+  padding-right: 2.5rem; /* espacio para el ícono */
+}

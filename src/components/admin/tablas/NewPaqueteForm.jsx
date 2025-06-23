@@ -21,32 +21,82 @@ const NewPaqueteForm = ({ onSubmit, onClose, initialData = {}, servicios }) => {
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
 
+  // const validate = () => {
+  //   const newErrors = {};
+  //   if (!formData.nombre || formData.nombre.length < 3) {
+  //     newErrors.nombre = 'El nombre debe tener al menos 3 caracteres.';
+  //   }
+  //   if (!formData.valor || formData.valor <= 0) {
+  //     newErrors.valor = 'El valor debe ser un número positivo.';
+  //   }
+  //   if (!formData.descripcion || formData.descripcion.length < 10) {
+  //     newErrors.descripcion = 'La descripción debe tener al menos 10 caracteres.';
+  //   }
+  //   if (!formData.lugar_encuentro || formData.lugar_encuentro.length < 1) {
+  //     newErrors.lugar_encuentro = 'El lugar de encuentro debe tener al menos 10 caracteres.';
+  //   }
+  //   if (!formData.destino || formData.destino.length < 1) {
+  //     newErrors.destino = 'El destino debe tener al menos 10 caracteres.';
+  //   }
+  //   if (formData.servicios.length === 0) {
+  //     newErrors.servicios = 'Debe seleccionar al menos un servicio.';
+  //   }
+  //   if (formData.multimedia.length + newMedia.length === 0) {
+  //     newErrors.multimedia = 'Debe agregar al menos un archivo multimedia.';
+  //   }
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
+
   const validate = () => {
-    const newErrors = {};
-    if (!formData.nombre || formData.nombre.length < 3) {
-      newErrors.nombre = 'El nombre debe tener al menos 3 caracteres.';
-    }
-    if (!formData.valor || formData.valor <= 0) {
-      newErrors.valor = 'El valor debe ser un número positivo.';
-    }
-    if (!formData.descripcion || formData.descripcion.length < 10) {
-      newErrors.descripcion = 'La descripción debe tener al menos 10 caracteres.';
-    }
-    if (!formData.lugar_encuentro || formData.lugar_encuentro.length < 1) {
-      newErrors.lugar_encuentro = 'El lugar de encuentro debe tener al menos 10 caracteres.';
-    }
-    if (!formData.destino || formData.destino.length < 1) {
-      newErrors.destino = 'El destino debe tener al menos 10 caracteres.';
-    }
-    if (formData.servicios.length === 0) {
-      newErrors.servicios = 'Debe seleccionar al menos un servicio.';
-    }
-    if (formData.multimedia.length + newMedia.length === 0) {
-      newErrors.multimedia = 'Debe agregar al menos un archivo multimedia.';
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const newErrors = {};
+
+  // Validación de nombre
+  if (!formData.nombre || formData.nombre.length < 3) {
+    newErrors.nombre = 'El nombre debe tener al menos 3 caracteres.';
+  } else if (/\d/.test(formData.nombre)) {
+    newErrors.nombre = 'El nombre no debe contener números.';
+  }
+
+  // Validación de valor (mínimo 4 cifras)
+if (!formData.valor || isNaN(formData.valor)) {
+  newErrors.valor = 'El valor debe ser un número.';
+} else if (formData.valor <= 0) {
+  newErrors.valor = 'El valor debe ser un número positivo.';
+} else if (formData.valor < 10000) {
+  newErrors.valor = 'El valor debe tener al menos 5 cifras (mínimo 10000).';
+}
+
+
+  // Validación de descripción
+  if (!formData.descripcion || formData.descripcion.length < 10) {
+    newErrors.descripcion = 'La descripción debe tener al menos 10 caracteres.';
+  }
+
+  // Lugar de encuentro (mínimo 10 caracteres)
+  if (!formData.lugar_encuentro || formData.lugar_encuentro.length < 10) {
+    newErrors.lugar_encuentro = 'El lugar de encuentro debe tener al menos 10 caracteres.';
+  }
+
+  // Destino (mínimo 10 caracteres)
+  if (!formData.destino || formData.destino.length < 10) {
+    newErrors.destino = 'El destino debe tener al menos 10 caracteres.';
+  }
+
+  // Servicios
+  if (formData.servicios.length === 0) {
+    newErrors.servicios = 'Debe seleccionar al menos un servicio.';
+  }
+
+  // Multimedia
+  if (formData.multimedia.length + newMedia.length === 0) {
+    newErrors.multimedia = 'Debe agregar al menos un archivo multimedia.';
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
 
   const hasChanges = () => {
     const campos = ['nombre', 'descripcion', 'valor', 'lugar_encuentro', 'destino'];

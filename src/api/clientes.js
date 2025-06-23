@@ -1,5 +1,7 @@
 import api from './base';
 
+
+
 export const getClientes = async () => {
   try {
     const response = await api.get('/clientes', { requiresAuth: true });
@@ -33,15 +35,24 @@ export const createCliente = async (clienteData) => {
   }
 };
 
-export const updateCliente = async (id, clienteData) => {
+export const updateCliente = async (id, data) => {
   try {
-    const response = await api.put(`/clientes/${id}`, clienteData, { requiresAuth: true });
-    return response;
+    console.log('📤 Enviando al backend:', data);
+    const res = await api.put(`/clientes/${id}`, data);
+    return res.data;
   } catch (error) {
-    console.error(`Error updating cliente ${id}:`, error);
+    if (error.response?.data?.errors) {
+      console.error(
+        '❌ Errores de validación:',
+        error.response.data.errors.map(e => e.msg).join(' | ')
+      );
+    } else {
+      console.error('❌ Error desconocido:', error.message);
+    }
     throw error;
   }
 };
+
 
 export const deleteCliente = async (id) => {
   try {

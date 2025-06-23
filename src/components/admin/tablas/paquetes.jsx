@@ -224,24 +224,24 @@ const handleDeletePaquete = async (id) => {
             >
                 {row.nombre}
             </div>,
-            width: '200px'
+            width: '250px'
         },
         {
             name: 'Valor',
             selector: row => row.valor,
             sortable: true,
             format: row => `$${row.valor.toLocaleString()}`,
-            width: '150px'
+            width: '200px'
         },
         {
             name: 'Lugar Encuentro',
             selector: row => row.lugar_encuentro,
-            width: '220px'
+            width: '250px'
         },
         {
             name: 'Destino',
             selector: row => row.destino,
-            width: '190px'
+            width: '250px'
         },
         // {
         //     name: 'Multimedia',
