@@ -65,14 +65,20 @@ const UsuarioClienteForm = ({ onClose, onSubmit, initialData = {} }) => {
     const newErrors = {};
     const regexLetras = /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/;
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    // Usuario
+    const regexMayuscula = /[A-Z]/;
+    const regexMinuscula = /[a-z]/;
+  
+    // Nombre
     if (!usuarioData.nombre.trim()) newErrors.nombre = 'El nombre es requerido.';
-    else if (!regexLetras.test(usuarioData.nombre)) newErrors.nombre = 'Solo letras.';
-
+    else if (usuarioData.nombre.trim().length < 3) newErrors.nombre = 'Debe tener mínimo 3 caracteres.';
+    else if (!regexLetras.test(usuarioData.nombre)) newErrors.nombre = 'Este campo solo debe contener letras.';
+  
+    // Apellido
     if (!usuarioData.apellido.trim()) newErrors.apellido = 'El apellido es requerido.';
-    else if (!regexLetras.test(usuarioData.apellido)) newErrors.apellido = 'Solo letras.';
-
+    else if (usuarioData.apellido.trim().length < 3) newErrors.apellido = 'Debe tener mínimo 3 caracteres.';
+    else if (!regexLetras.test(usuarioData.apellido)) newErrors.apellido = 'Este campo solo debe contener letras.';
+  
+    // Correo
     if (!usuarioData.correo.trim()) newErrors.correo = 'El correo es requerido.';
     else if (!regexCorreo.test(usuarioData.correo)) newErrors.correo = 'Correo inválido.';
     else if (!isEditing) {
@@ -80,13 +86,25 @@ const UsuarioClienteForm = ({ onClose, onSubmit, initialData = {} }) => {
       const correoExiste = usuarios.find(u => u.correo.toLowerCase() === usuarioData.correo.toLowerCase());
       if (correoExiste) newErrors.correo = 'Correo ya registrado.';
     }
-
+  
+    // Rol
     if (!usuarioData.rol) newErrors.rol = 'Debe seleccionar un rol.';
-
-    if (!isEditing && !usuarioData.contraseña.trim()) newErrors.contraseña = 'La contraseña es requerida.';
-    else if (!isEditing && usuarioData.contraseña.trim().length < 6) newErrors.contraseña = 'Mínimo 6 caracteres.';
-
-    // Cliente
+  
+    // Contraseña
+    if (!isEditing) {
+      const pwd = usuarioData.contraseña.trim();
+      const isValidLength = pwd.length >= 6;
+      const hasUpper = /[A-Z]/.test(pwd);
+      const hasLower = /[a-z]/.test(pwd);
+    
+      if (!pwd) {
+        newErrors.contraseña = 'La contraseña es requerida.';
+      } else if (!isValidLength || !hasUpper || !hasLower) {
+        newErrors.contraseña = 'Debe contener mínimo 6 caracteres, una mayúscula y una minúscula.';
+      }
+    }
+  
+    // Documento
     if (!clienteData.documento) newErrors.documento = 'Documento requerido.';
     else if (!/^\d{8,12}$/.test(clienteData.documento)) newErrors.documento = 'Debe tener entre 8 y 12 números.';
     else {
@@ -95,13 +113,15 @@ const UsuarioClienteForm = ({ onClose, onSubmit, initialData = {} }) => {
         newErrors.documento = 'Documento ya registrado.';
       }
     }
-
+  
+    // Teléfono
     if (!clienteData.telefono) newErrors.telefono = 'Teléfono requerido.';
     else if (!/^\d{7,15}$/.test(clienteData.telefono)) newErrors.telefono = 'Debe tener entre 7 y 15 dígitos.';
-
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
