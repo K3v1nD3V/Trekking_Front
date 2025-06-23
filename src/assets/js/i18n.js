@@ -83,6 +83,10 @@ const resources = {
             inactive: "Inactive",
             contactUs: "Contact Us"
         },
+        sideBar:{
+            purchases: "My Purchases",
+            packages: "Available Packages",
+        }
     }
   },
   es: {
@@ -165,6 +169,10 @@ const resources = {
             inactive: "Inactivo",
             contactUs: "Contáctanos"
         },
+        sideBar:{
+            purchases: "Mis Compras",
+            packages: "Paquetes Disponibles",
+        }
     }
   }
 };

@@ -20,14 +20,14 @@ const ClienteSidebar = ({ handleLogout }) => {
           <li>
             <NavOption
               icon={<span className="material-symbols-outlined">receipt_long</span>}
-              text="Mis Compras"
+              text={t('sideBar.purchases')}
               to="/cliente/compras"
             />
           </li>
           <li>
             <NavOption
               icon={<span className="material-symbols-outlined">inventory_2</span>}
-              text="Paquetes Disponibles"
+              text={t('sideBar.packages')}
               to="/cliente/paquetes"
             />
           </li>

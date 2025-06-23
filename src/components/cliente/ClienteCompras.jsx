@@ -15,9 +15,10 @@ const ClienteCompras = () => {
         // const usuarioResponse = await getUsuarioById(idCliente);
         const response = await getVentas();
         const ventas = response?.data || response || [];
+        console.log('Ventas obtenidas:', ventas);
         
         const filtradas = ventas.filter(v => {
-          if (typeof v.id_cliente === 'object') return v.id_cliente.id_usuario === idCliente;
+          if (typeof v.id_cliente === 'object') return v.id_cliente.id_usuario._id === idCliente;
           return false;
         });
         // console.log('Filtrando venta:', filtradas);
@@ -70,15 +71,14 @@ const ClienteCompras = () => {
             {expanded === idx && (
               <div className="cliente-compras__detalle">
                 {console.log('Detalles de la venta:', venta)}
-                <p><b>{t('compras.client')}:</b> {venta.id_cliente?.nombre} {venta.id_cliente?.apellido}</p>
+                <p><b>{t('compras.client')}:</b> {venta.id_cliente?.id_usuario.nombre} {venta.id_cliente?.id_usuario.apellido}</p>
                 <p><b>{t('compras.document')}:</b> {venta.id_cliente?.documento}</p>
-                <p><b>{t('compras.email')}:</b> {venta.id_cliente?.correo}</p>
                 <p><b>{t('compras.phone')}:</b> {venta.id_cliente?.telefono}</p>
                 <p><b>{t('compras.medicalObservation')}:</b> {venta.id_cliente?.observacion_medica || '---'}</p>
                 <p><b>{t('compras.companions')}:</b> {venta.acompañantes?.length
                   ? venta.acompañantes.map((a, i) =>
                       typeof a === 'object'
-                        ? `${a.nombre} ${a.apellido} (${a.documento})`
+                        ? `${a.id_usuario.nombre} ${a.id_usuario.apellido} (${a.documento})`
                         : a
                     ).join(', ')
                   : 'Ninguno'}

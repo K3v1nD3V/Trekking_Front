@@ -26,12 +26,10 @@ import { toast } from 'sonner';
 const Paquetes = () => {
     const [filterText, setFilterText] = useState('');
     const [selectedPaquete, setSelectedPaquete] = useState(null);
-    const [selectedMedia, setSelectedMedia] = useState(null);
-    const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+    const [selectedMedia] = useState(null);
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState('');
-    const [isExpandedModalOpen, setIsExpandedModalOpen] = useState(false);
     const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
     
     const [paquetes, setPaquetes] = useState([]);
@@ -173,12 +171,7 @@ const handleDeletePaquete = async (id) => {
                 )}
                 <h4>Multimedia</h4>
                 <div 
-                    className="paquetes-multimedia-container"
-                    // onClick={() => {
-                    //     setIsMediaModalOpen(true);
-                    //     setSelectedMedia(paquete.multimedia?.length > 0 ? paquete.multimedia : exampleUrls);
-                    // }}
-                    >
+                    className="paquetes-multimedia-container">
                     {mediaItems.map((item, index) => {
                         const isVideo = item.includes('.mp4') || item.includes('.webm');
                         const videoThumbnail = isVideo ? item.replace('.mp4', '.jpg').replace('.webm', '.jpg') : null;
@@ -214,64 +207,6 @@ const handleDeletePaquete = async (id) => {
             </div>
         )
     };
-    
-    // const MultimediaCell = ({ row }) => {
-    //     const exampleUrls = [
-    //         'https://wallpapers.com/images/hd/hd-nature-phone-river-h14wu1u3zdvst0ch.jpg',
-    //         'https://i.4cdn.org/wsg/1743099510944782.mp4',
-    //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCXMCnkvAqM19cMA6Pm7my9LYKv9HK_RWAEg&s',
-    //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4_hN3SXm5l8jxG-Mfu1nohwQLjPb8hfKbsQ&s',
-    //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4_hN3SXm5l8jxG-Mfu1nohwQLjPb8hfKbsQ&s',
-    //     ];
-        
-    //     const mediaItems = (row.multimedia?.length > 0 ? row.multimedia : exampleUrls).slice(0, 3);
-        
-    //     return (
-    //         <div 
-    //             className="paquetes-multimedia-container"
-    //             onClick={() => {
-    //                 setIsMediaModalOpen(true);
-    //                 setSelectedMedia(row.multimedia?.length > 0 ? row.multimedia : exampleUrls);
-    //             }}
-    //         >
-    //             {mediaItems.map((item, index) => {
-    //                 const isVideo = item.includes('.mp4') || item.includes('.webm');
-    //                 const videoThumbnail = isVideo ? item.replace('.mp4', '.jpg').replace('.webm', '.jpg') : null;
-                    
-    //                 return (
-    //                     <div 
-    //                         key={index} 
-    //                         className="paquetes-media-item"
-    //                         style={{
-    //                             zIndex: index,
-    //                             transform: `translateX(${index * 15}px)`
-    //                         }}
-    //                     >
-    //                         {isVideo ? (
-    //                             <div className="video-thumbnail">
-    //                                 <img
-    //                                     src={videoThumbnail || 'https://i.imgur.com/KZpuufK.jpg'}
-    //                                     alt={`Video ${index + 1}`} 
-    //                                     className="paquetes-multimedia-image"
-    //                                     onError={(e) => {
-    //                                         e.target.src = 'https://i.imgur.com/KZpuufK.jpg';
-    //                                     }}
-    //                                 />
-    //                                 <div className="video-play-icon">▶</div>
-    //                             </div>
-    //                         ) : (
-    //                             <img 
-    //                                 src={item}
-    //                                 alt={`Imagen ${index + 1}`}
-    //                                 className="paquetes-multimedia-image"
-    //                             />
-    //                         )}
-    //                     </div>
-    //                 );
-    //             })}
-    //         </div>
-    //     );
-    // };
 
     const columns = [
         {
@@ -445,11 +380,7 @@ const handleDeletePaquete = async (id) => {
                         {selectedMedia?.map((media, index) => (
                             <div
                                 key={index}
-                                className={`media-thumbnail ${currentMediaIndex === index ? 'active' : ''}`}
-                                onClick={() => {
-                                    setCurrentMediaIndex(index);
-                                    setIsExpandedModalOpen(true);
-                                }}
+                                className={`media-thumbnail}`}
                             >
                                 {media.includes('.mp4') || media.includes('.webm') ? (
                                     <video src={media} className="thumbnail-media" />
@@ -461,19 +392,6 @@ const handleDeletePaquete = async (id) => {
                     </div>
                 </div>
             </Modal>
-    
-            {/* Modal para visualización expandida */}
-            <NewExpandedModal
-                isOpen={isExpandedModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                mediaUrl={selectedMedia?.[currentMediaIndex]}
-                mediaType={
-                    selectedMedia?.[currentMediaIndex]?.includes('.mp4') ||
-                    selectedMedia?.[currentMediaIndex]?.includes('.webm')
-                        ? 'video'
-                        : 'image'
-                }
-            />
         </>
     );
  }
