@@ -175,11 +175,13 @@ const UsuarioForm = ({ onSubmit, onClose, initialData = {}, roles = [] }) => {
           className={errors.rol ? 'input-error' : ''}
         >
           <option value="">Seleccione un rol</option>
-          {roles.map(rol => (
-            <option key={rol._id} value={rol._id}>
-              {rol.nombre}
-            </option>
-          ))}
+          {roles
+            .filter(rol => rol.nombre === "admin")
+            .map(rol => (
+              <option key={rol._id} value={rol._id}>
+                {rol.nombre}
+              </option>
+            ))}
         </select>
         {errors.rol && <p className="field-error">{errors.rol}</p>}
       </div>

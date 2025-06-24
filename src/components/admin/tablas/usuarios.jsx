@@ -69,11 +69,16 @@ const Usuarios = () => {
       setIsModalOpen(false);
     };
 
-    const filteredData = usuarios.filter(item =>
+    const filteredData = usuarios
+      .filter(item => {
+        const role = roles.find(r => r._id === item.rol);
+        return role && role.nombre === "admin";
+      })
+      .filter(item =>
         Object.values(item).some(value =>
-            String(value).toLowerCase().includes(filterText.toLowerCase())
+          String(value).toLowerCase().includes(filterText.toLowerCase())
         )
-    );
+      );
 
     const getRoleName = (roleId) => {
         const role = roles.find(role => role._id === roleId);
